@@ -11,25 +11,43 @@ public class LightTank_ControllerScript : MonoBehaviour
     public List<int> inverseSteeringWheelIndexes = new List<int>();
     public int maxSteeringAngle = 15;
     public int brakingPower = 100;
+    public bool isPlayer = false;
+
+    private GameObject turret;
+    private GameObject gun;
+    private float turretRotation;
+    private float gunPitch;
+
+    private GameManager gameManagerScript;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        wheelColliders = GameObject.Find("Wheel Colliders").GetComponentsInChildren<WheelCollider>().ToList();
-        GameObject wheelsParent = GameObject.Find("Wheels");
+        wheelColliders = this.transform.Find("Wheel Colliders").GetComponentsInChildren<WheelCollider>().ToList();
+        GameObject wheelsParent = this.transform.Find("Wheels").gameObject;
         foreach (Transform t in wheelsParent.transform)
         {
             wheels.Add(t.gameObject);
         }
+
+        this.turret = this.transform.Find("Hitbox/Turret").gameObject;
+        this.gun = this.transform.Find("Hitbox/Turret/Gun").gameObject;
+        this.turretRotation = turret.transform.rotation.eulerAngles.y;
+        this.gunPitch = gun.transform.rotation.eulerAngles.x;
+
+        this.gameManagerScript = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (this.isPlayer == true)
+        {
+            HandleMouseInput();
+            HandleMovementInput();
+        }
         UpdateWheelPositions();
-        HandleMovementInput();
-        //Debug.Log(wheelColliders[0].rpm);
     }
 
     private void UpdateWheelPositions()
@@ -75,6 +93,17 @@ public class LightTank_ControllerScript : MonoBehaviour
         {
             this.wheelColliders[this.inverseSteeringWheelIndexes[i]].steerAngle = -steeringInput;
         }
+    }
 
+    private void HandleMouseInput()
+    {
+        this.turretRotation += this.gameManagerScript.mouseSensitivity * Input.GetAxis("Mouse X");
+        this.gunPitch -= this.gameManagerScript.mouseSensitivity * Input.GetAxis("Mouse Y") * 1f;
+
+        Vector3 currentTurretRotation = this.turret.transform.rotation.eulerAngles;
+        this.turret.transform.rotation = Quaternion.Euler(currentTurretRotation.x, turretRotation, currentTurretRotation.z);
+
+        Vector3 currentGunRotation = this.gun.transform.rotation.eulerAngles;
+        this.gun.transform.rotation = Quaternion.Euler(gunPitch, currentGunRotation.y, currentGunRotation.z);
     }
 }

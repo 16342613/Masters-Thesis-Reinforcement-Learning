@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public float mouseSensitivity = 2f;
+
     // Start is called before the first frame update
     void Start()
     {

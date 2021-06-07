@@ -17,8 +17,12 @@ public class LightTank_ControllerScript : MonoBehaviour
     private GameObject gun;
     private float turretRotation;
     private float gunPitch;
+    public float gunDepression = -8;
+    public float gunElevation = 25;
 
     private GameManager gameManagerScript;
+    private Transform cameraTransform;
+    private float cameraPitch;
 
 
     // Start is called before the first frame update
@@ -34,9 +38,17 @@ public class LightTank_ControllerScript : MonoBehaviour
         this.turret = this.transform.Find("Hitbox/Turret").gameObject;
         this.gun = this.transform.Find("Hitbox/Turret/Gun").gameObject;
         this.turretRotation = turret.transform.rotation.eulerAngles.y;
-        this.gunPitch = gun.transform.rotation.eulerAngles.x;
+        this.gunPitch = this.gun.transform.rotation.eulerAngles.x;
 
         this.gameManagerScript = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+
+        GameObject cameraTransformContainer = new GameObject();
+        cameraTransformContainer.transform.position = this.gun.transform.position;
+        cameraTransformContainer.transform.rotation = this.gun.transform.rotation;
+        cameraTransformContainer.transform.parent = this.turret.transform;
+        cameraTransformContainer.name = "<Camera Transform Container>";
+        this.cameraTransform = cameraTransformContainer.transform;
+        this.cameraPitch = this.cameraTransform.rotation.eulerAngles.x;
     }
 
     // Update is called once per frame
@@ -98,12 +110,42 @@ public class LightTank_ControllerScript : MonoBehaviour
     private void HandleMouseInput()
     {
         this.turretRotation += this.gameManagerScript.mouseSensitivity * Input.GetAxis("Mouse X");
-        this.gunPitch -= this.gameManagerScript.mouseSensitivity * Input.GetAxis("Mouse Y") * 1f;
+        this.gunPitch -= this.gameManagerScript.mouseSensitivity * Input.GetAxis("Mouse Y");
+        this.cameraPitch -= this.gameManagerScript.mouseSensitivity * Input.GetAxis("Mouse Y");
 
-        Vector3 currentTurretRotation = this.turret.transform.rotation.eulerAngles;
-        this.turret.transform.rotation = Quaternion.Euler(currentTurretRotation.x, turretRotation, currentTurretRotation.z);
+        // Clamp the gun between the maximum and minimum gun depression angles
+        if (this.gunPitch > -this.gunDepression)
+        {
+            this.gunPitch = -this.gunDepression;
+        } 
+        else if (this.gunPitch < -this.gunElevation)
+        {
+            this.gunPitch = -this.gunElevation;
+        }
 
-        Vector3 currentGunRotation = this.gun.transform.rotation.eulerAngles;
-        this.gun.transform.rotation = Quaternion.Euler(gunPitch, currentGunRotation.y, currentGunRotation.z);
+        // The camera should have more longitudinal freedom, but still clamp them between 90 and 0 degrees
+        if (cameraPitch < -90)
+        {
+            cameraPitch = -90;
+        }
+        else if (cameraPitch > 90)
+        {
+            cameraPitch = 90;
+        }
+
+        Vector3 currentTurretRotation = this.turret.transform.localEulerAngles;
+        this.turret.transform.localRotation = Quaternion.Euler(currentTurretRotation.x, turretRotation, currentTurretRotation.z);
+
+        Vector3 currentGunRotation = this.gun.transform.localEulerAngles;
+        this.gun.transform.localRotation = Quaternion.Euler(gunPitch, currentGunRotation.y, currentGunRotation.z);
+
+        this.cameraTransform.localRotation = Quaternion.Euler(cameraPitch, currentGunRotation.y, currentGunRotation.z);
+        Camera.main.transform.forward = this.gun.transform.forward;
+        Camera.main.transform.position = this.turret.transform.position - (this.cameraTransform.forward * 15);
+
+        Debug.Log(cameraPitch);
+
+
+
     }
 }

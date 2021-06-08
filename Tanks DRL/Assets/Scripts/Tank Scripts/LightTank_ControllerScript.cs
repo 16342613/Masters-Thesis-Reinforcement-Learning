@@ -113,6 +113,7 @@ public class LightTank_ControllerScript : MonoBehaviour
         this.gunPitch -= this.gameManagerScript.mouseSensitivity * Input.GetAxis("Mouse Y");
         this.cameraPitch -= this.gameManagerScript.mouseSensitivity * Input.GetAxis("Mouse Y");
 
+        this.gunPitch = this.cameraPitch;
         // Clamp the gun between the maximum and minimum gun depression angles
         if (this.gunPitch > -this.gunDepression)
         {
@@ -140,12 +141,10 @@ public class LightTank_ControllerScript : MonoBehaviour
         this.gun.transform.localRotation = Quaternion.Euler(gunPitch, currentGunRotation.y, currentGunRotation.z);
 
         this.cameraTransform.localRotation = Quaternion.Euler(cameraPitch, currentGunRotation.y, currentGunRotation.z);
-        Camera.main.transform.forward = this.gun.transform.forward;
-        Camera.main.transform.position = this.turret.transform.position - (this.cameraTransform.forward * 15);
+        Camera.main.transform.rotation = this.cameraTransform.rotation;
+        Camera.main.transform.position = this.turret.transform.position - (this.cameraTransform.forward * 10);
+
 
         Debug.Log(cameraPitch);
-
-
-
     }
 }

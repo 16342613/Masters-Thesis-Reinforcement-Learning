@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - SteeringWheels
+  - Muzzle Blast
   layers:
   - Default
   - TransparentFX

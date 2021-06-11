@@ -10,8 +10,6 @@ public class ShellScript : MonoBehaviour
     public float penetration = 175;
     private TankControllerScript originTank;
 
-    public GameObject landing;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -20,10 +18,7 @@ public class ShellScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Instantiate(landing, collision.GetContact(0).point, Quaternion.identity);
         Destroy(this.gameObject);
-
-
     }
 
     public TankControllerScript Get_originTank()

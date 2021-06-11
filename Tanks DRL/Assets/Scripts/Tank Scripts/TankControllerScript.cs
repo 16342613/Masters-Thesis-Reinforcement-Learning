@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.VFX;
 using UnityEngine;
 
 public abstract class TankControllerScript : MonoBehaviour
@@ -12,6 +13,12 @@ public abstract class TankControllerScript : MonoBehaviour
     private GameObject gun;
     private Transform muzzle;
     public bool isPlayer = false;
+
+    private VisualEffect muzzleSmokeVFX;
+    private VisualEffect muzzleBlastVFX;
+    private Light muzzleLightSource;
+
+    private bool firedRound = false;
 
     public virtual void Start()
     {
@@ -28,6 +35,18 @@ public abstract class TankControllerScript : MonoBehaviour
         cameraTransformContainer.name = "<Camera Transform Container>";
         cameraTransform = cameraTransformContainer.transform;
         cameraPitch = cameraTransform.rotation.eulerAngles.x;
+
+        muzzleSmokeVFX = transform.Find("Hitbox/Turret/Gun/Muzzle/Muzzle Smoke").GetComponent<VisualEffect>();
+        muzzleSmokeVFX.enabled = false;
+        muzzleBlastVFX = transform.Find("Hitbox/Turret/Gun/Muzzle/Muzzle Blast").GetComponent<VisualEffect>();
+        muzzleBlastVFX.enabled = false;
+        muzzleLightSource = transform.Find("Hitbox/Turret/Gun/Muzzle/Muzzle Light Source").GetComponent<Light>();
+        muzzleLightSource.enabled = false;
+    }
+
+    private void Update()
+    {
+        
     }
 
     /// <summary>
@@ -40,7 +59,7 @@ public abstract class TankControllerScript : MonoBehaviour
     {
         turretRotation += mouseSensitivity * Input.GetAxis("Mouse X");
         gunPitch -= mouseSensitivity * Input.GetAxis("Mouse Y");
-        cameraPitch -= mouseSensitivity * Input.GetAxis("Mouse Y");
+        cameraPitch -= (mouseSensitivity * Input.GetAxis("Mouse Y"));
 
         gunPitch = cameraPitch;
         // Clamp the gun between the maximum and minimum gun depression angles
@@ -73,7 +92,7 @@ public abstract class TankControllerScript : MonoBehaviour
         Camera.main.transform.rotation = cameraTransform.rotation;
         Camera.main.transform.position = turret.transform.position - (cameraTransform.forward * 10);
 
-        Debug.Log(gunPitch);
+        //Debug.Log(muzzle.forward);
     }
 
     public void FireGun(GameObject round)
@@ -82,5 +101,37 @@ public abstract class TankControllerScript : MonoBehaviour
 
         GameObject firedRound = Instantiate(round, muzzle.position, muzzle.rotation);
         firedRound.GetComponent<Rigidbody>().velocity = firedRound.transform.forward * (firedRound.GetComponent<ShellScript>().muzzleVelocity / 5f);
+
+        PlayMuzzleVFX();
+    }
+
+    private void PlayMuzzleVFX()
+    {
+        muzzleBlastVFX.enabled = true;
+        muzzleBlastVFX.Play();
+
+        muzzleLightSource.enabled = true;
+        StartCoroutine(StopMuzzleLight());
+
+        muzzleSmokeVFX.enabled = true;
+        muzzleSmokeVFX.SetVector3("Muzzle Direction", muzzle.forward * 2);
+        muzzleSmokeVFX.SetVector3("Muzzle Up", muzzle.up);
+        muzzleSmokeVFX.SetVector3("Muzzle Right", muzzle.right);
+        muzzleSmokeVFX.Play();
+
+        StartCoroutine(StopVFXGraph(muzzleSmokeVFX, 0.1f));
+        StartCoroutine(StopVFXGraph(muzzleBlastVFX, 0.25f));
+    }
+
+    private IEnumerator StopVFXGraph(VisualEffect vfx, float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        vfx.Stop();
+    }
+
+    private IEnumerator StopMuzzleLight()
+    {
+        yield return new WaitForSeconds(0.05f);
+        muzzleLightSource.enabled = false;
     }
 }

@@ -15,8 +15,7 @@ public class LightTankControllerScript : TankControllerScript
     public float gunDepression = -8;
     public float gunElevation = 25;
     public List<GameObject> shellTypes = new List<GameObject>();
-
-    private GameManager gameManagerScript;
+    public float scrollZoomFactor = 2.5f;
 
     public LightTankControllerScript() : base()
     {
@@ -43,10 +42,9 @@ public class LightTankControllerScript : TankControllerScript
         // Handle the inputs if this is a player
         if (isPlayer == true)
         {
-            base.HandleMouseInput(2f, gunDepression, gunElevation);
+            base.HandleMouseInput(2f, gunDepression, gunElevation, scrollZoomFactor);
             HandleMovementInput();
 
-            //if (Input.GetMouseButton(0))
             if(Input.GetKey(KeyCode.X))
             {
                 base.FireGun(shellTypes[0]);

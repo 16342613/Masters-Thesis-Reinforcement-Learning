@@ -13,7 +13,7 @@ public class ShellScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        Destroy(this.gameObject, 10);
     }
 
     private void OnCollisionEnter(Collision collision)

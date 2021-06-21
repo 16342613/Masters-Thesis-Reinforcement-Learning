@@ -1,0 +1,659 @@
+/target:library
+/out:Temp/Unity.RenderPipelines.HighDefinition.Editor.dll
+/nowarn:0169
+/nowarn:0649
+/refout:Temp/Unity.RenderPipelines.HighDefinition.Editor.dll.ref
+/unsafe
+/deterministic
+/debug:portable
+/optimize-
+/nostdlib+
+/preferreduilang:en-US
+/langversion:8.0
+/reference:Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.dll
+/reference:Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.dll
+/reference:Library/ScriptAssemblies/Unity.RenderPipelines.HighDefinition.Config.Runtime.dll
+/reference:Library/ScriptAssemblies/Unity.RenderPipelines.HighDefinition.Runtime.dll
+/reference:Library/ScriptAssemblies/Unity.ShaderGraph.Editor.dll
+/reference:Library/ScriptAssemblies/Unity.VisualEffectGraph.Editor.dll
+/reference:Library/ScriptAssemblies/UnityEditor.TestRunner.dll
+/reference:Library/ScriptAssemblies/UnityEditor.UI.dll
+/reference:Library/ScriptAssemblies/UnityEngine.TestRunner.dll
+/reference:Library/ScriptAssemblies/UnityEngine.UI.dll
+/reference:Assets/Plugins/Google.Protobuf.dll
+/reference:Assets/Plugins/HDF.PInvoke.1.10.dll
+/reference:Assets/Plugins/HDF5CSharp.dll
+/reference:Assets/Plugins/ICSharpCode.SharpZipLib.dll
+/reference:Assets/Plugins/MethodBoundaryAspect.dll
+/reference:Assets/Plugins/Newtonsoft.Json.dll
+/reference:Assets/Plugins/NumSharp.dll
+/reference:Assets/Plugins/Protobuf.Text.dll
+/reference:Assets/Plugins/Serilog.Sinks.Console.dll
+/reference:Assets/Plugins/Serilog.dll
+/reference:Assets/Plugins/System.Buffers.dll
+/reference:Assets/Plugins/System.Memory.dll
+/reference:Assets/Plugins/System.Resources.Extensions.dll
+/reference:Assets/Plugins/System.Runtime.CompilerServices.Unsafe.dll
+/reference:Assets/Plugins/TensorFlow.NET.dll
+/reference:Assets/Plugins/Tensorflow.Keras.dll
+/reference:"C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/16.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEditor.Graphs.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll"
+/reference:"E:/Users/mandh/Masters-Thesis-Reinforcemenet-Learning/Tanks DRL/Library/PackageCache/com.unity.ext.nunit@1.0.5/net35/unity-custom/nunit.framework.dll"
+/reference:"E:/Users/mandh/Masters-Thesis-Reinforcemenet-Learning/Tanks DRL/Library/PackageCache/com.unity.ext.nunit@1.0.5/net35/unity-custom/nunit.framework.dll"
+/reference:"E:/Users/mandh/Masters-Thesis-Reinforcemenet-Learning/Tanks DRL/Library/PackageCache/com.unity.render-pipelines.core@10.2.2/Editor/ShaderGenerator/ICSharpCode.NRefactory.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEditor.CoreModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEditor.GraphViewModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEditor.PackageManagerUIModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEditor.SceneTemplateModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEditor.UIElementsModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEditor.UIElementsSamplesModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEditor.UIServiceModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEditor.UnityConnectModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEditor.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.ARModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.AccessibilityModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.AndroidJNIModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.AnimationModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.AssetBundleModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.AudioModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.ClothModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.ClusterInputModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.ClusterRendererModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.CoreModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.CrashReportingModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.DSPGraphModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.DirectorModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.GIModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.GameCenterModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.GridModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.HotReloadModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.IMGUIModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.ImageConversionModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.InputLegacyModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.InputModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.JSONSerializeModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.LocalizationModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.ParticleSystemModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.PerformanceReportingModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.Physics2DModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.PhysicsModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.ProfilerModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.ScreenCaptureModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.SharedInternalsModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.SpriteMaskModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.SpriteShapeModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.StreamingModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.SubstanceModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.SubsystemsModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.TLSModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.TerrainModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.TerrainPhysicsModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.TextCoreModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.TextRenderingModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.TilemapModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.UIElementsModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.UIElementsNativeModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.UIModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.UNETModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.UmbraModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityAnalyticsModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityConnectModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityCurlModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityTestProtocolModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestAssetBundleModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestAudioModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestTextureModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestWWWModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.VFXModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.VRModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.VehiclesModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.VideoModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.VirtualTexturingModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.WindModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.XRModule.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/Microsoft.Win32.Primitives.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.AppContext.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Collections.Concurrent.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Collections.NonGeneric.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Collections.Specialized.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Collections.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ComponentModel.Annotations.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ComponentModel.EventBasedAsync.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ComponentModel.Primitives.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ComponentModel.TypeConverter.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ComponentModel.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Console.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Data.Common.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Diagnostics.Contracts.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Diagnostics.Debug.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Diagnostics.FileVersionInfo.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Diagnostics.Process.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Diagnostics.StackTrace.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Diagnostics.TextWriterTraceListener.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Diagnostics.Tools.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Diagnostics.TraceSource.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Drawing.Primitives.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Dynamic.Runtime.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Globalization.Calendars.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Globalization.Extensions.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Globalization.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.Compression.ZipFile.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.FileSystem.DriveInfo.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.FileSystem.Primitives.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.FileSystem.Watcher.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.FileSystem.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.IsolatedStorage.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.MemoryMappedFiles.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.Pipes.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.UnmanagedMemoryStream.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Linq.Expressions.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Linq.Parallel.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Linq.Queryable.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Linq.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.Http.Rtc.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.NameResolution.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.NetworkInformation.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.Ping.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.Primitives.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.Requests.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.Security.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.Sockets.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.WebHeaderCollection.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.WebSockets.Client.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.WebSockets.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ObjectModel.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Reflection.Emit.ILGeneration.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Reflection.Emit.Lightweight.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Reflection.Emit.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Reflection.Extensions.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Reflection.Primitives.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Reflection.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Resources.Reader.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Resources.ResourceManager.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Resources.Writer.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.CompilerServices.VisualC.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.Extensions.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.Handles.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.InteropServices.RuntimeInformation.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.InteropServices.WindowsRuntime.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.InteropServices.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.Numerics.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.Serialization.Formatters.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.Serialization.Json.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.Serialization.Primitives.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.Serialization.Xml.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Security.Claims.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Security.Cryptography.Algorithms.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Security.Cryptography.Csp.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Security.Cryptography.Encoding.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Security.Cryptography.Primitives.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Security.Cryptography.X509Certificates.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Security.Principal.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Security.SecureString.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ServiceModel.Duplex.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ServiceModel.Http.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ServiceModel.NetTcp.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ServiceModel.Primitives.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ServiceModel.Security.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Text.Encoding.Extensions.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Text.Encoding.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Text.RegularExpressions.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Threading.Overlapped.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Threading.Tasks.Parallel.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Threading.Tasks.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Threading.Thread.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Threading.ThreadPool.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Threading.Timer.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Threading.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ValueTuple.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Xml.ReaderWriter.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Xml.XDocument.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Xml.XPath.XDocument.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Xml.XPath.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Xml.XmlDocument.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Xml.XmlSerializer.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/netstandard.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Microsoft.CSharp.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Core.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Data.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Net.Http.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Numerics.Vectors.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Numerics.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Runtime.Serialization.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Xml.Linq.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Xml.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.dll"
+/reference:"E:/Program Files/Unity/2020.1.14f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll"
+/define:CSHARP_7_3_OR_NEWER
+/define:CSHARP_7_OR_LATER
+/define:DEBUG
+/define:ENABLE_AR
+/define:ENABLE_AUDIO
+/define:ENABLE_BURST_AOT
+/define:ENABLE_CACHING
+/define:ENABLE_CLOTH
+/define:ENABLE_CLOUD_LICENSE
+/define:ENABLE_CLOUD_SERVICES
+/define:ENABLE_CLOUD_SERVICES_ADS
+/define:ENABLE_CLOUD_SERVICES_ANALYTICS
+/define:ENABLE_CLOUD_SERVICES_BUILD
+/define:ENABLE_CLOUD_SERVICES_COLLAB
+/define:ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS
+/define:ENABLE_CLOUD_SERVICES_CRASH_REPORTING
+/define:ENABLE_CLOUD_SERVICES_PURCHASING
+/define:ENABLE_CLOUD_SERVICES_UNET
+/define:ENABLE_CLOUD_SERVICES_USE_WEBREQUEST
+/define:ENABLE_CLUSTERINPUT
+/define:ENABLE_CLUSTER_SYNC
+/define:ENABLE_CRUNCH_TEXTURE_COMPRESSION
+/define:ENABLE_CUSTOM_RENDER_TEXTURE
+/define:ENABLE_DIRECTOR
+/define:ENABLE_DIRECTOR_AUDIO
+/define:ENABLE_DIRECTOR_TEXTURE
+/define:ENABLE_EDITOR_HUB_LICENSE
+/define:ENABLE_EVENT_QUEUE
+/define:ENABLE_LEGACY_INPUT_MANAGER
+/define:ENABLE_LOCALIZATION
+/define:ENABLE_LZMA
+/define:ENABLE_MANAGED_ANIMATION_JOBS
+/define:ENABLE_MANAGED_AUDIO_JOBS
+/define:ENABLE_MANAGED_JOBS
+/define:ENABLE_MANAGED_TRANSFORM_JOBS
+/define:ENABLE_MICROPHONE
+/define:ENABLE_MONO
+/define:ENABLE_MONO_BDWGC
+/define:ENABLE_MOVIES
+/define:ENABLE_MULTIPLE_DISPLAYS
+/define:ENABLE_NETWORK
+/define:ENABLE_OUT_OF_PROCESS_CRASH_HANDLER
+/define:ENABLE_PHYSICS
+/define:ENABLE_PROFILER
+/define:ENABLE_RUNTIME_GI
+/define:ENABLE_SCRIPTING_GC_WBARRIERS
+/define:ENABLE_SPRITES
+/define:ENABLE_TERRAIN
+/define:ENABLE_TEXTURE_STREAMING
+/define:ENABLE_TILEMAP
+/define:ENABLE_TIMELINE
+/define:ENABLE_UNET
+/define:ENABLE_UNITYEVENTS
+/define:ENABLE_UNITYWEBREQUEST
+/define:ENABLE_UNITY_COLLECTIONS_CHECKS
+/define:ENABLE_VIDEO
+/define:ENABLE_VIRTUALTEXTURING
+/define:ENABLE_VR
+/define:ENABLE_WEBCAM
+/define:ENABLE_WEBSOCKET_CLIENT
+/define:ENABLE_WEBSOCKET_HOST
+/define:ENABLE_WWW
+/define:GFXDEVICE_WAITFOREVENT_MESSAGEPUMP
+/define:HDRP_1_OR_NEWER
+/define:INCLUDE_DYNAMIC_GI
+/define:NET_4_6
+/define:PLATFORM_STANDALONE
+/define:PLATFORM_STANDALONE_WIN
+/define:PLATFORM_SUPPORTS_MONO
+/define:PLATFORM_UPDATES_TIME_OUTSIDE_OF_PLAYER_LOOP
+/define:RENDER_SOFTWARE_CURSOR
+/define:SCENE_TEMPLATE_MODULE
+/define:TRACE
+/define:UNITY_2017_1_OR_NEWER
+/define:UNITY_2017_2_OR_NEWER
+/define:UNITY_2017_3_OR_NEWER
+/define:UNITY_2017_4_OR_NEWER
+/define:UNITY_2018_1_OR_NEWER
+/define:UNITY_2018_2_OR_NEWER
+/define:UNITY_2018_3_OR_NEWER
+/define:UNITY_2018_4_OR_NEWER
+/define:UNITY_2019_1_OR_NEWER
+/define:UNITY_2019_2_OR_NEWER
+/define:UNITY_2019_3_OR_NEWER
+/define:UNITY_2019_4_OR_NEWER
+/define:UNITY_2020
+/define:UNITY_2020_1_OR_NEWER
+/define:UNITY_2020_2
+/define:UNITY_2020_2_1
+/define:UNITY_2020_2_OR_NEWER
+/define:UNITY_5_3_OR_NEWER
+/define:UNITY_5_4_OR_NEWER
+/define:UNITY_5_5_OR_NEWER
+/define:UNITY_5_6_OR_NEWER
+/define:UNITY_ASSERTIONS
+/define:UNITY_EDITOR
+/define:UNITY_EDITOR_64
+/define:UNITY_EDITOR_WIN
+/define:UNITY_INCLUDE_TESTS
+/define:UNITY_STANDALONE
+/define:UNITY_STANDALONE_WIN
+/define:UNITY_TEAM_LICENSE
+/define:USE_SEARCH_ENGINE_API
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\AssemblyInfo.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\AssetProcessors\AssetVersion.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\AssetProcessors\AutodeskInteractiveMaterialImport.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\AssetProcessors\CubeLutImporter.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\AssetProcessors\FBXArnoldSurfaceMaterialDescriptionPreprocessor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\AssetProcessors\FBXMaterialDescriptionPostprocessor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\AssetProcessors\HDIESImporterEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\AssetProcessors\MaterialPostProcessor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\AssetProcessors\NormalMapFilteringTexturePostprocessor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\AssetProcessors\PhysicalMaterial3DsMaxPreprocessor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\AssetProcessors\ShaderGraphMaterialsUpdater.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\AssetProcessors\SketchupMaterialDescriptionPostprocessor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\AssetProcessors\ThreeDSMaterialDescriptionPostprocessor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\BuildProcessors\HDRPPreprocessBuild.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\BuildProcessors\HDRPPreprocessShaders.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Compositor\CompositionFilterUI.Drawer.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Compositor\CompositionLayerUI.Drawers.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Compositor\CompositionManagerEditor.Styles.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Compositor\CompositionManagerEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Compositor\CompositionUtils.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Compositor\CompositorWindow.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Compositor\SerializedCompositionFilter.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Compositor\SerializedCompositionLayer.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Compositor\SerializedCompositionManager.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Compositor\SeriallizedShaderProperty.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Compositor\ShaderPropertyUI.Drawers.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Core\Lighting\LightLayerEnumPropertyDrawer.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Core\TextureCombiner\TextureCombiner.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\HDAnalytics.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\AdditionalShadowDataEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\AmbientOcclusionEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\DiffusionProfileOverrideEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\HDAdditionalLightDataEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\HDIESImporter.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\HDLightEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\HDLightExplorerExtension.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\HDLightUI.ContextualMenu.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\HDLightUI.Handles.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\HDLightUI.Skin.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\HDLightUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\IndirectLightingControllerEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\LightUnit\LightUnitSlider.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\LightUnit\LightUnitSliderSettings.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\ProbeVolume\ProbeVolumeEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\ProbeVolume\ProbeVolumeUI.Drawer.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\ProbeVolume\ProbeVolumeUI.Skin.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\ProbeVolume\SerializedProbeVolume.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\ProbeVolumeControllerEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\CameraSettingsUI.Drawers.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\HDAdditionalReflectionDataEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\HDBakedReflectionSystem.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\HDProbeEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\HDProbeUI.Drawers.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\HDProbeUI.Handles.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\HDProbeUI.Skin.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\HDProbeUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\HDReflectionProbeEditor.Gizmos.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\HDReflectionProbeEditor.Preview.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\HDReflectionProbeEditor.ProbeUtility.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\HDReflectionProbeEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\HDScreenSpaceReflectionEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\PlanarReflectionProbeEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\ProbeSettingsUI.Drawers.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\ReflectionMenuItem.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\ScreenSpaceRefractionEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\SerializedCameraSettings.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\SerializedHDProbe.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\SerializedHDReflectionProbe.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\SerializedPlanarReflectionProbe.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\SerializedProbeSettings.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\Volume\InfluenceVolumeUI.Drawers.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\Volume\InfluenceVolumeUI.Gizmos.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\Volume\InfluenceVolumeUI.Handles.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\Volume\InfluenceVolumeUI.Skin.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\Volume\InfluenceVolumeUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\Volume\ProxyVolumeUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\Volume\ReflectionProxyVolumeComponentEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\Volume\SerializedInfluenceVolume.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\Volume\SerializedProxyVolume.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Reflection\Volume\SerializedReflectionProxyVolumeComponent.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\SerializedHDLight.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Shadow\ContactShadowsEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Shadow\HDShadowSettingsEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\Shadow\ShadowCascadeGUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\VolumetricLighting\DensityVolumeEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\VolumetricLighting\DensityVolumeUI.Drawer.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\VolumetricLighting\DensityVolumeUI.Skin.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\VolumetricLighting\SerializedDensityVolume.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Lighting\VolumetricLighting\VolumetricMenuItem.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\AxF\AxFGUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\BaseShaderPreprocessor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Decal\DecalLayerEnumPropertyDrawer.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Decal\DecalMenuItems.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Decal\DecalProjectorEditor.Skin.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Decal\DecalProjectorEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Decal\DecalUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Decal\ShaderGraph\CreateDecalShaderGraph.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Decal\ShaderGraph\DecalData.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Decal\ShaderGraph\DecalGUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Decal\ShaderGraph\DecalPropertyBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Decal\ShaderGraph\DecalSubTarget.Migration.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Decal\ShaderGraph\DecalSubTarget.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\DiffusionProfile\DiffusionProfileMaterialUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\DiffusionProfile\DiffusionProfileSettingsEditor.Styles.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\DiffusionProfile\DiffusionProfileSettingsEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Eye\ShaderGraph\CreateEyeShaderGraph.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Eye\ShaderGraph\EyeData.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Eye\ShaderGraph\EyeSubTarget.Migration.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Eye\ShaderGraph\EyeSubTarget.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Eye\ShaderGraph\EyeSurfaceOptionPropertyBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Eye\ShaderGraph\Node\CirclePupilAnimation.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Eye\ShaderGraph\Node\CorneaRefraction.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Eye\ShaderGraph\Node\EyeSurfaceTypeDebug.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Eye\ShaderGraph\Node\IrisLimbalRing.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Eye\ShaderGraph\Node\IrisOffset.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Eye\ShaderGraph\Node\IrisOutOfBoundColorClamp.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Eye\ShaderGraph\Node\IrisUVLocation.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Eye\ShaderGraph\Node\ScleraIrisBlend.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Eye\ShaderGraph\Node\ScleraLimbalRing.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Eye\ShaderGraph\Node\ScleraUVLocation.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Fabric\ShaderGraph\CreateFabricShaderGraph.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Fabric\ShaderGraph\FabricData.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Fabric\ShaderGraph\FabricSubTarget.Migration.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Fabric\ShaderGraph\FabricSubTarget.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Fabric\ShaderGraph\FabricSurfaceOptionPropertyBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Hair\ShaderGraph\CreateHairShaderGraph.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Hair\ShaderGraph\HairAdvancedOptionsPropertyBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Hair\ShaderGraph\HairData.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Hair\ShaderGraph\HairSubTarget.Migration.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Hair\ShaderGraph\HairSubTarget.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\LayeredLit\LayeredLitGUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Lit\BaseLitGUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Lit\LitGUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Lit\LitShaderPreprocessor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Lit\ShaderGraph\CreateHDLitShaderGraph.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Lit\ShaderGraph\HDLitData.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Lit\ShaderGraph\HDLitSubTarget.Migration.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Lit\ShaderGraph\HDLitSubTarget.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Lit\ShaderGraph\LitSurfaceOptionPropertyBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Lit\StandardsToHDLitMaterialUpgrader.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\MaterialEditorExtension.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\MaterialExternalReferences.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\MaterialHeaderScope.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\AdvancedOptionsPropertyBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\DiffusionProfileMaterialPropertyDrawer.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\DiffusionProfilePropertyDrawer.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\DiffusionProfileShaderProperty.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\DistortionPropertyBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\HDBlockFields.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\HDFields.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\HDMetadata.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\HDPropertiesHeader.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\HDShaderPasses.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\HDStructFields.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\HDStructs.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\HDSubShaderUtilities.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\HDSubTarget.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\HDTarget.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\Legacy\DecalMasterNode1.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\Legacy\EyeMasterNode1.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\Legacy\FabricMasterNode1.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\Legacy\HDLitMasterNode1.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\Legacy\HDUnlitMasterNode1.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\Legacy\HairMasterNode1.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\Legacy\StackLitMasterNode1.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\LightingSubTarget.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\Nodes\DiffusionProfileNode.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\Nodes\EmissionNode.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\Nodes\ExposureNode.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\Nodes\HDSceneColorNode.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\Nodes\RayTracingQualityNode.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\PassDescriptorExtension.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\ShaderGraphVersion.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\Slots\DefaultMaterialSlot.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\Slots\DiffusionProfileInputMaterialSlot.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\SubTargetPropertiesGUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\SubTargetPropertyBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\SurfaceOptionPropertyBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\SurfaceSubTarget.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\TargetData\BuiltinData.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\TargetData\HDTargetData.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\TargetData\IRequiresData.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\TargetData\LightingData.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\TargetData\SystemData.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\ShaderGraph\Views\DiffusionProfileSlotControlView.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\StackLit\ShaderGraph\CreateStackLitShaderGraph.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\StackLit\ShaderGraph\StackLitData.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\StackLit\ShaderGraph\StackLitSubTarget.Migration.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\StackLit\ShaderGraph\StackLitSubTarget.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\StackLit\ShaderGraph\StackLitSurfaceOptionPropertyBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\TerrainLit\StandardsTerrainToHDTerrainLitUpgrader.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\TerrainLit\TerrainLitGUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\AdvancedOptionsUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\AxfMainSurfaceInputsUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\AxfSurfaceInputsUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\DecalSortingInputsUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\DecalSurfaceInputsUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\DecalSurfaceOptionsUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\DetailInputsUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\DistortionUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\EmissionUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\HDShaderGUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\LayerListUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\LayeringOptionsUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\LayersUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\LightingShaderGraphGUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\LitShaderGraphGUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\LitSurfaceInputsUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\MaterialUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\MaterialUIBlockList.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\RefractionUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\ShaderGraphUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\SurfaceOptionUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\TessellationOptionsUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\TransparencyUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\UIBlocks\UnlitSurfaceInputsUIBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Unlit\BaseUnlitGUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Unlit\ShaderGraph\CreateHDUnlitShaderGraph.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Unlit\ShaderGraph\HDUnlitData.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Unlit\ShaderGraph\HDUnlitDistortionPropertyBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Unlit\ShaderGraph\HDUnlitGUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Unlit\ShaderGraph\HDUnlitSubTarget.Migration.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Unlit\ShaderGraph\HDUnlitSubTarget.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Unlit\ShaderGraph\HDUnlitSurfaceOptionPropertyBlock.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Unlit\UnlitGUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Material\Unlit\UnlitsToHDUnlitUpgrader.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\PackageInfo.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\PostProcessing\BloomEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\PostProcessing\ChannelMixerEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\PostProcessing\ChromaticAberrationEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\PostProcessing\ColorCurvesEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\PostProcessing\DepthOfFieldEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\PostProcessing\ExposureEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\PostProcessing\FilmGrainEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\PostProcessing\LiftGammaGainEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\PostProcessing\MotionBlurEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\PostProcessing\SerializedGlobalPostProcessSettings.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\PostProcessing\ShadowsMidtonesHighlightsEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\PostProcessing\TonemappingEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\PostProcessing\TrackballUIDrawer.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\PostProcessing\VignetteEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RayTracing\ReflectionKernelGenerator.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RayTracing\SolidAngleKernelGenerator.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\BaseUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Camera\HDAdditionalCameraEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Camera\HDCameraEditor.Handlers.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Camera\HDCameraEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Camera\HDCameraUI.Drawers.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Camera\HDCameraUI.Skin.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Camera\SerializedHDCamera.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\CustomPass\CustomPassDrawer.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\CustomPass\CustomPassDrawerAttribute.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\CustomPass\CustomPassVolumeEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\CustomPass\DrawRenderersCustomPassDrawer.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\CustomPass\FullScreenCustomPassDrawer.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\HDAssetFactory.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\HDBaseEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\HDEditorCLI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\HDEditorUtils.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\HDRenderPipelineEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\HDRenderPipelineMenuItems.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\HDRenderPipelineUI.Skin.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\HDRenderPipelineUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\HDShaderUtils.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\IUpdateable.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\PathTracing\PathTracingEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Raytracing\GlobalIlluminationEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Raytracing\RayTracingSettingsEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Raytracing\RayTracingShaderPreprocessor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Raytracing\RecursiveRenderingEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Raytracing\SubSurfaceScatteringEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\ScalableSettingLevelParameterEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\DefaultSettingsPanel.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\DiffusionProfileSettingsListUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\EditorDefaultSettings.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\FrameSettingsUI.Drawers.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\FrameSettingsUI.Skin.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\OverridableFrameSettingsArea.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\QualitySettingsPanel.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\SerializedDynamicResolutionSettings.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\SerializedFrameSettings.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\SerializedGlobalDecalSettings.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\SerializedGlobalLightLoopSettings.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\SerializedGlobalProbeVolumeSettings.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\SerializedHDRenderPipelineAsset.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\SerializedHDShadowInitParameters.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\SerializedLightingQualitySettings.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\SerializedLowResTransparencySettings.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\SerializedPostProcessingQualitySettings.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\SerializedRenderPipelineSettings.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\SerializedScalableSetting.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\SerializedScalableSettingValue.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\SerializedVirtualTexturingSettings.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\Settings\SerializedXRSettings.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\VirtualTexturingSettingsUI.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\RenderPipeline\VolumeComponentWithQualityEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\SceneTemplates\HDRPBasicDxrScenePipeline.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\SceneTemplates\HDRPBasicScenePipeline.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Sky\AtmosphericScattering\FogEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Sky\GradientSky\GradientSkyEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Sky\HDLightingWindowEnvironmentSection.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Sky\HDRISky\HDRISkyEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Sky\PhysicallyBasedSky\PhysicallyBasedSkyEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Sky\SkySettingsEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Sky\StaticLightingSkyEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Sky\VisualEnvironmentEditor.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Upgraders\UpgradeStandardShaderMaterials.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\VFXGraph\Outputs\VFXAbstractDistortionOutput.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\VFXGraph\Outputs\VFXAbstractParticleHDRPLitOutput.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\VFXGraph\Outputs\VFXDistortionMeshOutput.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\VFXGraph\Outputs\VFXDistortionPlanarPrimitiveOutput.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\VFXGraph\Outputs\VFXDistortionQuadStripOutput.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\VFXGraph\Outputs\VFXLitCubeOutput.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\VFXGraph\Outputs\VFXLitMeshOutput.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\VFXGraph\Outputs\VFXLitPlanarPrimitiveOutput.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\VFXGraph\Outputs\VFXLitQuadStripOutput.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\VFXGraph\Outputs\VFXLitSphereOutput.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\VFXGraph\VFXHDRPBinder.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\VFXGraph\VFXHDRPSubOutput.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Wizard\HDProjectSettings.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Wizard\HDWizard.Configuration.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Wizard\HDWizard.UIElement.cs"
+"E:\Users\mandh\Masters-Thesis-Reinforcemenet-Learning\Tanks DRL\Library\PackageCache\com.unity.render-pipelines.high-definition@10.2.2\Editor\Wizard\HDWizard.Window.cs"

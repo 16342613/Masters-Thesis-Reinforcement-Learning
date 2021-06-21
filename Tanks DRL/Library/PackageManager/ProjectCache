@@ -13,7 +13,7 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 637587078646179669
+      ticks: 637598959966630799
     m_Hash: 713333597
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
@@ -81,6 +81,7 @@ m_PackageAssets:
         - 2.7.1
         - 2.7.2
         - 2.7.3
+        - 2.7.4
         - 2.8.0-exp.1
         - 2.8.0-exp.2
         - 2.8.0-pre.1
@@ -102,6 +103,7 @@ m_PackageAssets:
         - 2.7.1
         - 2.7.2
         - 2.7.3
+        - 2.7.4
         - 2.8.0-exp.1
         - 2.8.0-exp.2
         - 2.8.0-pre.1
@@ -190,6 +192,7 @@ m_PackageAssets:
         - 1.3.7
         - 1.3.8
         - 1.3.9
+        - 1.4.9
         - 1.5.7
         - 2.0.0-preview.6
         - 2.0.0-preview.8
@@ -203,6 +206,7 @@ m_PackageAssets:
         - 2.1.0-preview.6
         compatible:
         - 1.3.9
+        - 1.4.9
         - 1.5.7
         - 2.0.0-preview.6
         - 2.0.0-preview.8
@@ -715,13 +719,15 @@ m_PackageAssets:
         - 1.1.22
         - 1.1.24
         - 1.1.26
+        - 1.1.27
         compatible:
         - 1.1.19
         - 1.1.20
         - 1.1.22
         - 1.1.24
         - 1.1.26
-        verified: 1.1.26
+        - 1.1.27
+        verified: 1.1.27
       dependencies:
       - name: com.unity.ext.nunit
         version: 1.0.5
@@ -3064,6 +3070,7 @@ m_PackageAssets:
         - 7.5.1
         - 7.5.2
         - 7.5.3
+        - 7.6.0
         - 8.0.1
         - 8.1.0
         - 8.2.0
@@ -3081,6 +3088,7 @@ m_PackageAssets:
         - 10.3.1
         - 10.3.2
         - 10.4.0
+        - 10.5.0
         compatible:
         - 10.2.2
         verified: 10.2.2
@@ -3208,6 +3216,7 @@ m_PackageAssets:
         - 7.5.1
         - 7.5.2
         - 7.5.3
+        - 7.6.0
         - 8.0.1
         - 8.1.0
         - 8.2.0
@@ -3224,6 +3233,7 @@ m_PackageAssets:
         - 10.3.1
         - 10.3.2
         - 10.4.0
+        - 10.5.0
         compatible:
         - 10.2.2
         verified: 10.2.2
@@ -3327,6 +3337,7 @@ m_PackageAssets:
         - 7.5.1
         - 7.5.2
         - 7.5.3
+        - 7.6.0
         - 8.0.1
         - 8.1.0
         - 8.2.0
@@ -3343,6 +3354,7 @@ m_PackageAssets:
         - 10.3.1
         - 10.3.2
         - 10.4.0
+        - 10.5.0
         compatible:
         - 10.2.2
         verified: 10.2.2
@@ -3425,6 +3437,7 @@ m_PackageAssets:
         - 7.5.1
         - 7.5.2
         - 7.5.3
+        - 7.6.0
         - 8.0.1
         - 8.1.0
         - 8.2.0
@@ -3441,6 +3454,7 @@ m_PackageAssets:
         - 10.3.1
         - 10.3.2
         - 10.4.0
+        - 10.5.0
         compatible:
         - 10.2.2
         verified: 10.2.2

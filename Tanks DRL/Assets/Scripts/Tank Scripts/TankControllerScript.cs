@@ -119,7 +119,7 @@ public abstract class TankControllerScript : MonoBehaviour
         }
 
         cameraZoomFactor -= (int)Input.mouseScrollDelta.y;
-        Debug.Log(cameraZoomFactor);
+        //Debug.Log(cameraZoomFactor);
 
         if (cameraZoomFactor < 2)
         {

@@ -9,6 +9,7 @@ public abstract class TankControllerScript : MonoBehaviour
     private float gunPitch;
     private Transform cameraTransform;
     private float cameraPitch;
+    protected GameObject hull;
     private GameObject turret;
     private GameObject gun;
     private Transform muzzle;
@@ -30,6 +31,7 @@ public abstract class TankControllerScript : MonoBehaviour
     public virtual void Start()
     {
         gameManagerScript = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+        hull = transform.Find("Hitbox/Hull").gameObject;
         turret = transform.Find("Hitbox/Turret").gameObject;
         gun = transform.Find("Hitbox/Turret/Gun").gameObject;
         muzzle = transform.Find("Hitbox/Turret/Gun/Muzzle");
@@ -59,6 +61,10 @@ public abstract class TankControllerScript : MonoBehaviour
             aimCamera.gameObject.SetActive(false);
 
             thirdPersonCamera = Camera.main;
+        }
+        else
+        {
+
         }
     }
 

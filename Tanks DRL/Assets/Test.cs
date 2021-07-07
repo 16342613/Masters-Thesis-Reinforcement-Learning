@@ -13,6 +13,7 @@ public class Test : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        /*
         var watch = System.Diagnostics.Stopwatch.StartNew();
 
         var layers = new Tensorflow.Keras.Layers.LayersApi();
@@ -54,11 +55,12 @@ public class Test : MonoBehaviour
         watch.Stop();
         long elapsedMs = watch.ElapsedMilliseconds / 1000;
         Debug.Log(elapsedMs);
+        */
     }
 
     // Update is called once per frame
-    void Update()
+    /*void Update()
     {
         
-    }
+    }*/
 }

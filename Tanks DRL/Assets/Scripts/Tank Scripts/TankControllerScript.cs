@@ -27,44 +27,49 @@ public abstract class TankControllerScript : MonoBehaviour
     private GameManager gameManagerScript;
 
     private bool firedRound = false;
+    public GameObject AITrainer = null;
+    public bool isDummy = false;
 
     public virtual void Start()
     {
-        gameManagerScript = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
-        hull = transform.Find("Hitbox/Hull").gameObject;
-        turret = transform.Find("Hitbox/Turret").gameObject;
-        gun = transform.Find("Hitbox/Turret/Gun").gameObject;
-        muzzle = transform.Find("Hitbox/Turret/Gun/Muzzle");
-        turretRotation = turret.transform.rotation.eulerAngles.y;
-        gunPitch = gun.transform.rotation.eulerAngles.x;
-
-        GameObject cameraTransformContainer = new GameObject();
-        cameraTransformContainer.transform.position = gun.transform.position;
-        cameraTransformContainer.transform.rotation = gun.transform.rotation;
-        cameraTransformContainer.transform.parent = turret.transform;
-        cameraTransformContainer.name = "<Camera Transform Container>";
-        cameraTransform = cameraTransformContainer.transform;
-        cameraPitch = cameraTransform.rotation.eulerAngles.x;
-
-        muzzleSmokeVFX = transform.Find("Hitbox/Turret/Gun/Muzzle/Muzzle Smoke").GetComponent<VisualEffect>();
-        muzzleSmokeVFX.enabled = false;
-        muzzleBlastVFX = transform.Find("Hitbox/Turret/Gun/Muzzle/Muzzle Blast").GetComponent<VisualEffect>();
-        muzzleBlastVFX.enabled = false;
-        muzzleResidualSmokeVFX = transform.Find("Hitbox/Turret/Gun/Muzzle/Muzzle Residual Smoke").GetComponent<VisualEffect>();
-        muzzleResidualSmokeVFX.enabled = false;
-        muzzleLightSource = transform.Find("Hitbox/Turret/Gun/Muzzle/Muzzle Light Source").GetComponent<Light>();
-        muzzleLightSource.enabled = false;
-
-        if (isPlayer == true)
+        if (isDummy == false)
         {
-            aimCamera = transform.Find("Hitbox/Turret/Gun/Aim Camera").GetComponent<Camera>();
-            aimCamera.gameObject.SetActive(false);
+            gameManagerScript = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+            hull = transform.Find("Hitbox/Hull").gameObject;
+            turret = transform.Find("Hitbox/Turret").gameObject;
+            gun = transform.Find("Hitbox/Turret/Gun").gameObject;
+            muzzle = transform.Find("Hitbox/Turret/Gun/Muzzle");
+            turretRotation = turret.transform.rotation.eulerAngles.y;
+            gunPitch = gun.transform.rotation.eulerAngles.x;
 
-            thirdPersonCamera = Camera.main;
-        }
-        else
-        {
+            GameObject cameraTransformContainer = new GameObject();
+            cameraTransformContainer.transform.position = gun.transform.position;
+            cameraTransformContainer.transform.rotation = gun.transform.rotation;
+            cameraTransformContainer.transform.parent = turret.transform;
+            cameraTransformContainer.name = "<Camera Transform Container>";
+            cameraTransform = cameraTransformContainer.transform;
+            cameraPitch = cameraTransform.rotation.eulerAngles.x;
 
+            muzzleSmokeVFX = transform.Find("Hitbox/Turret/Gun/Muzzle/Muzzle Smoke").GetComponent<VisualEffect>();
+            muzzleSmokeVFX.enabled = false;
+            muzzleBlastVFX = transform.Find("Hitbox/Turret/Gun/Muzzle/Muzzle Blast").GetComponent<VisualEffect>();
+            muzzleBlastVFX.enabled = false;
+            muzzleResidualSmokeVFX = transform.Find("Hitbox/Turret/Gun/Muzzle/Muzzle Residual Smoke").GetComponent<VisualEffect>();
+            muzzleResidualSmokeVFX.enabled = false;
+            muzzleLightSource = transform.Find("Hitbox/Turret/Gun/Muzzle/Muzzle Light Source").GetComponent<Light>();
+            muzzleLightSource.enabled = false;
+
+            if (isPlayer == true)
+            {
+                aimCamera = transform.Find("Hitbox/Turret/Gun/Aim Camera").GetComponent<Camera>();
+                aimCamera.gameObject.SetActive(false);
+
+                thirdPersonCamera = Camera.main;
+            }
+            else
+            {
+
+            }
         }
     }
 
@@ -200,5 +205,12 @@ public abstract class TankControllerScript : MonoBehaviour
     {
         yield return new WaitForSeconds(0.05f);
         muzzleLightSource.enabled = false;
+    }
+
+    public List<string> SendArmourStateData(Vector3 globalArmourForward, Vector3 globalCollisionPoint, float penetrationDifference, Vector3 relativeAngle)
+    {
+        List<string> details = new List<string>();
+
+        return details;
     }
 }

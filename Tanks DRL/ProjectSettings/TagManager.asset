@@ -6,6 +6,9 @@ TagManager:
   tags:
   - SteeringWheels
   - Muzzle Blast
+  - Round
+  - Armour Plate
+  - Enemy Tank
   layers:
   - Default
   - TransparentFX

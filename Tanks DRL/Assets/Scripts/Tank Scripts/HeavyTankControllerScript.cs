@@ -36,8 +36,6 @@ public class HeavyTankControllerScript : TankControllerScript
             tankRigidBody.velocity = tankRigidBody.velocity.normalized * topSpeed;
         }
 
-        Debug.Log(tankRigidBody.velocity.magnitude);
-
         if (isPlayer == true)
         {
             base.HandleMouseInput(2f, gunDepression, gunElevation, scrollZoomFactor);

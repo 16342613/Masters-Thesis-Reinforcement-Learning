@@ -16,8 +16,6 @@ public class CommunicationClient
     private string logFilePath;
     private bool connectedToServer;
 
-
-
     public CommunicationClient(string logFilePath)
     {
         this.logFilePath = logFilePath;
@@ -45,7 +43,7 @@ public class CommunicationClient
     {
         if (connectedToServer == false)
         {
-            throw new Exception("ERROR: Please set up a connection to the server first!");
+            //throw new Exception("ERROR: Please set up a connection to the server first!");
         }
 
         try
@@ -114,6 +112,4 @@ public class CommunicationClient
     {
         FileHandler.WriteToFile(logFilePath, DateTime.Now.ToString("HH:mm:ss tt") + " : " + data);
     }
-
-
 }

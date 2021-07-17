@@ -1,10 +1,1 @@
-23:52:09 p.m. : Establised connection with host <DESKTOP-23VITDP> on port 8000
-23:52:12 p.m. : Sent the message to the host successfully
-23:52:12 p.m. : Received the response from the host
-23:52:12 p.m. : 0
-23:52:13 p.m. : Sent the message to the host successfully
-23:52:13 p.m. : Received the response from the host
-23:52:13 p.m. : 0
-23:52:13 p.m. : Sent the message to the host successfully
-23:52:13 p.m. : Received the response from the host
-23:52:13 p.m. : 0
+00:20:12 a.m. : ERROR: Could not connect with host <DESKTOP-23VITDP> on port 8000!

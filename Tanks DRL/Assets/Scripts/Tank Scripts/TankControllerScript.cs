@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.VFX;
 using UnityEngine;
 
+[System.Serializable]
 public abstract class TankControllerScript : MonoBehaviour
 {
     private float turretRotation;
@@ -14,6 +15,7 @@ public abstract class TankControllerScript : MonoBehaviour
     private GameObject gun;
     private Transform muzzle;
     public bool isPlayer = false;
+    [SerializeField] private int hitPoints;
 
     private VisualEffect muzzleSmokeVFX;
     private VisualEffect muzzleBlastVFX;
@@ -212,5 +214,10 @@ public abstract class TankControllerScript : MonoBehaviour
         List<string> details = new List<string>();
 
         return details;
+    }
+
+    public int GetHitpoints()
+    {
+        return this.hitPoints;
     }
 }

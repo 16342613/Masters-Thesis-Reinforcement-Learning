@@ -658,6 +658,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
+  hitPoints: 500
   AITrainer: {fileID: 0}
   isDummy: 1
   gunDepression: -8

@@ -8,6 +8,9 @@ public class ShellScript : MonoBehaviour
     public float muzzleVelocity = 800;
     // Penetrative power in millimetres
     public float penetration = 175;
+    // The damage caused by this shell
+    public int alphaDamage = 240;
+
     private TankControllerScript originTank;
 
     // Start is called before the first frame update
@@ -18,6 +21,35 @@ public class ShellScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.tag == "Armour Plate")
+        {
+            TankControllerScript hitTankScript = collision.transform.GetComponentInParent<TankControllerScript>();
+            ArmourPlateScript hitArmourScript = collision.transform.GetComponent<ArmourPlateScript>();
+            // Start at the current component and work upwards until you reach the hull/turret
+            /*
+            Transform parentComponent = collision.gameObject.transform;
+
+            while (parentComponent.name != "Hull" || parentComponent.name != "Turret")
+            {
+                parentComponent = parentComponent.parent;
+            }
+
+            TankControllerScript hitTankScript = collision.transform.GetComponentInParent<TankControllerScript>();
+            // This may not be necessary if the enemy is stationary!
+            hitTankScript.SendArmourStateData(
+                parentComponent.forward.normalized, // The main armour forward angle
+                collision.GetContact(0).point,  // The global collision contact point
+                penetration - collision.gameObject.GetComponent<ArmourPlateScript>().armourThickness,   // The difference in the armour thickness and shell penetration (>0 is better for the shooter)
+                collision.GetContact(0).normal - collision.transform.forward.normalized);   // The relative angle of the impact
+            */
+
+            // Cause damage if the armour is penned
+            if (penetration > hitArmourScript.armourThickness)
+            {
+                hitTankScript.CauseDamage(alphaDamage);
+            }
+        }
+
         Destroy(this.gameObject);
     }
 

@@ -31,11 +31,11 @@ public class CommunicationClient
             client = new TcpClient(hostName, port);
             connectedToServer = true;
 
-            LogData("Establised connection with host <" + hostName + "> on port " + port);
+            LogData("Establised connection with host " + hostName + " on port " + port);
         }
         catch (SocketException)
         {
-            LogData("ERROR: Could not connect with host <" + hostName + "> on port " + port + "!");
+            LogData("ERROR: Could not connect with host " + hostName + " on port " + port + "!");
         }
     }
 
@@ -77,6 +77,7 @@ public class CommunicationClient
         try
         {
             Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
 
             while (stopwatch.ElapsedMilliseconds < millisecondsTimeout)
             {
@@ -105,7 +106,7 @@ public class CommunicationClient
     {
         stream.Close();
         client.Close();
-        LogData("Terminated the connection to the host <" + hostName + "> on port " + port);
+        LogData("Terminated the connection to the host " + hostName + " on port " + port);
     }
 
     private void LogData(string data)

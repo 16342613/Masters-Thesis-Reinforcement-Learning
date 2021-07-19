@@ -8,7 +8,9 @@ enum ServerRequests
     // Given an observation, the server returns an action which follows the policy
     PREDICT,
     // Build up the replay buffer and learn the optimal policy
-    LEARN
+    BUILD_BUFFER,
+    // Test connection
+    TEST_CONNECTION
 }
 
 public class ArmourTrainerAI : MonoBehaviour
@@ -46,18 +48,23 @@ public class ArmourTrainerAI : MonoBehaviour
             FireRound();
         }
 
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            TakeAction(ObserveEnvironment());
-        }
-
         if (Input.GetKeyDown(KeyCode.S))
         {
-            string response = client.RequestResponse("HELLO WORLD");
+            ObserveAndTakeAction();
+        }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            Train();
+        }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            string response = client.RequestResponse(ServerRequests.TEST_CONNECTION.ToString() + " >|< Connection test! ");
             Debug.Log(response);
         }
 
-        Debug.Log(shooter.transform.right);
+        //Debug.Log(targetScript.GetHitpoints());
     }
 
     /// <summary>
@@ -119,7 +126,7 @@ public class ArmourTrainerAI : MonoBehaviour
         return new EnvironmentState(targetLocation, targetHullAngle, targetTurretAngle, targetHitpoints, shooterLocation, shooterPenetration, aimedPlate, aimedLocation, plateThickness);
     }
 
-    private float TakeAction(EnvironmentState state)
+    private object[] TakeAction(EnvironmentState state)
     {
         // Predict the action using the NN
         string response = client.RequestResponse(ServerRequests.PREDICT.ToString() + " >|< " + state.ToString());
@@ -177,22 +184,68 @@ public class ArmourTrainerAI : MonoBehaviour
         }
 
         int newHitpoints = targetScript.GetHitpoints();
-        float reward = 0;
+        float reward = -0.1f;
 
+        // This is a bit dodgy! The shell has a travel time so the direct action which fired the shell may not be rewarded!
         if (oldHitpoints > newHitpoints)
         {
-            reward = (oldHitpoints - newHitpoints);
-        }
-        else
-        {
-            reward = 0;
+            reward = (oldHitpoints - newHitpoints) * 0.1f;
         }
 
-        return 0;
+        return new object[] { bestActionIndex, reward };
     }
 
-    private void SendToReplayBuffer()
+    private int ObserveAndTakeAction()
     {
         // Send (Old state, action, reward, new state) to replay buffer
+
+        // Observe the environment
+        EnvironmentState currentState = ObserveEnvironment();
+        // Query the server to get the best action for that observation
+        object[] actionReward = TakeAction(currentState);
+        EnvironmentState newState = ObserveEnvironment();
+
+        // Send the state transition data to the server, which puts it into the replay buffer
+        string stateTransitionString = currentState.ToString()
+            + " >|< " + actionReward[0].ToString()
+            + " >|< " + actionReward[1].ToString()
+            + " >|< " + newState.ToString();
+
+        // Return the size of the replay buffer in the client
+        return int.Parse(client.RequestResponse(ServerRequests.BUILD_BUFFER.ToString() + " >|< " + stateTransitionString));
     }
+
+    private int PerformEpisode(int maxSteps = 100)
+    {
+        int steps = 0;
+
+        while ((targetScript.GetHitpoints() > 0) || (steps < maxSteps))
+        {
+            ObserveAndTakeAction();
+            steps++;
+        }
+
+        return steps;
+    }
+
+    public void Train()
+    {
+        int bufferPopulation = 0;
+
+        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+        sw.Start();
+
+        while (bufferPopulation != 500)
+        {
+            bufferPopulation = ObserveAndTakeAction();
+        }
+
+        sw.Stop();
+
+        Debug.Log(sw.ElapsedMilliseconds);
+
+        
+    }
+
+
 }

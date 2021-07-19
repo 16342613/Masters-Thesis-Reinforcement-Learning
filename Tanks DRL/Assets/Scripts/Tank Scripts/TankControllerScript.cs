@@ -220,4 +220,22 @@ public abstract class TankControllerScript : MonoBehaviour
     {
         return this.hitPoints;
     }
+
+    public void CauseDamage(int shellAlphaDamage)
+    {
+        if (hitPoints < shellAlphaDamage)
+        {
+            hitPoints = 0;
+            DestroyTank();
+        }
+        else
+        {
+            hitPoints -= shellAlphaDamage;
+        }
+    }
+
+    public void DestroyTank()
+    {
+        // TODO
+    }
 }

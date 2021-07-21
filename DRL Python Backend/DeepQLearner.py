@@ -1,4 +1,5 @@
-import tensorflow
+import tensorflow as tf
+import tensorflow.keras.backend as K
 from tensorflow.keras import layers
 import numpy as np
 from tensorflow import keras
@@ -25,36 +26,28 @@ class DeepQLearner:
                                   "System.Int32": self.__parse_float  # Treat integers as floats
                                   })
 
-    def sample_replay_buffer(self):
-        pass
+    def set_up_networks(self):
+        self.predictionNetwork = self.create_neural_network()
+        self.targetNetwork = self.create_neural_network()
+        self.targetNetwork.set_weights(self.predictionNetwork.get_weights())
+
+
+    def update_target_network(self):
+        self.targetNetwork.set_weights(self.predictionNetwork.get_weights())
+
 
     def create_neural_network(self):
-        # Create the neural network
-
-        # inputLayer = layers.Input(self.inputShape)
-        #
-        # hiddenLayers = layers.Dense(10, activation="relu")(inputLayer)
-        # hiddenLayers = layers.Dense(10, activation="relu")(hiddenLayers)
-        # hiddenLayers = layers.Dense(10, activation="relu")(hiddenLayers)
-        #
-        # outputLayer = layers.Dense(self.actionCount, activation="linear")(hiddenLayers)
-        #
-        # return Model(inputs=inputLayer, outputs=outputLayer)
-
         model = keras.Sequential([
             layers.Dense(10, input_shape=self.inputShape, activation="relu"),
             layers.Dense(10, activation="relu"),
             layers.Dense(10, activation="relu"),
-            layers.Dense(self.actionCount, activation="sigmoid")
+            layers.Dense(self.actionCount, activation="relu")
         ])
 
-        model.compile(optimizer="adam", loss="Huber", metrics=['accuracy'])
+        model.compile(optimizer="adam", loss=self.dql_loss, metrics=['accuracy'], run_eagerly=True)
 
         return model
 
-    def start_learning(self):
-        self.predictionNetwork = self.create_neural_network()
-        self.targetNetwork = self.create_neural_network()
 
     def predict_action(self, stringInput):
         parsedInputs = self.parse_string_input(stringInput)
@@ -87,10 +80,38 @@ class DeepQLearner:
 
     def add_to_replay_buffer(self, stringInput):
         splitString = stringInput.split(" >|< ")
-        transitionData = StateTransition(self.parse_string_input(" >|< ".join([splitString[0], splitString[1]])),
-                             self.__parse_float(splitString[2]),
-                             self.__parse_float(splitString[3]),
-                             self.parse_string_input(" >|< ".join([splitString[4], splitString[5]])))
+        transitionData = StateTransition(self.parse_string_input(" >|< ".join([splitString[0], splitString[1]]))[0],
+                                         self.__parse_float(splitString[2])[0],
+                                         self.__parse_float(splitString[3])[0],
+                                         self.parse_string_input(" >|< ".join([splitString[4], splitString[5]]))[0])
 
         self.replayBuffer.populate_buffer(transitionData)
         return str(len(self.replayBuffer.buffer))
+
+    def dql_loss(self, y_true, y_pred):
+
+        lossSum = tf.cast(tf.constant(0), dtype=tf.float32)
+        for i in range(len(y_true)):
+            actualY = y_true[i][0]
+            predictedY = tf.reduce_max(y_pred[i][0])
+            loss = tf.square(actualY - predictedY)
+            lossSum = lossSum + loss
+
+        loss = lossSum / len(y_true)
+        return loss
+
+
+    def train(self):
+        # Sample from replay buffer
+        sampledTransitions = self.replayBuffer.sample_buffer(self.batchSize)
+        trainX = np.array([[transition.initialState] for transition in sampledTransitions])
+        trainY = []
+
+        # Calculate the outputs of the target network, taking the reward and discount factor into account
+        for i in range(len(sampledTransitions)):
+            trainY.append(sampledTransitions[i].reward + (self.discountFactor * np.max(self.targetNetwork.predict(sampledTransitions[i].newState.reshape(1, self.inputShape[0])))))
+
+        trainY = np.array(trainY)
+        self.predictionNetwork.fit(trainX, trainY, epochs=10)
+
+

@@ -16,6 +16,8 @@ public abstract class TankControllerScript : MonoBehaviour
     private Transform muzzle;
     public bool isPlayer = false;
     [SerializeField] private int hitPoints;
+    private int fullHitpoints;
+    public int tankIndex = 1;
 
     private VisualEffect muzzleSmokeVFX;
     private VisualEffect muzzleBlastVFX;
@@ -34,6 +36,8 @@ public abstract class TankControllerScript : MonoBehaviour
 
     public virtual void Start()
     {
+        fullHitpoints = hitPoints;
+
         if (isDummy == false)
         {
             gameManagerScript = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
@@ -219,6 +223,12 @@ public abstract class TankControllerScript : MonoBehaviour
     public int GetHitpoints()
     {
         return this.hitPoints;
+    }
+
+    // Only use this in training!
+    public void ResetHitpoint()
+    {
+        hitPoints = fullHitpoints;
     }
 
     public void CauseDamage(int shellAlphaDamage)

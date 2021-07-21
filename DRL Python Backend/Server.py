@@ -21,6 +21,8 @@ class Server:
         self.deepQLearner = deepQLearner
         self.commands = dict({"PREDICT": self.deepQLearner.predict_action,
                               "BUILD_BUFFER": self.deepQLearner.add_to_replay_buffer,
+                              "TRAIN": self.deepQLearner.train,
+                              "UPDATE_TARGET_NETWORK": self.deepQLearner.update_target_network,
                               "TEST_CONNECTION": self.__connection_test})
 
     def start_server(self):
@@ -37,12 +39,20 @@ class Server:
         while self.running is True:
             message = clientSocket.recv(1024).decode()
             if len(message) > 0:
-                self.__log_data("Received request from " + clientSocket.getsockname()[0])
+                self.__log_data("Received request " + message + " from " + clientSocket.getsockname()[0])
                 splitMessage = message.split(" >|< ")
-                # response = self.commands[splitMessage[0]](splitMessage[1] + " >|< " + splitMessage[2])
-                response = self.commands[splitMessage[0]](" >|< ".join([splitMessage[i + 1] for i in range(len(splitMessage) - 1)]))
-                clientSocket.send(str.encode(response))
-                self.__log_data("Sent response " + response + " to " + clientSocket.getsockname()[0])
+
+                if len(splitMessage) > 1:
+                    # Accept the request and send the response
+                    response = self.commands[splitMessage[0]](" >|< ".join([splitMessage[i + 1] for i in range(len(splitMessage) - 1)]))
+                    clientSocket.send(str.encode(response))
+                    self.__log_data("Sent response " + response + " to " + clientSocket.getsockname()[0])
+                else:
+                    # Handle the request, but no response is necessary
+                    self.commands[splitMessage[0]]()
+
+
+
 
     def __log_data(self, toPrint, overrideLogPermissions=False):
         if (self.verboseLogging is True) or (overrideLogPermissions is True):

@@ -10,8 +10,6 @@ class ReplayBuffer:
 
 
     def populate_buffer(self, stateTransition):
-        print(len(self.buffer))
-
         if len(self.buffer) == self.capacity:
             # Remove the last item in the queue
             self.buffer.pop(0)

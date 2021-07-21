@@ -15,10 +15,12 @@ public class CommunicationClient
     private TcpClient client;
     private string logFilePath;
     private bool connectedToServer;
+    private bool verboseLogging;
 
-    public CommunicationClient(string logFilePath)
+    public CommunicationClient(string logFilePath, bool verboseLogging = true)
     {
         this.logFilePath = logFilePath;
+        this.verboseLogging = true;
         FileHandler.ClearFile(logFilePath);
     }
 
@@ -31,11 +33,11 @@ public class CommunicationClient
             client = new TcpClient(hostName, port);
             connectedToServer = true;
 
-            LogData("Establised connection with host " + hostName + " on port " + port);
+            LogData("Establised connection with host " + hostName + " on port " + port, true);
         }
         catch (SocketException)
         {
-            LogData("ERROR: Could not connect with host " + hostName + " on port " + port + "!");
+            LogData("ERROR: Could not connect with host " + hostName + " on port " + port + "!", true);
         }
     }
 
@@ -57,7 +59,7 @@ public class CommunicationClient
         }
         catch (NullReferenceException)
         {
-            LogData("ERROR: Unable to send the message to the host!");
+            LogData("ERROR: Unable to send the message to the host!", true);
         }
     }
 
@@ -92,11 +94,11 @@ public class CommunicationClient
                 }
             }
 
-            LogData("TIMEOUT");
+            LogData("TIMEOUT", true);
         }
         catch (Exception e)
         {
-            LogData("ERROR: " + e.Message + "!");
+            LogData("ERROR: " + e.Message + "!", true);
         }
 
         return null;
@@ -109,8 +111,11 @@ public class CommunicationClient
         LogData("Terminated the connection to the host " + hostName + " on port " + port);
     }
 
-    private void LogData(string data)
+    private void LogData(string data, bool criticalLog = false)
     {
-        FileHandler.WriteToFile(logFilePath, DateTime.Now.ToString("HH:mm:ss tt") + " : " + data);
+        if (this.verboseLogging == true || criticalLog == true)
+        {
+            FileHandler.WriteToFile(logFilePath, DateTime.Now.ToString("HH:mm:ss tt") + " : " + data);
+        }
     }
 }

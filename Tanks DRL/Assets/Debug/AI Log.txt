@@ -1,0 +1,10 @@
+Episode : 0 ; Steps : 200 ; Reward : -20.00004 ; Epsilon : 1
+Episode : 1 ; Steps : 200 ; Reward : -20.00004 ; Epsilon : 0.99
+Episode : 2 ; Steps : 200 ; Reward : -20.00004 ; Epsilon : 0.98
+Episode : 3 ; Steps : 200 ; Reward : -20.00004 ; Epsilon : 0.97
+Episode : 4 ; Steps : 200 ; Reward : -20.00004 ; Epsilon : 0.96
+Episode : 5 ; Steps : 200 ; Reward : -20.00004 ; Epsilon : 0.95
+Episode : 6 ; Steps : 200 ; Reward : -20.00004 ; Epsilon : 0.9400001
+Episode : 7 ; Steps : 200 ; Reward : -20.00004 ; Epsilon : 0.9300001
+Episode : 8 ; Steps : 200 ; Reward : -20.00004 ; Epsilon : 0.9200001
+Episode : 9 ; Steps : 200 ; Reward : -20.00004 ; Epsilon : 0.9100001

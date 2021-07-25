@@ -11,11 +11,13 @@ public class EnvironmentState : MonoBehaviour
     public int tankIndex;
 
     public Vector3 shooterLocation;
+    public Vector3 shooterForward;
     public float shooterPenetration;
+    public int firedRound;
     public Vector3 aimedLocation;
     public float plateThickness;
 
-    public EnvironmentState(Vector3 enemyLocation, Vector3 enemyHullAngle, Vector3 enemyTurretAngle, int enemyHitpoints, int tankIndex, Vector3 shooterLocation, float shooterPenetration, Vector3 aimedLocation, float plateThickness)
+    public EnvironmentState(Vector3 enemyLocation, Vector3 enemyHullAngle, Vector3 enemyTurretAngle, int enemyHitpoints, int tankIndex, Vector3 shooterLocation, Vector3 shooterForward, float shooterPenetration, Vector3 aimedLocation, float plateThickness)
     {
         this.enemyLocation = enemyLocation;
         this.enemyHullAngle = enemyHullAngle;
@@ -23,19 +25,7 @@ public class EnvironmentState : MonoBehaviour
         this.enemyHitpoints = enemyHitpoints;
         this.tankIndex = tankIndex;
         this.shooterLocation = shooterLocation;
-        this.shooterPenetration = shooterPenetration;
-        this.aimedLocation = aimedLocation;
-        this.plateThickness = plateThickness;
-    }
-
-    public void SetData(Vector3 enemyLocation, Vector3 enemyHullAngle, Vector3 enemyTurretAngle, int enemyHitpoints, int tankIndex, Vector3 shooterLocation, float shooterPenetration, Vector3 aimedLocation, float plateThickness)
-    {
-        this.enemyLocation = enemyLocation;
-        this.enemyHullAngle = enemyHullAngle;
-        this.enemyTurretAngle = enemyTurretAngle;
-        this.enemyHitpoints = enemyHitpoints;
-        this.tankIndex = tankIndex;
-        this.shooterLocation = shooterLocation;
+        this.shooterForward = shooterForward;
         this.shooterPenetration = shooterPenetration;
         this.aimedLocation = aimedLocation;
         this.plateThickness = plateThickness;
@@ -44,13 +34,19 @@ public class EnvironmentState : MonoBehaviour
 
     public override string ToString()
     {
-        return enemyLocation.GetType().ToString() + " | " + enemyHullAngle.GetType().ToString() + " | " + enemyTurretAngle.GetType().ToString() + " | " 
-            + enemyHitpoints.GetType().ToString() + " | " + tankIndex.GetType().ToString() + " | " + shooterLocation.GetType().ToString() + " | " 
-            + shooterPenetration.GetType().ToString() + " | " + aimedLocation.GetType().ToString() + " | " + plateThickness.GetType().ToString()
+        /*return enemyLocation.GetType().ToString() + " | " + enemyHullAngle.GetType().ToString() + " | " + enemyTurretAngle.GetType().ToString() + " | " 
+            + enemyHitpoints.GetType().ToString() + " | " + tankIndex.GetType().ToString() + " | " + shooterLocation.GetType().ToString() + " | " + shooterForward.GetType().ToString() + " | "
+            + shooterPenetration.GetType().ToString() + " | " + firedRound.GetType().ToString() + " | " + aimedLocation.GetType().ToString() + " | " + plateThickness.GetType().ToString()
 
             + " >|< " 
             
             + enemyLocation.ToString() + " | " + enemyHullAngle.ToString() + " | " + enemyTurretAngle.ToString() + " | " + enemyHitpoints.ToString() + " | "
-            + tankIndex.ToString() + " | " + shooterLocation.ToString() + " | " + shooterPenetration + " | " + aimedLocation.ToString() + " | " + plateThickness;
+            + tankIndex.ToString() + " | " + shooterLocation.ToString() + " | " + shooterForward.ToString() + " | " + shooterPenetration + " | " + firedRound + " | " + aimedLocation.ToString() + " | " + plateThickness;*/
+
+        return enemyLocation.x.GetType().ToString() + " | " + shooterLocation.x.GetType().ToString()
+
+            + " >|< "
+
+            + enemyLocation.x.ToString() + " | " + shooterLocation.x.ToString();
     }
 }

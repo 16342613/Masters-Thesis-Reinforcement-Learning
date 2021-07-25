@@ -131,6 +131,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   muzzleVelocity: 600
   penetration: 175
+  alphaDamage: 100
 --- !u!96 &4013399724426051756
 TrailRenderer:
   serializedVersion: 2

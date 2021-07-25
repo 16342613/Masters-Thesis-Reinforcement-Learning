@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.IO;
 
 public class HelperScript : MonoBehaviour
 {
@@ -37,5 +38,23 @@ public class HelperScript : MonoBehaviour
     public static void PrintList<T>(List<T> toPrint)
     {
         Debug.Log(string.Join(" | ", toPrint.ToArray()));
+    }
+
+    public static Vector3 GetDirection(Vector3 from, Vector3 to)
+    {
+        Vector3 heading = to - from;
+
+        return heading / heading.magnitude;
+    }
+
+    public static void ClearLogs(string logFolderPath = "Assets/Debug")
+    {
+        foreach(string logFilePath in Directory.GetFiles(logFolderPath))
+        {
+            if (logFilePath.EndsWith(".txt") == true)
+            {
+                FileHandler.ClearFile(logFilePath);
+            }
+        }
     }
 }

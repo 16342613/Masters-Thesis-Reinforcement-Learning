@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.Threading;
 
 enum ServerRequests
 {
@@ -16,7 +17,13 @@ enum ServerRequests
     // Update the target neural network on the server
     UPDATE_TARGET_NETWORK,
     // Test connection
-    TEST_CONNECTION
+    TEST_CONNECTION,
+    // Echo a string on the server's console
+    ECHO,
+    // Plot the rewards and steps on the server
+    PLOT,
+    // Save the neural networks on the server
+    SAVE_NETWORKS
 }
 
 public class ArmourTrainerAI : MonoBehaviour
@@ -38,7 +45,6 @@ public class ArmourTrainerAI : MonoBehaviour
     private List<float> episodicRewards = new List<float>();
     public float epsilon = 1;
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -47,7 +53,8 @@ public class ArmourTrainerAI : MonoBehaviour
         client = new CommunicationClient("Assets/Debug/Communication Log.txt");
         client.ConnectToServer("DESKTOP-23VITDP", 8000);
 
-        FileHandler.ClearFile("Assets/Debug/AI Log.txt");
+        // Clear the log files
+        HelperScript.ClearLogs();
     }
 
     // Update is called once per frame
@@ -66,7 +73,8 @@ public class ArmourTrainerAI : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.X))
         {
-            Train();
+            //Train();
+            StartCoroutine(Train());
         }
 
         if (Input.GetKeyDown(KeyCode.U))
@@ -80,7 +88,7 @@ public class ArmourTrainerAI : MonoBehaviour
             Debug.Log(response);
         }
 
-        //Debug.Log(targetScript.GetHitpoints());
+        //TestReward();
     }
 
     /// <summary>
@@ -125,16 +133,16 @@ public class ArmourTrainerAI : MonoBehaviour
         int targetHitpoints = targetScript.GetHitpoints();
 
         Vector3 shooterLocation = shooter.transform.position;
-        //Vector3 shooterDirection = shooter.transform.forward.normalized;
+        Vector3 shooterDirection = shooter.transform.forward.normalized;
         float shooterPenetration = round.GetComponent<ShellScript>().penetration;
         Vector3 aimedLocation = Vector3.zero;
         int tankIndex = -1;
         float plateThickness = -1;
         RaycastHit hit;
 
-        if (Physics.Raycast(shooter.transform.position, shooter.transform.forward, out hit, Mathf.Infinity))
+        if (Physics.Raycast(shooter.transform.position, shooter.transform.forward, out hit, 200))
         {
-            if (hit.collider.gameObject.tag == "Enemy Tank")
+            if (hit.collider.gameObject.tag == "Armour Plate")
             {
                 // aimedLocation = hit.collider.transform.InverseTransformPoint(hit.point);
                 aimedLocation = hit.point;
@@ -143,18 +151,19 @@ public class ArmourTrainerAI : MonoBehaviour
             }
             else
             {
-                aimedLocation = hit.point;
+                aimedLocation = shooterLocation + (shooterDirection * 200f);
             }
         }
 
-        return new EnvironmentState(targetLocation, targetHullAngle, targetTurretAngle, targetHitpoints, tankIndex, shooterLocation, shooterPenetration, aimedLocation, plateThickness);
+        return new EnvironmentState(targetLocation, targetHullAngle, targetTurretAngle, targetHitpoints, tankIndex, shooterLocation, shooterDirection, shooterPenetration, aimedLocation, plateThickness);
     }
 
-    private object[] TakeAction(EnvironmentState state)
+    private object[] TakeAction(EnvironmentState state, int actionRepeat = 1)
     {
         // Predict the action using the NN
         string response = client.RequestResponse(ServerRequests.PREDICT.ToString() + " >|< " + state.ToString());
         List<float> parsedResponse = HelperScript.ParseStringToFloats(response, " | ");
+        HelperScript.PrintList(parsedResponse);
 
         int bestActionIndex = parsedResponse.IndexOf(parsedResponse.Max());
         int oldHitpoints = targetScript.GetHitpoints();
@@ -162,64 +171,100 @@ public class ArmourTrainerAI : MonoBehaviour
         // Use epsilon-greedy for exploration
         if (Random.Range(0, 1) < epsilon)
         {
-            bestActionIndex = Mathf.RoundToInt(Random.Range(0, parsedResponse.Count - 1));
+            bestActionIndex = Mathf.RoundToInt(Random.Range(0, 1f));
         }
 
-        switch (bestActionIndex)
+        bool firedRound = false;
+
+        for (int i = 0; i < actionRepeat; i++)
         {
-            // Shoot
-            case 0:
-                FireRound();
-                break;
+            /*
+            switch (bestActionIndex)
+            {
+                // Shoot
+                case 0:
+                    FireRound();
+                    firedRound = true;
+                    break;
 
-            // Move left
-            case 1:
-                shooter.transform.position -= shooter.transform.right * 0.1f;
-                break;
+                // Move left
+                case 1:
+                    shooter.transform.position -= shooter.transform.right * 0.1f;
+                    break;
 
-            // Move right
-            case 2:
-                shooter.transform.position += shooter.transform.right * 0.1f;
-                break;
+                // Move right
+                case 2:
+                    shooter.transform.position += shooter.transform.right * 0.1f;
+                    break;
 
-            // Move up
-            case 3:
-                shooter.transform.position += shooter.transform.up * 0.1f;
-                break;
+                // Move up
+                case 3:
+                    shooter.transform.position += shooter.transform.up * 0.1f;
+                    break;
 
-            // Move down
-            case 4:
-                shooter.transform.position -= shooter.transform.up * 0.1f;
-                break;
+                // Move down
+                case 4:
+                    shooter.transform.position -= shooter.transform.up * 0.1f;
+                    break;
 
-            // Look left
-            case 5:
-                shooter.transform.eulerAngles += new Vector3(0, 1, 0);
-                break;
+                // Look left
+                case 5:
+                    shooter.transform.eulerAngles += new Vector3(0, 1, 0);
+                    break;
 
-            // Look right
-            case 6:
-                shooter.transform.eulerAngles += new Vector3(0, -1, 0);
-                break;
+                // Look right
+                case 6:
+                    shooter.transform.eulerAngles += new Vector3(0, -1, 0);
+                    break;
 
-            // Look up
-            case 7:
-                shooter.transform.eulerAngles += new Vector3(1, 0, 0);
-                break;
+                // Look up
+                case 7:
+                    shooter.transform.eulerAngles += new Vector3(-1, 0, 0);
+                    break;
 
-            // Look down
-            case 8:
-                shooter.transform.eulerAngles += new Vector3(1, 0, 0);
-                break;
+                // Look down
+                case 8:
+                    shooter.transform.eulerAngles += new Vector3(1, 0, 0);
+                    break;
 
-            // Take no action
-            case 9:
-                break;
+                // Take no action
+                case 9:
+                    break;
+            }
+
+            if (firedRound == true) { break; }*/
+
+            switch (bestActionIndex)
+            {
+                // Move left
+                case 0:
+                    shooter.transform.position -= shooter.transform.right * 0.1f;
+                    break;
+
+                // Move right
+                case 1:
+                    shooter.transform.position += shooter.transform.right * 0.1f;
+                    break;
+            }
         }
 
-        int newHitpoints = targetScript.GetHitpoints();
+        EnvironmentState newEnvironment = ObserveEnvironment();
+        if (bestActionIndex == 0)
+        {
+            newEnvironment.firedRound = 1;
+        }
+        else
+        {
+            newEnvironment.firedRound = 0;
+        }
+
+        /*int newHitpoints = targetScript.GetHitpoints();
+
+        Vector3 idealRotation = (Quaternion.LookRotation(HelperScript.GetDirection(newEnvironment.shooterLocation, newEnvironment.enemyLocation), Vector3.up) * Vector3.forward).normalized;
+        float reward = 1 / (Vector3.Angle(newEnvironment.shooterForward, idealRotation) * (1 / Vector3.Distance(newEnvironment.shooterLocation, newEnvironment.enemyLocation))) * (1 / Vector3.Distance(newEnvironment.shooterLocation, newEnvironment.enemyLocation)) * 750;
+
         // The default reward
-        float reward = -0.1f;
+        //float reward = -0.1f;
 
         // If the terminal state has been reached
         if (oldHitpoints == 0)
@@ -231,26 +276,36 @@ public class ArmourTrainerAI : MonoBehaviour
         // It may also be a good idea to reward even more if the action kills the enemy tank
         else if (oldHitpoints > newHitpoints)
         {
-            reward = (oldHitpoints - newHitpoints) * 0.1f;
-        }
+            reward += (oldHitpoints - newHitpoints) * 100000;
+        }*/
 
-        // If the shooter is aiming at the tank, then give a positive reward
-        if (ObserveEnvironment().tankIndex >= 0)
+        float reward = 0;
+
+        if (Mathf.Abs(state.enemyLocation.x - state.shooterLocation.x) > Mathf.Abs(newEnvironment.enemyLocation.x - newEnvironment.shooterLocation.x))
         {
-            reward = 0.2f;
+            reward += 0.2f;
+        }
+        else
+        {
+            reward -= 0.2f;
+        }
+        // If the shooter is aiming at the tank, then give a positive reward
+        if (newEnvironment.tankIndex >= 0)
+        {
+            reward += 0.5f;
         }
 
         return new object[] { bestActionIndex, reward, false };
     }
 
-    private object[] ObserveAndTakeAction(ServerRequests request)
+    private object[] ObserveAndTakeAction(ServerRequests request, int actionRepeat = 3)
     {
         // Send (Old state, action, reward, new state) to replay buffer
 
         // Observe the environment
         EnvironmentState currentState = ObserveEnvironment();
         // Query the server to get the best action for that observation
-        object[] actionReward = TakeAction(currentState);
+        object[] actionReward = TakeAction(currentState, actionRepeat);
         EnvironmentState newState = ObserveEnvironment();
 
         // Send the state transition data to the server, which puts it into the replay buffer
@@ -263,31 +318,36 @@ public class ArmourTrainerAI : MonoBehaviour
         return new object[] { client.RequestResponse(request.ToString() + " >|< " + stateTransitionString), actionReward[2], actionReward[1] };
     }
 
-    private List<float> PerformEpisode(int maxSteps)
+    /*private List<float> PerformEpisode(int maxSteps)
     {
-        int steps = 0;
+        int stepCount = 0;
         float episodeReward = 0;
 
-        while (steps < maxSteps)
+        for (int i = 0; i < maxSteps; i++)
         {
             object[] stepOutput = ObserveAndTakeAction(ServerRequests.BUILD_BUFFER);
-            steps++;
+            stepCount++;
 
             episodeReward += float.Parse(stepOutput[2].ToString());
+            yield return new WaitForSeconds(0.1f);
 
             // Reset the environment and leave this episode if the episode has terminated
             if (bool.Parse(stepOutput[1].ToString()) == true) { break; }
         }
 
         ResetEnvironment();
-        return new List<float> { (float) steps, episodeReward};
-    }
+        //return new List<float> { (float)stepCount, episodeReward };
+        rewards.Add(episodeReward);
+        steps.Add(stepCount);
+    */
 
-    public void Train(int episodeCount = 100, int maxEpisodeSteps = 200, int networkUpdateInterval = 10, int epsilonAnnealInterval = 2, float epsilonAnnealAmount = 0.01f)
+    public IEnumerator Train(int episodeCount = 400, int maxEpisodeSteps = 250, int networkUpdateInterval = 30, int epsilonAnnealInterval = 1, float epsilonAnnealAmount = 0.00333f, int plotInterval = 30)
     {
+        ResetEnvironment();
+        //client.SendMessage(ServerRequests.ECHO.ToString() + " >|< Started training!");
         // Build up the replay buffer so you can sample transitions
         int bufferPopulation = 0;
-        while (bufferPopulation != 500)
+        for (int i=0; i < 600; i++)
         {
             object[] stepOutput = ObserveAndTakeAction(ServerRequests.BUILD_BUFFER);
             bufferPopulation = int.Parse(stepOutput[0].ToString());
@@ -296,46 +356,119 @@ public class ArmourTrainerAI : MonoBehaviour
             {
                 ResetEnvironment();
             }
+
+            yield return null;
         }
 
+        List<float> rewards = new List<float>();
+        List<float> stepCounts = new List<float>();
 
         for (int i = 0; i < episodeCount; i++)
         {
             // Spawn the shooter in a random location within the bounds
-            shooter.transform.position = new Vector3(Random.Range(minimumBounds.x, maximumBounds.x), Random.Range(minimumBounds.y, maximumBounds.y), Random.Range(minimumBounds.z, maximumBounds.z));
+            /*shooter.transform.position = new Vector3(Random.Range(minimumBounds.x, maximumBounds.x), Random.Range(minimumBounds.y, maximumBounds.y), Random.Range(minimumBounds.z, maximumBounds.z));
             while (Vector3.Distance(shooter.transform.position, target.transform.position) < proximityThreshold)
             {
                 shooter.transform.position = new Vector3(Random.Range(minimumBounds.x, maximumBounds.x), Random.Range(minimumBounds.y, maximumBounds.y), Random.Range(minimumBounds.z, maximumBounds.z));
-            }
+                FileHandler.WriteToFile("Assets/Debug/Debug Log.txt", System.DateTime.Now.ToString("HH:mm:ss tt") + " : Retried spawning");
+            }*/
 
             if (i % networkUpdateInterval == 0)
             {
-                client.SendMessage(ServerRequests.UPDATE_TARGET_NETWORK.ToString());
+                client.RequestResponse(ServerRequests.UPDATE_TARGET_NETWORK.ToString() + " >|< Placeholder");
             }
 
             // Perform an episode
-            List<float> episodeDetails = PerformEpisode(maxEpisodeSteps);
-            FileHandler.WriteToFile("Assets/Debug/AI Log.txt", "Episode : " + i + " ; Steps : " + episodeDetails[0] + " ; Reward : " + episodeDetails[1] + " ; Epsilon : " + epsilon);
-            // Debug.Log("Episode : " + i + " ; Steps : " + episodeDetails[0] + " ; Reward : " + episodeDetails[1]);
+            //List<float> episodeDetails = PerformEpisode(maxEpisodeSteps);
+
+            int stepCount = 0;
+            float episodeReward = 0;
+
+            for (int j = 0; j < maxEpisodeSteps; j++)
+            {
+                object[] stepOutput = ObserveAndTakeAction(ServerRequests.BUILD_BUFFER);
+                stepCount++;
+
+                episodeReward += float.Parse(stepOutput[2].ToString());
+
+                // Reset the environment and leave this episode if the episode has terminated
+                if (bool.Parse(stepOutput[1].ToString()) == true) { break; }
+                yield return new WaitForSeconds(0.001f);
+            }
+
+            rewards.Add(episodeReward);
+            stepCounts.Add(stepCount);
+
+            FileHandler.WriteToFile("Assets/Debug/AI Log.txt", System.DateTime.Now.ToString("HH:mm:ss tt") + " ==> Episode : " + i + " ; Steps : " + stepCounts[i] + " ; Reward : " + rewards[i] + " ; Epsilon : " + epsilon);
             client.SendMessage(ServerRequests.TRAIN.ToString());
 
             // Anneal epsilon over time
-            if ((episodeCount % epsilonAnnealInterval == 0) && (epsilon > 0))
+            if ((i % epsilonAnnealInterval == 0) && (epsilon >= 0.15f))
             {
                 epsilon -= epsilonAnnealAmount;
             }
+
+            if ((i % plotInterval == 0) && (i > 0))
+            {
+                PlotProgress(rewards.Skip(rewards.Count - plotInterval).ToList());
+                client.SendMessage(ServerRequests.SAVE_NETWORKS.ToString());
+            }
+
+            ResetEnvironment();
         }
     }
 
     private void ResetEnvironment()
     {
         // Spawn the shooter in a random location within the bounds
-        shooter.transform.position = new Vector3(Random.Range(minimumBounds.x, maximumBounds.x), Random.Range(minimumBounds.y, maximumBounds.y), Random.Range(minimumBounds.z, maximumBounds.z));
+        /*shooter.transform.position = new Vector3(Random.Range(minimumBounds.x, maximumBounds.x), Random.Range(minimumBounds.y, maximumBounds.y), Random.Range(minimumBounds.z, maximumBounds.z));
         while (Vector3.Distance(shooter.transform.position, target.transform.position) < proximityThreshold)
         {
             shooter.transform.position = new Vector3(Random.Range(minimumBounds.x, maximumBounds.x), Random.Range(minimumBounds.y, maximumBounds.y), Random.Range(minimumBounds.z, maximumBounds.z));
         }
+        shooter.transform.eulerAngles = new Vector3(Random.Range(-45, 45), Random.Range(0, 360), 0);
+        //AimShooter();*/
 
+        shooter.transform.position = new Vector3(Random.Range(0, 10f), 0.2f, 0);
+        shooter.transform.eulerAngles = new Vector3(0, 0, 0);
         targetScript.ResetHitpoint();
+    }
+
+    private void PlotProgress(List<float> rewards)
+    {
+        try
+        {
+            string requestContent = "";
+
+            for (int i = 0; i < rewards.Count; i++)
+            {
+                if (i < (rewards.Count - 1))
+                {
+                    requestContent += rewards[i] + " | ";
+                }
+                else
+                {
+                    requestContent += rewards[i];
+                }
+            }
+
+            client.RequestResponse(ServerRequests.PLOT + " >|< " + requestContent);
+        }
+        catch (System.Exception e)
+        {
+            FileHandler.WriteToFile("Assets/Debug/AI Log.txt", "PLOT ERROR: " + e.Message);
+        }
+    }
+
+    private void TestReward()
+    {
+        int oldHitpoints = targetScript.GetHitpoints();
+
+        EnvironmentState newEnvironment = ObserveEnvironment();
+        Vector3 idealRotation = (Quaternion.LookRotation(HelperScript.GetDirection(newEnvironment.shooterLocation, newEnvironment.enemyLocation), Vector3.up) * Vector3.forward).normalized;
+
+        float reward = 1 / (Vector3.Angle(newEnvironment.shooterForward, idealRotation) * (1 / Vector3.Distance(newEnvironment.shooterLocation, newEnvironment.enemyLocation))) * (1 / Vector3.Distance(newEnvironment.shooterLocation, newEnvironment.enemyLocation));
+
+        Debug.Log(idealRotation + " ; " + newEnvironment.shooterForward + " ; " + reward + " ; " + newEnvironment.tankIndex);
     }
 }

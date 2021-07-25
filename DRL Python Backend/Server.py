@@ -13,7 +13,7 @@ class Server:
 
         self.running = False
         # Initialise an empty dql learner. This is just a placeholder
-        self.deepQLearner = DeepQLearner(0, 0, 0, 0, 0, 0)
+        self.deepQLearner = DeepQLearner(0, 0, 0, 0)
         # This will be populated when the dql learner ia set
         self.commands = dict()
 
@@ -23,7 +23,10 @@ class Server:
                               "BUILD_BUFFER": self.deepQLearner.add_to_replay_buffer,
                               "TRAIN": self.deepQLearner.train,
                               "UPDATE_TARGET_NETWORK": self.deepQLearner.update_target_network,
-                              "TEST_CONNECTION": self.__connection_test})
+                              "TEST_CONNECTION": self.__connection_test,
+                              "ECHO": self.__echo,
+                              "PLOT": self.deepQLearner.plot_progress,
+                              "SAVE_NETWORKS": self.deepQLearner.save_models})
 
     def start_server(self):
         self.serverSocket = socket.socket()
@@ -44,19 +47,25 @@ class Server:
 
                 if len(splitMessage) > 1:
                     # Accept the request and send the response
-                    response = self.commands[splitMessage[0]](" >|< ".join([splitMessage[i + 1] for i in range(len(splitMessage) - 1)]))
+                    response = self.commands[splitMessage[0]](
+                        " >|< ".join([splitMessage[i + 1] for i in range(len(splitMessage) - 1)]))
                     clientSocket.send(str.encode(response))
                     self.__log_data("Sent response " + response + " to " + clientSocket.getsockname()[0])
                 else:
                     # Handle the request, but no response is necessary
                     self.commands[splitMessage[0]]()
 
-
-
-
     def __log_data(self, toPrint, overrideLogPermissions=False):
         if (self.verboseLogging is True) or (overrideLogPermissions is True):
             print(datetime.now().strftime("%H:%M:%S") + " : " + toPrint)
 
     def __connection_test(self, clientMessage):
-        return "Hello from " + socket.gethostname() + " on port " + str(self.port) + ". I have received your message with content < " + clientMessage + " >."
+        return "Hello from " + socket.gethostname() + " on port " + str(
+            self.port) + ". I have received your message with content < " + clientMessage + " >."
+
+    def __echo(self, toEcho):
+        try:
+            self.__log_data(toEcho, overrideLogPermissions=True)
+            return "1"
+        except:
+            return "0"

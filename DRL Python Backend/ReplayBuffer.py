@@ -1,13 +1,13 @@
 import random
 
+
 class ReplayBuffer:
-    def __init__(self, savePath, capacity = 500):
+    def __init__(self, savePath, capacity=20000):
         self.savePath = savePath
         self.capacity = capacity
 
         # The replay buffer is a FIFO queue. The queue goes from right to left (<--)
         self.buffer = []
-
 
     def populate_buffer(self, stateTransition):
         if len(self.buffer) == self.capacity:
@@ -16,8 +16,6 @@ class ReplayBuffer:
         else:
             # Add the new item to the queue
             self.buffer.append(stateTransition)
-
-
 
     def sample_buffer(self, sampleSize):
         return random.sample(self.buffer, sampleSize)

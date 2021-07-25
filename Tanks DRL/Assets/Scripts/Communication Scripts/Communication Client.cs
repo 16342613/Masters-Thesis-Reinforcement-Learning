@@ -65,7 +65,6 @@ public class CommunicationClient
 
     public string RequestResponse(string message, int timeout = 5000)
     {
-        Stopwatch stopwatch = new Stopwatch();
         // Send the request to the server
         SendMessage(message);
         // Wait for a response from the server

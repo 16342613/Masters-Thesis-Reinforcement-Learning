@@ -15,12 +15,13 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 from DeepQLearner import DeepQLearner
 from Server import Server
 
-dql = DeepQLearner(0.99, 512, (2,), 2)
+dql = DeepQLearner(0.99, 64, (12,), 4)
 dql.set_up_networks()
 
 server = Server("DRL Backend", 8000, verboseLogging=False)
 server.set_deep_q_learner(dql)
-server.start_server()
+server.initialise_server()
+#server.start_server()
 
 
 # message = "PREDICT >|< UnityEngine.Vector3 | UnityEngine.Vector3 | UnityEngine.Vector3 | System.Int32 | UnityEngine.Vector3 | System.Single | UnityEngine.Vector3 | System.Single >|< (5.0, 0.6, 5.2) | (0.0, 0.0, 0.0) | (0.0, 0.0, 0.0) | 260 | (8.6, 0.8, 7.2) | 175 | (0.5, 0.2, 0.5) | 100"

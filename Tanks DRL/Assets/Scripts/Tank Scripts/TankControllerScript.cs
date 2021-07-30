@@ -225,6 +225,11 @@ public abstract class TankControllerScript : MonoBehaviour
         return this.hitPoints;
     }
 
+    public int GetMaxHitpoints()
+    {
+        return this.fullHitpoints;
+    }
+
     // Only use this in training!
     public void ResetHitpoint()
     {

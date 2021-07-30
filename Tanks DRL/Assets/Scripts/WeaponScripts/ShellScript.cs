@@ -10,6 +10,11 @@ public class ShellScript : MonoBehaviour
     public float penetration = 175;
     // The damage caused by this shell
     public int alphaDamage = 240;
+    // The ID of the state before the action which caused the shell to be fired
+    public int stateID;
+    private ArmourTrainerAI AITrainer;
+
+
 
     private TankControllerScript originTank;
 
@@ -25,6 +30,8 @@ public class ShellScript : MonoBehaviour
         {
             TankControllerScript hitTankScript = collision.transform.GetComponentInParent<TankControllerScript>();
             ArmourPlateScript hitArmourScript = collision.transform.GetComponent<ArmourPlateScript>();
+
+
             // Start at the current component and work upwards until you reach the hull/turret
             /*
             Transform parentComponent = collision.gameObject.transform;
@@ -46,6 +53,16 @@ public class ShellScript : MonoBehaviour
             // Cause damage if the armour is penned
             if (penetration > hitArmourScript.armourThickness)
             {
+                try
+                {
+                    AITrainer.UpdateReward(stateID, 
+                        (1 - ((float)(hitTankScript.GetHitpoints() - alphaDamage) / (float)hitTankScript.GetMaxHitpoints())) * 10f);
+                }
+                catch (MissingComponentException)
+                {
+                    Debug.Log("Cant find the AI Armour trainer!");
+                }
+
                 hitTankScript.CauseDamage(alphaDamage);
             }
         }
@@ -58,8 +75,13 @@ public class ShellScript : MonoBehaviour
         return originTank;
     }
 
-    public void Set_originTank(TankControllerScript originTank)
+    public void SetOriginTank(TankControllerScript originTank)
     {
         this.originTank = originTank;
+    }
+
+    public void SetAITrainer(ArmourTrainerAI AITrainer)
+    {
+        this.AITrainer = AITrainer;
     }
 }

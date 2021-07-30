@@ -9,6 +9,7 @@ TagManager:
   - Round
   - Armour Plate
   - Enemy Tank
+  - Environment
   layers:
   - Default
   - TransparentFX

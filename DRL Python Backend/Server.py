@@ -1,4 +1,5 @@
 import socket
+from threading import Thread
 from DeepQLearner import DeepQLearner
 from datetime import datetime
 
@@ -26,7 +27,43 @@ class Server:
                               "TEST_CONNECTION": self.__connection_test,
                               "ECHO": self.__echo,
                               "PLOT": self.deepQLearner.plot_progress,
-                              "SAVE_NETWORKS": self.deepQLearner.save_models})
+                              "SAVE_NETWORKS": self.deepQLearner.save_models,
+                              "UPDATE_REWARD": self.deepQLearner.update_reward})
+
+    def handle_new_client(self, clientSocket):
+        while True:
+            message = clientSocket.recv(1024).decode()
+            if len(message) > 0:
+                self.__log_data("Received request " + message + " from " + clientSocket.getsockname()[0])
+                splitMessage = message.split(" >|< ")
+
+                if len(splitMessage) > 1:
+                    # Accept the request and send the response
+                    response = self.commands[splitMessage[0]](
+                        " >|< ".join([splitMessage[i + 1] for i in range(len(splitMessage) - 1)]))
+                    clientSocket.send(str.encode(response))
+                    self.__log_data("Sent response " + response + " to " + clientSocket.getsockname()[0])
+                else:
+                    # Handle the request, but no response is necessary
+                    self.commands[splitMessage[0]]()
+
+
+    def initialise_server(self):
+        self.serverSocket = socket.socket()
+        self.serverSocket.bind(('', self.port))
+        self.serverSocket.listen(self.maxConnections)
+
+
+        self.__log_data("Started server at " + socket.gethostname() + " on port " + str(self.port), True)
+        self.running = True
+
+        while True:
+            (clientSocket, address) = self.serverSocket.accept()
+            clientThread = Thread(target=self.handle_new_client, args=(clientSocket, ))
+            clientThread.start()
+            self.__log_data("Accepted client " + clientSocket.getsockname()[0], True)
+
+
 
     def start_server(self):
         self.serverSocket = socket.socket()

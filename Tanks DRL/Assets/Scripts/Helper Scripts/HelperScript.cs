@@ -37,7 +37,7 @@ public class HelperScript : MonoBehaviour
 
     public static void PrintList<T>(List<T> toPrint)
     {
-        Debug.Log(string.Join(" | ", toPrint.ToArray()));
+        Debug.Log(string.Join("   |   ", toPrint.ToArray()));
     }
 
     public static Vector3 GetDirection(Vector3 from, Vector3 to)

@@ -15,7 +15,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 from DeepQLearner import DeepQLearner
 from Server import Server
 
-dql = DeepQLearner(0.99, 64, (12,), 4)
+dql = DeepQLearner(0.99, 64, (6,), 2)
 dql.set_up_networks()
 
 server = Server("DRL Backend", 8000, verboseLogging=False)

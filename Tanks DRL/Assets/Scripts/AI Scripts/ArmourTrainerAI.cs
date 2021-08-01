@@ -25,7 +25,10 @@ enum ServerRequests
     // Save the neural networks on the server
     SAVE_NETWORKS,
     // Updates the reward for the state in the replay buffer when given the state ID
-    UPDATE_REWARD
+    UPDATE_REWARD,
+
+    // Send transition data to the A3C server
+    SEND_A3C_TRANSITION
 }
 
 public class ArmourTrainerAI : MonoBehaviour
@@ -94,6 +97,11 @@ public class ArmourTrainerAI : MonoBehaviour
             ResetEnvironment();
         }
 
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            TrainA3C();
+        }
+
         //TestReward();
     }
 
@@ -143,8 +151,8 @@ public class ArmourTrainerAI : MonoBehaviour
 
     public void UpdateReward(int stateID, float newReward)
     {
-        client.RequestResponse(ServerRequests.UPDATE_REWARD.ToString() + 
-            " >|< " + stateID.GetType().ToString() + " | " + newReward.GetType().ToString() + 
+        client.RequestResponse(ServerRequests.UPDATE_REWARD.ToString() +
+            " >|< " + stateID.GetType().ToString() + " | " + newReward.GetType().ToString() +
             " >|< " + stateID + " | " + newReward);
     }
 
@@ -272,15 +280,15 @@ public class ArmourTrainerAI : MonoBehaviour
                     shooter.transform.position += shooter.transform.right * 0.1f;
                     break;
 
-                // Move up
-                case 2:
-                    shooter.transform.position += shooter.transform.up * 0.1f;
-                    break;
+                    /*// Move up
+                    case 2:
+                        shooter.transform.position += shooter.transform.up * 0.1f;
+                        break;
 
-                // Move down
-                case 3:
-                    shooter.transform.position -= shooter.transform.up * 0.1f;
-                    break;
+                    // Move down
+                    case 3:
+                        shooter.transform.position -= shooter.transform.up * 0.1f;
+                        break;*/
             }
         }
 
@@ -329,14 +337,14 @@ public class ArmourTrainerAI : MonoBehaviour
 
         //float reward = 0;//1/Vector3.Distance(newEnvironment.enemyLocation, newEnvironment.shooterLocation);
 
-        /*if (Mathf.Abs(state.enemyLocation.x - state.shooterLocation.x) > Mathf.Abs(newEnvironment.enemyLocation.x - newEnvironment.shooterLocation.x))
+        if (Mathf.Abs(state.enemyLocation.x - state.shooterLocation.x) > Mathf.Abs(newEnvironment.enemyLocation.x - newEnvironment.shooterLocation.x))
         {
             reward += 0.2f;
         }
         else
         {
             reward -= 0.1f;
-        }*/
+        }
         // If the shooter is aiming at the tank, then give a positive reward
         if (newEnvironment.tankIndex >= 0)
         {
@@ -351,7 +359,7 @@ public class ArmourTrainerAI : MonoBehaviour
         return new object[] { bestActionIndex, reward, false };
     }
 
-    private object[] ObserveAndTakeAction(ServerRequests request, int actionRepeat = 1)
+    private object[] ObserveAndTakeAction(ServerRequests request, int actionRepeat = 3)
     {
         // Send (Old state, action, reward, new state) to replay buffer
 
@@ -369,45 +377,24 @@ public class ArmourTrainerAI : MonoBehaviour
             + " >|< " + currentState.ID.ToString();
 
         // Return the size of the replay buffer in the client
-        return new object[] { client.RequestResponse(request.ToString() + " >|< " + stateTransitionString), actionReward[2], actionReward[1]};
+        return new object[] { client.RequestResponse(request.ToString() + " >|< " + stateTransitionString), actionReward[2], actionReward[1] };
     }
 
-    /*private List<float> PerformEpisode(int maxSteps)
-    {
-        int stepCount = 0;
-        float episodeReward = 0;
-
-        for (int i = 0; i < maxSteps; i++)
-        {
-            object[] stepOutput = ObserveAndTakeAction(ServerRequests.BUILD_BUFFER);
-            stepCount++;
-
-            episodeReward += float.Parse(stepOutput[2].ToString());
-            yield return new WaitForSeconds(0.1f);
-
-            // Reset the environment and leave this episode if the episode has terminated
-            if (bool.Parse(stepOutput[1].ToString()) == true) { break; }
-        }
-
-        ResetEnvironment();
-        //return new List<float> { (float)stepCount, episodeReward };
-        rewards.Add(episodeReward);
-        steps.Add(stepCount);
-    */
-
-    public IEnumerator Train(int episodeCount = 2000, int maxEpisodeSteps = 100, int networkUpdateInterval = 50, int epsilonAnnealInterval = 4, int plotInterval = 30)
+    public IEnumerator Train(int episodeCount = 75, int maxEpisodeSteps = 100, int networkUpdateInterval = 1000, int epsilonAnnealInterval = 1, int plotInterval = 500)
     {
         ResetEnvironment();
         //client.SendMessage(ServerRequests.ECHO.ToString() + " >|< Started training!");
         // Build up the replay buffer so you can sample transitions
         int setupIterations = 1000;
         float baselineReward = 0;
+        epsilon = 1f;
 
         for (int i = 0; i < setupIterations; i++)
         {
             object[] stepOutput = ObserveAndTakeAction(ServerRequests.BUILD_BUFFER);
 
-            if ((i % maxEpisodeSteps == 0) && (i > 0)) {
+            if ((i % maxEpisodeSteps == 0) && (i > 0))
+            {
                 ResetEnvironment();
             }
 
@@ -416,11 +403,12 @@ public class ArmourTrainerAI : MonoBehaviour
             yield return null;
         }
 
-        FileHandler.WriteToFile("Assets/Debug/AI Log.txt", System.DateTime.Now.ToString("HH:mm:ss tt") + " ==> Baseline Reward : " + (baselineReward/setupIterations));
+        FileHandler.WriteToFile("Assets/Debug/AI Log.txt", System.DateTime.Now.ToString("HH:mm:ss tt") + " ==> Baseline Reward : " + (baselineReward / setupIterations));
         ResetEnvironment();
 
         //List<float> rewards = new List<float>();
         List<float> stepCounts = new List<float>();
+        int stepCount = 0;
         for (int i = 0; i < episodeCount; i++)
         {
             // Spawn the shooter in a random location within the bounds
@@ -431,15 +419,13 @@ public class ArmourTrainerAI : MonoBehaviour
                 FileHandler.WriteToFile("Assets/Debug/Debug Log.txt", System.DateTime.Now.ToString("HH:mm:ss tt") + " : Retried spawning");
             }*/
 
-            if (i % networkUpdateInterval == 0)
+            if (stepCount % networkUpdateInterval == 0)
             {
                 client.RequestResponse(ServerRequests.UPDATE_TARGET_NETWORK.ToString() + " >|< Placeholder");
             }
 
             // Perform an episode
             //List<float> episodeDetails = PerformEpisode(maxEpisodeSteps);
-
-            int stepCount = 0;
             float episodeReward = 0;
 
             for (int j = 0; j < maxEpisodeSteps; j++)
@@ -451,28 +437,39 @@ public class ArmourTrainerAI : MonoBehaviour
 
                 // Reset the environment and leave this episode if the episode has terminated
                 if (bool.Parse(stepOutput[1].ToString()) == true) { break; }
+
+                if ((stepCount % 50 == 0) && (stepCount > 0))
+                {
+                    client.SendMessage(ServerRequests.TRAIN.ToString());
+                }
+
                 yield return new WaitForSeconds(0.001f);
+            }
+
+            if (stepCount > 100000)
+            {
+                stepCount = 0;
             }
 
             episodeRewards.Add(episodeReward);
             stepCounts.Add(stepCount);
 
-            if (i % 4 == 0)
+            /*if (i % 4 == 0)
             {
                 client.SendMessage(ServerRequests.TRAIN.ToString());
-            }
+            }*/
 
             //client.SendMessage(ServerRequests.TRAIN.ToString());
 
             FileHandler.WriteToFile("Assets/Debug/AI Log.txt", System.DateTime.Now.ToString("HH:mm:ss tt") + " ==> Episode : " + i + " ; Steps : " + stepCounts[i] + " ; Reward : " + episodeRewards[i] + " ; Epsilon : " + epsilon);
 
             // Anneal epsilon over time
-            if ((i % epsilonAnnealInterval == 0) && (epsilon >= 0.1f))
+            if ((stepCount % epsilonAnnealInterval == 0) && (epsilon >= 0.1f))
             {
-                epsilon = epsilon * 0.999f;
+                epsilon = epsilon * 0.97f;
             }
 
-            if ((i % plotInterval == 0) && (i > 0))
+            if ((stepCount % plotInterval == 0) && (stepCount > 0))
             {
                 PlotProgress(episodeRewards.Skip(episodeRewards.Count - plotInterval).ToList());
                 client.SendMessage(ServerRequests.SAVE_NETWORKS.ToString());
@@ -482,19 +479,118 @@ public class ArmourTrainerAI : MonoBehaviour
         }
     }
 
+    public IEnumerator TrainA3C(int episodeCount = 75, int maxEpisodeSteps = 100, int networkUpdateInterval = 1000, int epsilonAnnealInterval = 5, int plotInterval = 500)
+    {
+        ResetEnvironment();
+
+        int baselineRepeat = 5;
+        float baselineReward = 0;
+        epsilon = 1f;
+
+        for (int i = 0; i < baselineRepeat; i++)
+        {
+            for (int j = 0; j < maxEpisodeSteps; j++)
+            {
+                object[] stepOutput = ObserveAndTakeAction(ServerRequests.SEND_A3C_TRANSITION);
+
+                if ((j % maxEpisodeSteps == 0) && (j > 0))
+                {
+                    ResetEnvironment();
+                }
+
+                baselineReward += float.Parse(stepOutput[2].ToString());
+
+                yield return null;
+            }
+        }
+
+
+
+        //FileHandler.WriteToFile("Assets/Debug/AI Log.txt", System.DateTime.Now.ToString("HH:mm:ss tt") + " ==> Baseline Reward : " + (baselineReward / setupIterations));
+        ResetEnvironment();
+
+        //List<float> rewards = new List<float>();
+        List<float> stepCounts = new List<float>();
+        int stepCount = 0;
+        for (int i = 0; i < episodeCount; i++)
+        {
+            if (stepCount % networkUpdateInterval == 0)
+            {
+                client.RequestResponse(ServerRequests.UPDATE_TARGET_NETWORK.ToString() + " >|< Placeholder");
+            }
+
+            // Perform an episode
+            //List<float> episodeDetails = PerformEpisode(maxEpisodeSteps);
+            float episodeReward = 0;
+
+            for (int j = 0; j < maxEpisodeSteps; j++)
+            {
+                object[] stepOutput = ObserveAndTakeAction(ServerRequests.BUILD_BUFFER);
+                stepCount++;
+
+                episodeReward += float.Parse(stepOutput[2].ToString());
+
+                // Reset the environment and leave this episode if the episode has terminated
+                if (bool.Parse(stepOutput[1].ToString()) == true) { break; }
+
+                if ((stepCount % 50 == 0) && (stepCount > 0))
+                {
+                    client.SendMessage(ServerRequests.TRAIN.ToString());
+                }
+
+                yield return new WaitForSeconds(0.001f);
+            }
+
+            if (stepCount > 100000)
+            {
+                stepCount = 0;
+            }
+
+            episodeRewards.Add(episodeReward);
+            stepCounts.Add(stepCount);
+
+            /*if (i % 4 == 0)
+            {
+                client.SendMessage(ServerRequests.TRAIN.ToString());
+            }*/
+
+            //client.SendMessage(ServerRequests.TRAIN.ToString());
+
+            FileHandler.WriteToFile("Assets/Debug/AI Log.txt", System.DateTime.Now.ToString("HH:mm:ss tt") + " ==> Episode : " + i + " ; Steps : " + stepCounts[i] + " ; Reward : " + episodeRewards[i] + " ; Epsilon : " + epsilon);
+
+            // Anneal epsilon over time
+            if ((stepCount % epsilonAnnealInterval == 0) && (epsilon >= 0.1f))
+            {
+                epsilon = epsilon * 0.97f;
+            }
+
+            if ((stepCount % plotInterval == 0) && (stepCount > 0))
+            {
+                PlotProgress(episodeRewards.Skip(episodeRewards.Count - plotInterval).ToList());
+                client.SendMessage(ServerRequests.SAVE_NETWORKS.ToString());
+            }
+
+            ResetEnvironment();
+        }
+    }
+
+
     private void ResetEnvironment()
     {
         // Spawn the shooter in a random location within the bounds
-        shooter.transform.position = new Vector3(Random.Range(minimumBounds.x, maximumBounds.x), Random.Range(minimumBounds.y, maximumBounds.y), Random.Range(minimumBounds.z, maximumBounds.z));
+        /*shooter.transform.position = new Vector3(Random.Range(minimumBounds.x, maximumBounds.x), Random.Range(minimumBounds.y, maximumBounds.y), Random.Range(minimumBounds.z, maximumBounds.z));
         while (Vector3.Distance(shooter.transform.position, target.transform.position) < proximityThreshold)
         {
             shooter.transform.position = new Vector3(Random.Range(minimumBounds.x, maximumBounds.x), Random.Range(minimumBounds.y, maximumBounds.y), Random.Range(minimumBounds.z, maximumBounds.z));
         }
         //shooter.transform.eulerAngles = new Vector3(Random.Range(-45, 45), Random.Range(0, 360), 0);
-        AimShooter();
+        AimShooter();*/
 
-        //shooter.transform.position = new Vector3(Random.Range(target.transform.position.x - 10f, target.transform.position.x + 10f), 0.2f, target.transform.position.x -  5f);
-        //shooter.transform.eulerAngles = new Vector3(0, 0, 0);
+        target.transform.position = new Vector3(Random.Range(-7.5f, 7.5f), 0.2f, 0);
+
+        shooter.transform.position = new Vector3(Random.Range(target.transform.position.x - 7.5f, target.transform.position.x + 7.5f), 0.2f, target.transform.position.z - 5f);
+        shooter.transform.eulerAngles = new Vector3(0, 0, 0);
+
         targetScript.ResetHitpoint();
     }
 

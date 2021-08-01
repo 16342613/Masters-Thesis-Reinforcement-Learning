@@ -51,11 +51,10 @@ public class EnvironmentState : MonoBehaviour
             + enemyLocation.ToString() + " | " + enemyHullAngle.ToString() + " | " + enemyTurretAngle.ToString() + " | " + enemyHitpoints.ToString() + " | " + enemyMaxHitpoints.ToString() + " | "
             + tankIndex.ToString() + " | " + shooterLocation.ToString() + " | " + shooterForward.ToString() + " | " + shooterPenetration + " | " + firedRound + " | " + aimedLocation.ToString() + " | " + plateThickness;
         */
-        return enemyLocation.GetType().ToString() + " | " + shooterLocation.GetType().ToString() + " | " + shooterForward.GetType().ToString() + " | "
-            + aimedLocation.GetType().ToString()
+        return enemyLocation.GetType().ToString() + " | " + shooterLocation.GetType().ToString() + " | "
 
             + " >|< "
 
-            + enemyLocation.ToString() + " | " + shooterLocation.ToString() + " | " + shooterForward.ToString() + " | " + aimedLocation.ToString();
+            + enemyLocation.ToString() + " | " + shooterLocation.ToString();
     }
 }

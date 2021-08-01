@@ -78,7 +78,7 @@ class DeepQLearner:
         x = layers.Dense(self.actionCount, activation="linear", kernel_regularizer="l2")(x)
 
         model = Model(inputs, x)
-        model.compile(loss="huber", optimizer=keras.optimizers.Adam(learning_rate=0.001))
+        model.compile(loss="mse", optimizer=keras.optimizers.Adam(learning_rate=0.00025))
         return model
 
     def predict_action(self, stringInput):
@@ -141,11 +141,11 @@ class DeepQLearner:
 
         x = [i for i in range(len(self.currentRewards))]
 
-        ySmooth = savgol_filter(self.currentRewards, 25, 3)
+        #ySmooth = savgol_filter(self.currentRewards, 25, 3)
         #axes = plt.gca()
         #axes.set_ylim([0, 50])
         plt.plot(x, self.currentRewards, color='red')
-        plt.plot(x, ySmooth, color='black')
+        #plt.plot(x, ySmooth, color='black')
         if os.path.isfile("Generated Data/Screenshots/latestPlot.png"):
             os.remove("Generated Data/Screenshots/latestPlot.png")
         plt.savefig("Generated Data/Screenshots/latestPlot.png")

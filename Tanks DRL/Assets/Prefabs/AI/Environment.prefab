@@ -257,13 +257,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shooter: {fileID: 8556852523151521875}
   target: {fileID: 5273237593744962085}
-  round: {fileID: 4013399724426051744, guid: 4b3255b9f0a6cef46b357d0ddf654e94, type: 3}
+  round: {fileID: 6139722949784224834, guid: 7abf957f0b6838f458f605bb4029f5cc, type: 3}
   maximumBounds: {x: 10, y: 2, z: 10}
   minimumBounds: {x: 0, y: 0.2, z: 0}
   proximityThreshold: 2.5
   aimVariance: 30
+  environmentTransform: {fileID: 0}
   replayBufferPath: Assets/API Entry/AI/Replay Buffer.txt
   epsilon: 1
+  episodeRewards: []
 --- !u!1 &8556852524376852695
 GameObject:
   m_ObjectHideFlags: 0

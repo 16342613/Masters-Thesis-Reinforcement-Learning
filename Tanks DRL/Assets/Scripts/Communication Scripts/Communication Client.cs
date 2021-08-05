@@ -16,10 +16,12 @@ public class CommunicationClient
     private string logFilePath;
     private bool connectedToServer;
     private bool verboseLogging;
+    public string IP;
 
-    public CommunicationClient(string logFilePath, bool verboseLogging = true)
+    public CommunicationClient(string logFilePath, string IP = "192.168.56.1", bool verboseLogging = true)
     {
         this.logFilePath = logFilePath;
+        this.IP = IP;
         this.verboseLogging = true;
         FileHandler.ClearFile(logFilePath);
     }

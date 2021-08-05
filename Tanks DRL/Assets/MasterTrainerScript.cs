@@ -21,6 +21,12 @@ public class MasterTrainerScript : MonoBehaviour
         {
             trainingScripts.Add(environment.GetComponentInChildren<ArmourTrainerAI>());
         }
+
+        for (int i=0; i<trainingScripts.Count; i++)
+        {
+            trainingScripts[i].masterTrainer = this;
+            trainingScripts[i].AIName = i.ToString();
+        }
     }
 
     // Update is called once per frame
@@ -38,6 +44,8 @@ public class MasterTrainerScript : MonoBehaviour
         {
             Train();
         }
+
+        // Debug.Log(GlobalScript.globalEpisodeCount);
     }
 
     private void SetUpEnvironments()
@@ -57,7 +65,7 @@ public class MasterTrainerScript : MonoBehaviour
     {
         foreach(ArmourTrainerAI trainingScript in trainingScripts)
         {
-            StartCoroutine(trainingScript.Train());
+            StartCoroutine(trainingScript.TrainA3C());
         }
     }
 }

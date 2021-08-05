@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnvironmentState : MonoBehaviour
 {
+    #region Armour Trainer
     public Vector3 enemyLocation;
     public Vector3 enemyHullAngle;
     public Vector3 enemyTurretAngle;
@@ -38,7 +39,18 @@ public class EnvironmentState : MonoBehaviour
 
         this.ID = Random.Range(0, 100000000);
     }
+    #endregion
 
+    #region Movement Trainer
+    public Vector3 agentPosition;
+    public Vector3 targetPosition;
+
+    public EnvironmentState(Vector3 agentPosition, Vector3 targetPosition)
+    {
+        this.agentPosition = agentPosition;
+        this.targetPosition = targetPosition;
+    }
+    #endregion
 
     public override string ToString()
     {
@@ -50,11 +62,18 @@ public class EnvironmentState : MonoBehaviour
             
             + enemyLocation.ToString() + " | " + enemyHullAngle.ToString() + " | " + enemyTurretAngle.ToString() + " | " + enemyHitpoints.ToString() + " | " + enemyMaxHitpoints.ToString() + " | "
             + tankIndex.ToString() + " | " + shooterLocation.ToString() + " | " + shooterForward.ToString() + " | " + shooterPenetration + " | " + firedRound + " | " + aimedLocation.ToString() + " | " + plateThickness;
-        */
-        return enemyLocation.GetType().ToString() + " | " + shooterLocation.GetType().ToString() + " | "
+        
+        return enemyLocation.GetType().ToString() + " | " + shooterLocation.GetType().ToString()
 
             + " >|< "
 
             + enemyLocation.ToString() + " | " + shooterLocation.ToString();
+        */
+
+        return agentPosition.GetType().ToString() + " | " + targetPosition.GetType().ToString()
+
+            + " >|< "
+
+            + agentPosition.ToString() + " | " + targetPosition.ToString();
     }
 }

@@ -27,7 +27,7 @@ public class HelperScript : MonoBehaviour
         List<string> stringFloats = toParse.Split(new string[] { delimiter }, StringSplitOptions.None).ToList();
         List<float> output = new List<float>();
 
-        foreach(string stringFloat in stringFloats)
+        foreach (string stringFloat in stringFloats)
         {
             output.Add(float.Parse(stringFloat));
         }
@@ -49,12 +49,31 @@ public class HelperScript : MonoBehaviour
 
     public static void ClearLogs(string logFolderPath = "Assets/Debug")
     {
-        foreach(string logFilePath in Directory.GetFiles(logFolderPath))
+        foreach (string logFilePath in Directory.GetFiles(logFolderPath))
         {
             if (logFilePath.EndsWith(".txt") == true)
             {
                 FileHandler.ClearFile(logFilePath);
             }
         }
+    }
+
+    public static int SampleProbabilityDistribution(List<float> probabilites)
+    {
+        float currentInterval = 0;
+        float randomNumber = UnityEngine.Random.Range(0, 1f);
+
+        for (int i = 0; i < probabilites.Count; i++)
+        {
+            currentInterval = currentInterval + probabilites[i];
+
+            if (randomNumber <= currentInterval)
+            {
+                return i;
+            }
+        }
+
+        Debug.Log("PROBABILITY ERROR!");
+        return 0;
     }
 }

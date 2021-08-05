@@ -17,18 +17,9 @@ class A3C_Server:
         self.running = False
         # Initialise an empty dql learner. This is just a placeholder
         self.deepQLearner = DeepQLearner(0, 0, 0, 0)
-        # This will be populated when the dql learner ia set
-        self.commands = dict()
 
         # Initialise the master A3C trainer
         self.masterLearner = masterLearner
-
-        self.commands = dict({"PREDICT": self.deepQLearner.predict_action,
-                              "SEND_A3C_TRANSITION": self.deepQLearner.add_to_replay_buffer,
-                              "TEST_CONNECTION": self.__connection_test,
-                              "ECHO": self.__echo,
-                              "PLOT": self.deepQLearner.plot_progress,
-                              "UPDATE_REWARD": self.deepQLearner.update_reward})
 
         self.clients = []
 
@@ -36,7 +27,13 @@ class A3C_Server:
     def handle_new_client(self, clientSocket):
         self.clients.append(clientSocket)
         assignedWorker = self.masterLearner.assign_worker(clientSocket.getsockname()[0])
-
+        commands = dict({"PREDICT": self.masterLearner.global_predict,
+                         "SEND_A3C_TRANSITION": assignedWorker.append_to_buffer,
+                         "TEST_CONNECTION": self.__connection_test,
+                         "ECHO": self.__echo,
+                         "UPDATE_REWARD": self.deepQLearner.update_reward,
+                         "SAVE_NETWORKS": self.masterLearner.save_network,
+                         "PLOT": self.masterLearner.plot_progress})
 
         while True:
             message = clientSocket.recv(1024).decode()
@@ -46,13 +43,13 @@ class A3C_Server:
 
                 if len(splitMessage) > 1:
                     # Accept the request and send the response
-                    response = self.commands[splitMessage[0]](
-                        " >|< ".join([splitMessage[i + 1] for i in range(len(splitMessage) - 1)]))
+
+                    response = commands[splitMessage[0]](" >|< ".join([splitMessage[i + 1] for i in range(len(splitMessage) - 1)]))
                     clientSocket.send(str.encode(response))
                     self.__log_data("Sent response " + response + " to " + clientSocket.getsockname()[0])
                 else:
                     # Handle the request, but no response is necessary
-                    self.commands[splitMessage[0]]()
+                    commands[splitMessage[0]]()
 
 
     def initialise_server(self):

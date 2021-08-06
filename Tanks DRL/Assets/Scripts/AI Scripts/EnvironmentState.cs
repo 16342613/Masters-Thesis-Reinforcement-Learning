@@ -70,10 +70,10 @@ public class EnvironmentState : MonoBehaviour
             + enemyLocation.ToString() + " | " + shooterLocation.ToString();
         */
 
-        return agentPosition.GetType().ToString() + " | " + targetPosition.GetType().ToString()
+        return agentPosition.x.GetType().ToString() + " | " + agentPosition.z.GetType().ToString() + " | " + targetPosition.x.GetType().ToString() + " | " + targetPosition.z.GetType().ToString()
 
             + " >|< "
 
-            + agentPosition.ToString() + " | " + targetPosition.ToString();
+            + agentPosition.x.ToString() + " | " + agentPosition.z.ToString() + " | " + targetPosition.x.ToString() + " | " + targetPosition.z.ToString();
     }
 }

@@ -76,4 +76,10 @@ public class HelperScript : MonoBehaviour
         Debug.Log("PROBABILITY ERROR!");
         return 0;
     }
+
+    /*public static Vector3 NormalizeVector3(Vector3 original, float squareSide)
+    {
+        float length = (float)Math.Sqrt(Math.Pow(original.x, 2f) + Math.Pow(original.x, 2f) + Math.Pow(original.x, 2f));
+        return new Vector3(original.x / length, original.y / length, original.z / length);
+    }*/
 }

@@ -11,24 +11,28 @@ import weakref
 import matplotlib.pyplot as plt
 from scipy.signal import savgol_filter
 from datetime import datetime
+from Global import Global
+import numpy as np
 
 class A3C_Master:
     def __init__(self, inputSize, actionCount):
         self.inputSize = inputSize
         self.actionCount = actionCount
 
-        self.optimiser = tf.compat.v1.train.AdamOptimizer(0.00025, use_locking=True)
+        self.optimiser = tf.compat.v1.train.AdamOptimizer(0.00015, use_locking=True)
         self.pretrainedWeightsAvailable = False
         self.setWeights = False
         self.globalSavePath = "Generated Data/Saved Models/globalNetwork.h5"
         if os.path.isfile(self.globalSavePath):
-            self.globalModel = A3C_NN(self.inputSize, self.actionCount)
+            Global.globalModel = A3C_NN(self.inputSize, self.actionCount)
             self.pretrainedWeightsAvailable = True
-            self.global_predict("UnityEngine.Vector3 | UnityEngine.Vector3 >|< (4.1, 0.2, 0.0) | (8.6, 0.2, -5.0)", False)
+            # self.global_predict("UnityEngine.Vector3 | UnityEngine.Vector3 >|< (4.1, 0.2, 0.0) | (8.6, 0.2, -5.0)", False)
             print("Loaded saved weights")
         else:
-            self.globalModel = A3C_NN(self.inputSize, self.actionCount)
+            Global.globalModel = A3C_NN(self.inputSize, self.actionCount)
             self.setWeights = True
+
+        Global.globalModel(tf.convert_to_tensor(np.random.random((1, self.inputSize)), dtype=tf.float32))
 
         self.workers = dict()
         self.currentRewards = []
@@ -36,7 +40,7 @@ class A3C_Master:
 
 
     def assign_worker(self, clientIP):
-        worker = A3C_Worker(self.inputSize, self.actionCount, self.globalModel, clientIP, 0.99, self.optimiser)
+        worker = A3C_Worker(self.inputSize, self.actionCount, clientIP, 0.99, self.optimiser, weightUpdateInterval=15)
         worker.start()
 
         self.currentRewards.append([])
@@ -48,16 +52,16 @@ class A3C_Master:
     def global_predict(self, stringInput, parseString=True):
         helper = HelperPy()
         parsedInput = helper.parse_string_input(stringInput)
-        outputs = self.globalModel.get_prediction(parsedInput, parseString)
+        outputs = Global.globalModel.get_prediction(parsedInput, parseString)
 
         if self.pretrainedWeightsAvailable is True and self.setWeights is False:
-            self.globalModel.load_weights(self.globalSavePath)
+            Global.globalModel.load_weights(self.globalSavePath)
             self.setWeights = True
 
         return outputs
 
     def save_network(self):
-        self.globalModel.save_weights(self.globalSavePath)
+        Global.globalModel.save_weights(self.globalSavePath)
         print("Saved global model")
 
     def plot_progress(self, stringInput):

@@ -6,10 +6,11 @@ using System.Linq;
 public class MasterTrainerScript : MonoBehaviour
 {
     List<GameObject> environments = new List<GameObject>();
-    List<ArmourTrainerAI> trainingScripts = new List<ArmourTrainerAI>();
+    List<MovementTrainerAI> trainingScripts = new List<MovementTrainerAI>();
 
     public int environmentCount;
     public GameObject environment;
+    public Vector3 offset = new Vector3(0, 0, 10);
 
     // Start is called before the first frame update
     void Start()
@@ -19,7 +20,7 @@ public class MasterTrainerScript : MonoBehaviour
         environments = GameObject.FindGameObjectsWithTag("Environment").ToList();
         foreach (GameObject environment in environments)
         {
-            trainingScripts.Add(environment.GetComponentInChildren<ArmourTrainerAI>());
+            trainingScripts.Add(environment.GetComponentInChildren<MovementTrainerAI>());
         }
 
         for (int i=0; i<trainingScripts.Count; i++)
@@ -34,7 +35,7 @@ public class MasterTrainerScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.M))
         {
-            foreach (ArmourTrainerAI trainingScript in trainingScripts)
+            foreach (MovementTrainerAI trainingScript in trainingScripts)
             {
                 trainingScript.TestConnection();
             }
@@ -57,13 +58,13 @@ public class MasterTrainerScript : MonoBehaviour
             GameObject newEnvironment = GameObject.Instantiate(environment);
             newEnvironment.transform.position = currentSpawnPoint;
 
-            currentSpawnPoint += new Vector3(0, 0, 10);
+            currentSpawnPoint += offset;
         }
     }
 
     private void Train()
     {
-        foreach(ArmourTrainerAI trainingScript in trainingScripts)
+        foreach(MovementTrainerAI trainingScript in trainingScripts)
         {
             StartCoroutine(trainingScript.TrainA3C());
         }

@@ -62,10 +62,15 @@ class ActorCriticModel(keras.Model):
 
     def call(self, inputs):
         # Forward pass
+        # x = self.dense1(inputs)
+        # logits = self.policy_logits(x)
+        # v1 = self.dense2(inputs)
+        # values = self.values(v1)
+
         x = self.dense1(inputs)
+        x = self.dense2(x)
         logits = self.policy_logits(x)
-        v1 = self.dense2(inputs)
-        values = self.values(v1)
+        values = self.values(x)
         return logits, values
 
 
@@ -80,7 +85,7 @@ class MasterAgent():
         env = gym.make(self.game_name)
         self.state_size = env.observation_space.shape[0]
         self.action_size = env.action_space.n
-        self.opt = tf.compat.v1.train.AdamOptimizer(0.00025, use_locking=True)
+        self.opt = tf.compat.v1.train.AdamOptimizer(0.0001, use_locking=True)
         print(self.state_size, self.action_size)
 
         self.global_model = ActorCriticModel(self.state_size, self.action_size)  # global network
@@ -175,7 +180,7 @@ class Worker(threading.Thread):
         mem = Memory()
         rewards = []
 
-        while Worker.global_episode < 4000:
+        while Worker.global_episode < 3000:
             current_state = self.env.reset()
             mem.clear()
             ep_reward = 0.
@@ -227,6 +232,7 @@ class Worker(threading.Thread):
                         # We must use a lock to save our model and to print to prevent data races.
                         #print(ep_reward)
                         print(Worker.global_episode)
+                        #print(self.ep_loss)
                         rewards.append(ep_reward)
 
                         if ep_reward > Worker.best_score:

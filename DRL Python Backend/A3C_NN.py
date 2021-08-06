@@ -10,8 +10,14 @@ class A3C_NN(keras.Model):
         self.actionCount = actionCount
         #self.model = self._build_model()
 
-        self.dense1 = layers.Dense(100, activation='relu')
-        self.dense2 = layers.Dense(100, activation='relu')
+        self.dense1 = layers.Dense(64, activation='relu')
+        # self.batchNorm1 = layers.BatchNormalization()
+        self.dense2 = layers.Dense(64, activation='relu')
+        # self.batchNorm2 = layers.BatchNormalization()
+        # self.dense3 = layers.Dense(64, activation='relu')
+        # self.batchNorm3 = layers.BatchNormalization()
+        # self.dense4 = layers.Dense(64, activation='relu')
+        # self.batchNorm4 = layers.BatchNormalization()
         self.policy_logits = layers.Dense(self.actionCount, activation="softmax")
         self.values = layers.Dense(1, activation="linear")
 
@@ -44,10 +50,23 @@ class A3C_NN(keras.Model):
         # return policyOutput, valueOutput
 
         # Forward pass
+
+        # x = self.dense1(inputs)
+        # logits = self.policy_logits(x)
+        # v1 = self.dense2(inputs)
+        # values = self.values(v1)
+
         x = self.dense1(inputs)
+        # x = self.batchNorm1(x)
+        x = self.dense2(x)
+        # x = self.batchNorm2(x)
+        # x = self.dense3(x)
+        # x = self.batchNorm3(x)
+        # x = self.dense4(x)
+        # x = self.batchNorm4(x)
         logits = self.policy_logits(x)
-        v1 = self.dense2(inputs)
-        values = self.values(v1)
+        values = self.values(x)
+
         return logits, values
 
     def _build_model(self):
@@ -57,8 +76,8 @@ class A3C_NN(keras.Model):
         hiddenLayers = layers.Dense(64, activation="relu")(hiddenLayers)
         hiddenLayers = layers.Dense(64, activation="relu")(hiddenLayers)
 
-        policyOutput = layers.Dense(self.actionCount, activation="softmax")(hiddenLayers)
-        valueOutput = layers.Dense(1, activation="linear")(hiddenLayers)
+        policyOutput = layers.Dense(self.actionCount)(hiddenLayers)
+        valueOutput = layers.Dense(1)(hiddenLayers)
 
         model = Model(inputs=[inputLayer], outputs=[policyOutput, valueOutput])
 

@@ -13,12 +13,26 @@ public class FileHandler
 
     public static void WriteToFile(string filePath, List<string> lines)
     {
-        File.AppendAllLines(filePath, lines);
+        try
+        {
+            File.AppendAllLines(filePath, lines);
+        }
+        catch (IOException e)
+        {
+            Debug.Log(e.Message);
+        }
     }
 
     public static void WriteToFile(string filePath, string line)
     {
-        File.AppendAllLines(filePath, new List<string>() { line });
+        try
+        {
+            File.AppendAllLines(filePath, new List<string>() { line });
+        }
+        catch (IOException e)
+        {
+            Debug.Log(e.Message);
+        }
     }
 
     public static object ReadFile(string filePath, string delimiter = null)

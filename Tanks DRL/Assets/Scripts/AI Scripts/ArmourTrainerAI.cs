@@ -18,7 +18,6 @@ public class ArmourTrainerAI : TrainerScript
     public Transform environmentTransform;
 
     public string replayBufferPath;
-    public MasterTrainerScript masterTrainer;
 
     // Start is called before the first frame update
     void Start()
@@ -75,12 +74,6 @@ public class ArmourTrainerAI : TrainerScript
         }
 
         //TestReward();
-    }
-
-    public void TestConnection()
-    {
-        string response = client.RequestResponse(ServerRequests.TEST_CONNECTION.ToString() + " >|< Connection test! ");
-        Debug.Log(response);
     }
 
     /// <summary>

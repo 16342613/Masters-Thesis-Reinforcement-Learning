@@ -7,6 +7,8 @@ public class MovementTrainerAI : TrainerScript
 {
     public GameObject agent;
     public GameObject target;
+    public bool train = false;
+    // public List<int> bestActionIndexes = new List<int>() { 0, 0, 0, 0 };
 
     // Start is called before the first frame update
     void Start()
@@ -34,36 +36,50 @@ public class MovementTrainerAI : TrainerScript
 
         if (Input.GetKeyDown(KeyCode.N))
         {
-            Debug.Log("TEE");
+            train = true;
             StartCoroutine(TrainA3C());
         }
 
-        //TestReward();
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            train = false;
+        }
+
+
+        // HelperScript.PrintList(bestActionIndexes);
+        // TestReward();
     }
 
     private EnvironmentState ObserveEnvironment()
     {
-        return new EnvironmentState(agent.transform.position, target.transform.position);
+        return new EnvironmentState(agent.transform.localPosition / 20f, target.transform.localPosition / 20f);
     }
 
     public override object[] TakeAction(EnvironmentState state, int actionRepeat = 1)
     {
         // Predict the action using the NN
         string response = client.RequestResponse(ServerRequests.PREDICT.ToString() + " >|< " + state.ToString());
+        float value = 0;
 
         if (response.Contains(" >|< ") == true)
         {
-            response = response.Split(new string[] { " >|< " }, System.StringSplitOptions.None).ToList()[0];
+            List<string> splitString = response.Split(new string[] { " >|< " }, System.StringSplitOptions.None).ToList();
+            value = float.Parse(splitString[1]);
+            response = splitString[0];
         }
 
         List<float> parsedResponse = HelperScript.ParseStringToFloats(response, " | ");
-        int bestActionIndex = parsedResponse.IndexOf(parsedResponse.Max());
+        int bestActionIndex = HelperScript.SampleProbabilityDistribution(parsedResponse);//parsedResponse.IndexOf(parsedResponse.Max());
 
         // Use epsilon-greedy for exploration
         if (Random.Range(0, 1) < epsilon)
         {
-            bestActionIndex = Mathf.RoundToInt(Random.Range(0, (float)(parsedResponse.Count - 1)));
+            System.Random rnd = new System.Random();
+            bestActionIndex = rnd.Next(parsedResponse.Count);// Mathf.RoundToInt(Random.Range(0, (float)(parsedResponse.Count - 1)));
         }
+
+        // bestActionIndexes[bestActionIndex] += 1;
+        float oldDistance = Vector3.Distance(state.agentPosition, state.targetPosition);
 
         for (int i = 0; i < actionRepeat; i++)
         {
@@ -91,53 +107,69 @@ public class MovementTrainerAI : TrainerScript
             }
         }
 
-        /*bool hitWall = true;
-        if (agent.transform.position.z >= 20)
+        bool hitWall = true;
+        if (agent.transform.localPosition.z >= 20)
         {
-            agent.transform.position = new Vector3(agent.transform.position.x, agent.transform.position.y, 20);
+            agent.transform.localPosition = new Vector3(agent.transform.localPosition.x, agent.transform.localPosition.y, 19);
         }
-        else if (agent.transform.position.z <= 0)
+        else if (agent.transform.localPosition.z <= 0)
         {
-            agent.transform.position = new Vector3(agent.transform.position.x, agent.transform.position.y, 0);
+            agent.transform.localPosition = new Vector3(agent.transform.localPosition.x, agent.transform.localPosition.y, 1);
         }
-        else if (agent.transform.position.x >= 20)
+        else if (agent.transform.localPosition.x >= 20)
         {
-            agent.transform.position = new Vector3(20, agent.transform.position.y, agent.transform.position.z);
+            agent.transform.localPosition = new Vector3(19, agent.transform.localPosition.y, agent.transform.localPosition.z);
         }
-        else if (agent.transform.position.x <= 0)
+        else if (agent.transform.localPosition.x <= 0)
         {
-            agent.transform.position = new Vector3(0, agent.transform.position.y, agent.transform.position.z);
+            agent.transform.localPosition = new Vector3(1, agent.transform.localPosition.y, agent.transform.localPosition.z);
         }
         else
         {
             hitWall = false;
-        }*/
+        }
 
         EnvironmentState newEnvironment = ObserveEnvironment();
-
+        float newDistance = Vector3.Distance(newEnvironment.agentPosition, newEnvironment.targetPosition);
         // The default reward
         float reward = 0;
 
-        // If the agent hits the wall
-        if (Vector3.Distance(newEnvironment.agentPosition, newEnvironment.targetPosition) < 0.5f)
+        if (newDistance < oldDistance)
         {
-            reward = 10f;
-            return new object[] { bestActionIndex, reward, true }; // Episode has finished
+            reward = 1f;
         }
         else
         {
-            reward -= Mathf.Pow(1 - (1 / Vector3.Distance(newEnvironment.agentPosition, newEnvironment.targetPosition)), 4);
+            reward = -1f;
         }
 
-        /*if (hitWall == true)
+
+        if (Vector3.Distance(newEnvironment.agentPosition, newEnvironment.targetPosition) < 0.2f)
+        {
+            reward = 5f;
+            return new object[] { bestActionIndex, reward, 1 }; // Episode has finished
+        }
+        else
+        {
+            //reward -= Mathf.Pow(1 - (1 / (Vector3.Distance(newEnvironment.agentPosition, newEnvironment.targetPosition) * 20f)), 10);
+        }
+
+        //reward = reward * 0.1f;
+
+        if (hitWall == true)
         {
             reward = -1f;
-        }*/
+        }
+        if (AIName == "0")
+        {
+            HelperScript.PrintList(parsedResponse);
+            Debug.Log(reward + " ; " + value);
+        }
 
-        return new object[] { bestActionIndex, reward, false };
+        return new object[] { bestActionIndex, reward, 0 };
     }
 
-    private object[] ObserveAndTakeAction(ServerRequests request, int actionRepeat = 5)
+    private object[] ObserveAndTakeAction(ServerRequests request, int actionRepeat = 10)
     {
         // Send (Old state, action, reward, new state) to replay buffer
 
@@ -152,13 +184,14 @@ public class MovementTrainerAI : TrainerScript
             + " >|< " + actionReward[0].ToString()
             + " >|< " + actionReward[1].ToString()
             + " >|< " + newState.ToString()
-            + " >|< " + currentState.ID.ToString();
+            + " >|< " + currentState.ID.ToString()
+            + " >|< " + actionReward[2].ToString();
 
         // Return the size of the replay buffer in the client
         return new object[] { client.RequestResponse(request.ToString() + " >|< " + stateTransitionString), actionReward[2], actionReward[1] };
     }
 
-    public IEnumerator TrainA3C(int episodeCount = 500, int maxEpisodeSteps = 100, int epsilonAnnealInterval = 1, int plotInterval = 100)
+    public IEnumerator TrainA3C(int episodeCount = 501, int maxEpisodeSteps = 200, int epsilonAnnealInterval = 2, int plotInterval = 100)
     {
         ResetEnvironment();
 
@@ -192,19 +225,23 @@ public class MovementTrainerAI : TrainerScript
         int stepCount = 0;
         for (int i = 0; i < episodeCount; i++)
         {
+            if (train == false) { yield break; }
+
             // Perform an episode
             float episodeReward = 0;
 
             for (int j = 0; j < maxEpisodeSteps; j++)
             {
+                stepCounts.Add(0);
                 object[] stepOutput = ObserveAndTakeAction(ServerRequests.SEND_A3C_TRANSITION);
                 stepCount++;
+
 
                 episodeReward += float.Parse(stepOutput[2].ToString());
 
                 // Reset the environment and leave this episode if the episode has terminated
-                if (bool.Parse(stepOutput[1].ToString()) == true) { break; }
-
+                if (int.Parse(stepOutput[1].ToString()) == 1) { break; }
+                stepCounts[i]++;
                 yield return new WaitForSeconds(0.001f);
             }
 
@@ -215,9 +252,8 @@ public class MovementTrainerAI : TrainerScript
 
             episodeRewards.Add(episodeReward);
             GlobalScript.episodeRewards.Add(episodeReward);
-            stepCounts.Add(stepCount);
 
-            FileHandler.WriteToFile("Assets/Debug/AI Log.txt", System.DateTime.Now.ToString("HH:mm:ss tt") + "Name : " + this.AIName + " ==> Episode : " + i + " ; Steps : " + stepCounts[i] + " ; Reward : " + episodeRewards[i] + " ; Epsilon : " + epsilon);
+            FileHandler.WriteToFile("Assets/Debug/AI Log.txt", System.DateTime.Now.ToString("HH:mm:ss tt") + " Name : " + this.AIName + " ==> Episode : " + i + " ; Steps : " + stepCounts[i] + " ; Reward : " + episodeRewards[i] + " ; Epsilon : " + epsilon);
 
 
             if ((i % plotInterval == 0) && (i > 0))
@@ -230,7 +266,7 @@ public class MovementTrainerAI : TrainerScript
                 client.SendMessage(ServerRequests.SAVE_NETWORKS.ToString());
             }
 
-            if ((i % epsilonAnnealInterval == 0) && (epsilon >= 0.1f))
+            if ((i % epsilonAnnealInterval == 0) && (epsilon >= 0.1f) && (i > 0))
             {
                 epsilon = epsilon * 0.998f;
             }
@@ -243,14 +279,15 @@ public class MovementTrainerAI : TrainerScript
 
     public override void ResetEnvironment()
     {
-        agent.transform.position = new Vector3(0, 0, 0);
+        agent.transform.localPosition = new Vector3(Random.Range(1, 19f), 0, Random.Range(1, 19f));
     }
 
     private void TestReward()
     {
         EnvironmentState newEnvironment = ObserveEnvironment();
-        float reward = -Mathf.Pow(1 - (1 / Vector3.Distance(newEnvironment.agentPosition, newEnvironment.targetPosition)), 4);
+        float reward = -Mathf.Pow(1 - (1 / (Vector3.Distance(newEnvironment.agentPosition, newEnvironment.targetPosition) * 20f)), 10);
 
         Debug.Log(reward);
+
     }
 }

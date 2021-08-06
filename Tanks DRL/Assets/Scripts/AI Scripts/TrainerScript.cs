@@ -39,6 +39,8 @@ public abstract class TrainerScript : MonoBehaviour
     public float epsilon = 1f;
     public List<float> episodeRewards = new List<float>();
 
+    public MasterTrainerScript masterTrainer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,4 +56,10 @@ public abstract class TrainerScript : MonoBehaviour
     public abstract object[] TakeAction(EnvironmentState state, int actionRepeat = 1);
 
     public abstract void ResetEnvironment();
+
+    public void TestConnection()
+    {
+        string response = client.RequestResponse(ServerRequests.TEST_CONNECTION.ToString() + " >|< Connection test! ");
+        Debug.Log(response);
+    }
 }

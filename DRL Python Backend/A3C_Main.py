@@ -7,7 +7,8 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 
 # os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-Global.masterTrainer = A3C_Master(4, 4)
+Global.masterTrainer = A3C_Master(16, 4)
 
 server = A3C_Server("A3C Backend", 8000, verboseLogging=False)
 server.initialise_server()
+# server.initialise_server_multiple_sockets(8)

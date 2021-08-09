@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+using CielaSpike;
+
 public class MasterTrainerScript : MonoBehaviour
 {
     List<GameObject> environments = new List<GameObject>();
-    List<MovementTrainerAI> trainingScripts = new List<MovementTrainerAI>();
+    // Change the trainer script type between <> accordingly. In the end, you only need one trainer
+    List<ArmourTrainerAI> trainingScripts = new List<ArmourTrainerAI>();
 
     public int environmentCount;
     public GameObject environment;
@@ -20,10 +23,11 @@ public class MasterTrainerScript : MonoBehaviour
         environments = GameObject.FindGameObjectsWithTag("Environment").ToList();
         foreach (GameObject environment in environments)
         {
-            trainingScripts.Add(environment.GetComponentInChildren<MovementTrainerAI>());
+            // This may be null depending on the type of trainer. In the end, you should only use one trainer
+            trainingScripts.Add(environment.GetComponentInChildren<ArmourTrainerAI>());
         }
 
-        for (int i=0; i<trainingScripts.Count; i++)
+        for (int i = 0; i < trainingScripts.Count; i++)
         {
             trainingScripts[i].masterTrainer = this;
             trainingScripts[i].AIName = i.ToString();
@@ -35,7 +39,7 @@ public class MasterTrainerScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.M))
         {
-            foreach (MovementTrainerAI trainingScript in trainingScripts)
+            foreach (ArmourTrainerAI trainingScript in trainingScripts)
             {
                 trainingScript.TestConnection();
             }
@@ -64,9 +68,14 @@ public class MasterTrainerScript : MonoBehaviour
 
     private void Train()
     {
-        foreach(MovementTrainerAI trainingScript in trainingScripts)
+        foreach (ArmourTrainerAI trainingScript in trainingScripts)
         {
             StartCoroutine(trainingScript.TrainA3C());
         }
+    }
+
+    private void TrainAsyncronous()
+    {
+
     }
 }

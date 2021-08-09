@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using UnityEngine;
 
 public class ArmourTrainerAI : TrainerScript
@@ -18,11 +17,13 @@ public class ArmourTrainerAI : TrainerScript
     public Transform environmentTransform;
 
     public string replayBufferPath;
+    public bool train = false;
 
     // Start is called before the first frame update
     void Start()
     {
         targetScript = target.GetComponent<TankControllerScript>();
+        targetScript.AITrainer = this;
         environmentTransform = this.gameObject.transform.parent.transform;
 
         client = new CommunicationClient("Assets/Debug/Communication Log.txt");
@@ -48,8 +49,8 @@ public class ArmourTrainerAI : TrainerScript
 
         if (Input.GetKeyDown(KeyCode.X))
         {
-            //Train();
-            StartCoroutine(Train());
+            train = false;
+            //StartCoroutine(Train());
         }
 
         if (Input.GetKeyDown(KeyCode.U))
@@ -70,10 +71,11 @@ public class ArmourTrainerAI : TrainerScript
 
         if (Input.GetKeyDown(KeyCode.N))
         {
+            train = true;
             StartCoroutine(TrainA3C());
         }
 
-        //TestReward();
+        // TestReward();
     }
 
     /// <summary>
@@ -81,11 +83,11 @@ public class ArmourTrainerAI : TrainerScript
     /// </summary>
     private void AimShooter()
     {
-        shooter.transform.position = new Vector3(Random.Range(minimumBounds.x, maximumBounds.x), Random.Range(minimumBounds.y, maximumBounds.y), Random.Range(minimumBounds.z, maximumBounds.z));
+        /* shooter.transform.position = new Vector3(Random.Range(minimumBounds.x, maximumBounds.x), Random.Range(minimumBounds.y, maximumBounds.y), Random.Range(minimumBounds.z, maximumBounds.z));
         while (Vector3.Distance(shooter.transform.position, target.transform.position) < proximityThreshold)
         {
             shooter.transform.position = new Vector3(Random.Range(minimumBounds.x, maximumBounds.x), Random.Range(minimumBounds.y, maximumBounds.y), Random.Range(minimumBounds.z, maximumBounds.z));
-        }
+        }*/
 
         shooter.transform.LookAt(target.transform.position);
         bool aimingAtTarget = false;
@@ -102,8 +104,8 @@ public class ArmourTrainerAI : TrainerScript
                 }
             }
         }*/
-        //shooter.transform.Rotate(Random.Range(-aimVariance, aimVariance), Random.Range(-aimVariance, aimVariance), 0);
-        //shooter.transform.eulerAngles = new Vector3(shooter.transform.eulerAngles.x, shooter.transform.eulerAngles.y, 0);
+        shooter.transform.Rotate(Random.Range(-aimVariance, aimVariance), Random.Range(-aimVariance, aimVariance), 0);
+        shooter.transform.eulerAngles = new Vector3(shooter.transform.eulerAngles.x, shooter.transform.eulerAngles.y, 0);
     }
 
     private void FireRound(int previousStateID = 0)
@@ -112,6 +114,8 @@ public class ArmourTrainerAI : TrainerScript
         firedRound.GetComponent<Rigidbody>().velocity = firedRound.transform.forward * (firedRound.GetComponent<ShellScript>().muzzleVelocity / 10f); // should be divided by 5, not 10! This was set to 10 for training
         firedRound.GetComponent<ShellScript>().stateID = previousStateID;
         firedRound.GetComponent<ShellScript>().SetAITrainer(this);
+
+        Destroy(firedRound, 2f);
     }
 
     public void UpdateReward(int stateID, float newReward)
@@ -123,6 +127,7 @@ public class ArmourTrainerAI : TrainerScript
 
     private EnvironmentState ObserveEnvironment()
     {
+        /*
         Vector3 targetLocation = target.transform.position;
         Vector3 targetHullAngle = target.transform.Find("Hitbox/Hull").transform.rotation.eulerAngles;
         Vector3 targetTurretAngle = target.transform.Find("Hitbox/Turret").transform.rotation.eulerAngles;
@@ -153,41 +158,79 @@ public class ArmourTrainerAI : TrainerScript
         }
 
         return new EnvironmentState(targetLocation, targetHullAngle, targetTurretAngle, targetHitpoints, targetMaxHitpoints, tankIndex, shooterLocation, shooterDirection, shooterPenetration, aimedLocation, plateThickness);
+        */
+
+        Vector3 targetLocation = target.transform.position / 20f;
+        Vector3 targetHullAngle = target.transform.Find("Hitbox/Hull").transform.rotation.eulerAngles / 360f;
+        Vector3 targetTurretAngle = target.transform.Find("Hitbox/Turret").transform.rotation.eulerAngles / 360f;
+        float targetMaxHitpoints = (float) targetScript.GetMaxHitpoints();
+        float targetHitpoints = ((float) targetScript.GetHitpoints()) / targetMaxHitpoints;
+
+        Vector3 shooterLocation = shooter.transform.position / 20f;
+        Vector3 shooterDirection = shooter.transform.forward.normalized;
+        float shooterPenetration = round.GetComponent<ShellScript>().penetration / 300f;
+        Vector3 aimedLocation = Vector3.zero;
+        Vector3 idealForward = (Quaternion.LookRotation(HelperScript.GetDirection(shooterLocation, targetLocation), Vector3.up) * Vector3.forward).normalized;
+        int tankIndex = -1;
+        float plateThickness = -1;
+        RaycastHit hit;
+
+        if (Physics.Raycast(shooter.transform.position, shooter.transform.forward, out hit, 200))
+        {
+            if (hit.collider.gameObject.tag == "Armour Plate")
+            {
+                if (hit.collider.gameObject.GetComponentInParent<ArmourTrainerAI>().AIName == AIName)
+                {
+                    // aimedLocation = hit.collider.transform.InverseTransformPoint(hit.point);
+                    aimedLocation = hit.point / 20f;
+                    plateThickness = hit.collider.transform.GetComponent<ArmourPlateScript>().armourThickness / 1000f;
+                    tankIndex = hit.collider.transform.GetComponentInParent<TankControllerScript>().tankIndex;
+                }
+            }
+            else
+            {
+                aimedLocation = (shooterLocation + (shooterDirection * 200f)) / 20f;
+            }
+        }
+
+        return new EnvironmentState(targetLocation, targetHullAngle, targetTurretAngle, targetHitpoints, targetMaxHitpoints, tankIndex, shooterLocation, shooterDirection, idealForward, shooterPenetration, aimedLocation, plateThickness);
     }
 
     public override object[] TakeAction(EnvironmentState state, int actionRepeat = 1)
     {
         // Predict the action using the NN
         string response = client.RequestResponse(ServerRequests.PREDICT.ToString() + " >|< " + state.ToString());
+        float value = 0;
 
         if (response.Contains(" >|< ") == true)
         {
-            response = response.Split(new string[] { " >|< " }, System.StringSplitOptions.None).ToList()[0];
+            List<string> splitString = response.Split(new string[] { " >|< " }, System.StringSplitOptions.None).ToList();
+            value = float.Parse(splitString[1]);
+            response = splitString[0];
         }
 
         List<float> parsedResponse = HelperScript.ParseStringToFloats(response, " | ");
 
-        int bestActionIndex = parsedResponse.IndexOf(parsedResponse.Max());
-        string oldHitpointsString = targetScript.GetHitpoints().ToString();
-        string oldHitpointsDeepCopy = string.Copy(oldHitpointsString);
-        int oldHitpoints = int.Parse(oldHitpointsDeepCopy);
+        int bestActionIndex = HelperScript.SampleProbabilityDistribution(parsedResponse); //parsedResponse.IndexOf(parsedResponse.Max());
+        int observedHitpoints = targetScript.GetHitpoints();
         Vector3 oldIdealRotation = (Quaternion.LookRotation(HelperScript.GetDirection(state.shooterLocation, state.enemyLocation), Vector3.up) * Vector3.forward).normalized;
         float oldForwardDissimilarity = (Mathf.Abs(oldIdealRotation.x - state.shooterForward.x) + Mathf.Abs(oldIdealRotation.y - state.shooterForward.y) + Mathf.Abs(oldIdealRotation.z - state.shooterForward.z)) / 3f;
 
-        
+        float reward = 0;
+
         // Use epsilon-greedy for exploration
         if (Random.Range(0, 1) < epsilon)
         {
-            bestActionIndex = Mathf.RoundToInt(Random.Range(0, (float)(parsedResponse.Count - 1)));
+            System.Random rnd = new System.Random();
+            bestActionIndex = rnd.Next(parsedResponse.Count);
         }
-        
 
-        //bestActionIndex = HelperScript.SampleProbabilityDistribution(parsedResponse);
         bool firedRound = false;
 
         for (int i = 0; i < actionRepeat; i++)
         {
-            /*switch (bestActionIndex)
+            /*
+            switch (bestActionIndex)
             {
                 // Shoot
                 case 0:
@@ -234,103 +277,114 @@ public class ArmourTrainerAI : TrainerScript
                 case 8:
                     shooter.transform.eulerAngles += new Vector3(1, 0, 0);
                     break;
-
-                // Take no action
-                case 9:
-                    break;
             }
-
-            if (firedRound == true) { break; }*/
+            */
 
             switch (bestActionIndex)
             {
-                // Move left
+                // Look left
                 case 0:
-                    shooter.transform.position -= shooter.transform.right * 0.1f;
+                    shooter.transform.eulerAngles -= new Vector3(0, 1, 0);
                     break;
 
-                // Move right
+                // Look right
                 case 1:
-                    shooter.transform.position += shooter.transform.right * 0.1f;
+                    shooter.transform.eulerAngles += new Vector3(0, 1, 0);
                     break;
 
-                    /*// Move up
-                    case 2:
-                        shooter.transform.position += shooter.transform.up * 0.1f;
-                        break;
+                // Look up
+                case 2:
+                    shooter.transform.eulerAngles -= new Vector3(1, 0, 0);
+                    break;
 
-                    // Move down
-                    case 3:
-                        shooter.transform.position -= shooter.transform.up * 0.1f;
-                        break;*/
+                // Look down
+                case 3:
+                    shooter.transform.eulerAngles += new Vector3(1, 0, 0);
+                    break;
             }
+
+            if (firedRound == true) { break; }
         }
 
         EnvironmentState newEnvironment = ObserveEnvironment();
-        if (bestActionIndex == 0)
+        bool hitWall = true;
+        if (shooter.transform.localPosition.z >= 10)
         {
-            newEnvironment.firedRound = 1;
+            shooter.transform.localPosition = new Vector3(shooter.transform.localPosition.x, shooter.transform.localPosition.y, 9);
+        }
+        else if (shooter.transform.localPosition.z <= -10)
+        {
+            shooter.transform.localPosition = new Vector3(shooter.transform.localPosition.x, shooter.transform.localPosition.y, -9);
+        }
+        else if (shooter.transform.localPosition.y >= 10)
+        {
+            shooter.transform.localPosition = new Vector3(shooter.transform.localPosition.x, 9, shooter.transform.localPosition.z);
+        }
+        else if (shooter.transform.localPosition.y <= -10)
+        {
+            shooter.transform.localPosition = new Vector3(shooter.transform.localPosition.x, -9, shooter.transform.localPosition.z);
+        }
+        else if (shooter.transform.localPosition.x >= 10)
+        {
+            shooter.transform.localPosition = new Vector3(9, shooter.transform.localPosition.y, shooter.transform.localPosition.z);
+        }
+        else if (shooter.transform.localPosition.x <= -10)
+        {
+            shooter.transform.localPosition = new Vector3(-9, shooter.transform.localPosition.y, shooter.transform.localPosition.z);
         }
         else
         {
-            newEnvironment.firedRound = 0;
+            hitWall = false;
         }
 
-        int newHitpoints = targetScript.GetHitpoints();
-
         Vector3 newIdealRotation = (Quaternion.LookRotation(HelperScript.GetDirection(newEnvironment.shooterLocation, newEnvironment.enemyLocation), Vector3.up) * Vector3.forward).normalized;
-        float newForwardDissimilarity = (Mathf.Abs(newIdealRotation.x - newEnvironment.shooterForward.x) + Mathf.Abs(newIdealRotation.y - newEnvironment.shooterForward.y) + Mathf.Abs(oldIdealRotation.z - newEnvironment.shooterForward.z)) / 3f;
+        float newForwardDissimilarity = (Mathf.Abs(newIdealRotation.x - newEnvironment.shooterForward.x) + Mathf.Abs(newIdealRotation.y - newEnvironment.shooterForward.y) + Mathf.Abs(newIdealRotation.z - newEnvironment.shooterForward.z)) / 3f;
         //float reward = 1 / (Vector3.Angle(newEnvironment.shooterForward, idealRotation) * (1 / Vector3.Distance(newEnvironment.shooterLocation, newEnvironment.enemyLocation))) * (1 / Vector3.Distance(newEnvironment.shooterLocation, newEnvironment.enemyLocation)) * 750;
-
-        // The default reward
-        float reward = 0;
 
 
         if (newForwardDissimilarity < oldForwardDissimilarity)
         {
-            //reward += 0.1f;
+            reward += 0.1f;
         }
         else
         {
-            //reward -= 0.1f;
+            reward -= 0.1f;
         }
 
         // If the terminal state has been reached
-        if (oldHitpoints == 0)
+        if (newEnvironment.enemyHitpoints == 0)
         {
+            reward += 10f;
             // You may need to change the final reward
-            return new object[] { bestActionIndex, 10, true };
+            return new object[] { bestActionIndex, reward, 1 };
         }
         // This is a bit dodgy! The shell has a travel time so the direct action which fired the shell may not be rewarded!
         // It may also be a good idea to reward even more if the action kills the enemy tank
-        else if (oldHitpoints > newHitpoints)
+        /*else if (oldHitpoints > newHitpoints)
         {
             //reward += (oldHitpoints - newHitpoints);
             reward += (1 - ((oldHitpoints - newHitpoints) / newEnvironment.enemyMaxHitpoints)) * 10f;
-        }
+        }*/
 
-        //float reward = 0;//1/Vector3.Distance(newEnvironment.enemyLocation, newEnvironment.shooterLocation);
-
-        if (Mathf.Abs(state.enemyLocation.x - state.shooterLocation.x) > Mathf.Abs(newEnvironment.enemyLocation.x - newEnvironment.shooterLocation.x))
-        {
-            reward += 0.2f;
-        }
-        else
-        {
-            reward = 0f;
-        }
         // If the shooter is aiming at the tank, then give a positive reward
         if (newEnvironment.tankIndex >= 0)
         {
-            reward += 0.5f;
+            reward += 10f;
+            // You may need to change the final reward
+            return new object[] { bestActionIndex, reward, 1 };
         }
 
-        // parsedResponse.Add(reward);
-        // parsedResponse.Add(parsedResponse[1] - parsedResponse[0]);
-        // HelperScript.PrintList(parsedResponse);
-        // Debug.Log("Action: " + bestActionIndex + " ; Reward:" + reward);
+        if (hitWall == true)
+        {
+            reward -= 0.1f;
+        }
+        if (AIName == "0")
+        {
+            HelperScript.PrintList(parsedResponse);
+            Debug.Log(reward + " ; " + value);
+        }
 
-        return new object[] { bestActionIndex, reward, false };
+        return new object[] { bestActionIndex, reward, 0 };
     }
 
     private object[] ObserveAndTakeAction(ServerRequests request, int actionRepeat = 6)
@@ -348,7 +402,8 @@ public class ArmourTrainerAI : TrainerScript
             + " >|< " + actionReward[0].ToString()
             + " >|< " + actionReward[1].ToString()
             + " >|< " + newState.ToString()
-            + " >|< " + currentState.ID.ToString();
+            + " >|< " + currentState.ID.ToString()
+            + " >|< " + actionReward[2].ToString();
 
         // Return the size of the replay buffer in the client
         return new object[] { client.RequestResponse(request.ToString() + " >|< " + stateTransitionString), actionReward[2], actionReward[1] };
@@ -453,7 +508,7 @@ public class ArmourTrainerAI : TrainerScript
         }
     }
 
-    public IEnumerator TrainA3C(int episodeCount = 50, int maxEpisodeSteps = 100, int epsilonAnnealInterval = 1, int plotInterval = 100)
+    public IEnumerator TrainA3C(int episodeCount = 1001, int maxEpisodeSteps = 200, int epsilonAnnealInterval = 3, int plotInterval = 50)
     {
         ResetEnvironment();
 
@@ -481,25 +536,28 @@ public class ArmourTrainerAI : TrainerScript
 
         FileHandler.WriteToFile("Assets/Debug/AI Log.txt", System.DateTime.Now.ToString("HH:mm:ss tt") + " ==> Baseline Reward : " + (baselineReward / baselineRepeat));
         ResetEnvironment();
-        
+
         List<float> averageRewards = new List<float>();
         List<float> stepCounts = new List<float>();
         int stepCount = 0;
         for (int i = 0; i < episodeCount; i++)
         {
+            if (train == false) { yield break; }
+
             // Perform an episode
             float episodeReward = 0;
 
             for (int j = 0; j < maxEpisodeSteps; j++)
             {
+                stepCounts.Add(0);
                 object[] stepOutput = ObserveAndTakeAction(ServerRequests.SEND_A3C_TRANSITION);
                 stepCount++;
 
                 episodeReward += float.Parse(stepOutput[2].ToString());
 
                 // Reset the environment and leave this episode if the episode has terminated
-                if (bool.Parse(stepOutput[1].ToString()) == true) { break; }
-
+                if (int.Parse(stepOutput[1].ToString()) == 1) { break; }
+                stepCounts[i]++;
                 yield return new WaitForSeconds(0.001f);
             }
 
@@ -510,14 +568,9 @@ public class ArmourTrainerAI : TrainerScript
 
             episodeRewards.Add(episodeReward);
             GlobalScript.episodeRewards.Add(episodeReward);
-            stepCounts.Add(stepCount);
 
-            FileHandler.WriteToFile("Assets/Debug/AI Log.txt", System.DateTime.Now.ToString("HH:mm:ss tt") + "Name : " + this.AIName + " ==> Episode : " + i + " ; Steps : " + stepCounts[i] + " ; Reward : " + episodeRewards[i] + " ; Epsilon : " + epsilon);
+            FileHandler.WriteToFile("Assets/Debug/AI Log.txt", System.DateTime.Now.ToString("HH:mm:ss tt") + " Name : " + this.AIName + " ==> Episode : " + i + " ; Steps : " + stepCounts[i] + " ; Reward : " + episodeRewards[i] + " ; Epsilon : " + epsilon);
 
-            if ((i % 10 == 0) && (i > 0))
-            {
-                // averageRewards.Add(episodeRewards.Skip(episodeRewards.Count - 10).Average());
-            }
 
             if ((i % plotInterval == 0) && (i > 0))
             {
@@ -529,7 +582,7 @@ public class ArmourTrainerAI : TrainerScript
                 client.SendMessage(ServerRequests.SAVE_NETWORKS.ToString());
             }
 
-            if ((i % epsilonAnnealInterval == 0) && (epsilon >= 0.1f))
+            if ((i % epsilonAnnealInterval == 0) && (epsilon >= 0.1f) && (i > 0))
             {
                 epsilon = epsilon * 0.998f;
             }
@@ -537,7 +590,6 @@ public class ArmourTrainerAI : TrainerScript
             GlobalScript.globalEpisodeCount++;
 
             ResetEnvironment();
-            // Debug.Log(stepCount);
         }
     }
 
@@ -570,20 +622,20 @@ public class ArmourTrainerAI : TrainerScript
 
     public override void ResetEnvironment()
     {
+        target.transform.localPosition = new Vector3(Random.Range(minimumBounds.x, maximumBounds.x), Random.Range(minimumBounds.y, maximumBounds.y), Random.Range(minimumBounds.z, maximumBounds.z));
+
         // Spawn the shooter in a random location within the bounds
-        /*shooter.transform.position = new Vector3(Random.Range(minimumBounds.x, maximumBounds.x), Random.Range(minimumBounds.y, maximumBounds.y), Random.Range(minimumBounds.z, maximumBounds.z));
-        while (Vector3.Distance(shooter.transform.position, target.transform.position) < proximityThreshold)
+        shooter.transform.localPosition = new Vector3(Random.Range(minimumBounds.x, maximumBounds.x), Random.Range(minimumBounds.y, maximumBounds.y), Random.Range(minimumBounds.z, maximumBounds.z));
+        while (Vector3.Distance(shooter.transform.localPosition, target.transform.localPosition) < proximityThreshold)
         {
-            shooter.transform.position = new Vector3(Random.Range(minimumBounds.x, maximumBounds.x), Random.Range(minimumBounds.y, maximumBounds.y), Random.Range(minimumBounds.z, maximumBounds.z));
+            shooter.transform.localPosition = new Vector3(Random.Range(minimumBounds.x, maximumBounds.x), Random.Range(minimumBounds.y, maximumBounds.y), Random.Range(minimumBounds.z, maximumBounds.z));
         }
-        //shooter.transform.eulerAngles = new Vector3(Random.Range(-45, 45), Random.Range(0, 360), 0);
-        AimShooter();*/
 
-        target.transform.position = new Vector3(environmentTransform.position.x + Random.Range(-7.5f, 7.5f), environmentTransform.position.y + 0.2f, environmentTransform.position.z);
+        shooter.transform.LookAt(target.transform.position);
+        shooter.transform.Rotate(Random.Range(-aimVariance, aimVariance), Random.Range(-aimVariance, aimVariance), 0);
+        shooter.transform.eulerAngles = new Vector3(shooter.transform.eulerAngles.x, shooter.transform.eulerAngles.y, 0);
 
-        shooter.transform.position = new Vector3(Random.Range(target.transform.position.x - 7.5f, target.transform.position.x + 7.5f), target.transform.position.y, target.transform.position.z - 5f);
-        shooter.transform.eulerAngles = new Vector3(0, 0, 0);
-
+        // target.transform.position = new Vector3(environmentTransform.position.x + Random.Range(-9f, 9f), environmentTransform.position.y + 0.2f, environmentTransform.position.z);
         targetScript.ResetHitpoint();
     }
 
@@ -618,10 +670,11 @@ public class ArmourTrainerAI : TrainerScript
         int oldHitpoints = targetScript.GetHitpoints();
 
         EnvironmentState newEnvironment = ObserveEnvironment();
-        Vector3 idealRotation = (Quaternion.LookRotation(HelperScript.GetDirection(newEnvironment.shooterLocation, newEnvironment.enemyLocation), Vector3.up) * Vector3.forward).normalized;
+        Vector3 newIdealRotation = (Quaternion.LookRotation(HelperScript.GetDirection(newEnvironment.shooterLocation, newEnvironment.enemyLocation), Vector3.up) * Vector3.forward).normalized;
+        float newForwardDissimilarity = (Mathf.Abs(newIdealRotation.x - newEnvironment.shooterForward.x) + Mathf.Abs(newIdealRotation.y - newEnvironment.shooterForward.y) + Mathf.Abs(newIdealRotation.z - newEnvironment.shooterForward.z)) / 3f;
 
-        float reward = 1 / (Vector3.Angle(newEnvironment.shooterForward, idealRotation) * (1 / Vector3.Distance(newEnvironment.shooterLocation, newEnvironment.enemyLocation))) * (1 / Vector3.Distance(newEnvironment.shooterLocation, newEnvironment.enemyLocation)) * 750;//1 / (Vector3.Angle(newEnvironment.shooterForward, idealRotation) * (1 / Vector3.Distance(newEnvironment.shooterLocation, newEnvironment.enemyLocation))) * (1 / Vector3.Distance(newEnvironment.shooterLocation, newEnvironment.enemyLocation));
+        //  float reward = 1 / (Vector3.Angle(newEnvironment.shooterForward, idealRotation) * (1 / Vector3.Distance(newEnvironment.shooterLocation, newEnvironment.enemyLocation))) * (1 / Vector3.Distance(newEnvironment.shooterLocation, newEnvironment.enemyLocation)) * 750;//1 / (Vector3.Angle(newEnvironment.shooterForward, idealRotation) * (1 / Vector3.Distance(newEnvironment.shooterLocation, newEnvironment.enemyLocation))) * (1 / Vector3.Distance(newEnvironment.shooterLocation, newEnvironment.enemyLocation));
 
-        Debug.Log(idealRotation + " ; " + newEnvironment.shooterForward + " ; " + reward + " ; " + newEnvironment.tankIndex);
+        Debug.Log(newEnvironment.idealForward + " ; " + newEnvironment.shooterForward);
     }
 }

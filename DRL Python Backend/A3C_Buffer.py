@@ -22,6 +22,18 @@ class A3C_Buffer:
         # else:
         #     self.negativeBuffer.append(stateTransition)
 
+    def update_reward(self, stateID, newReward):
+        # Get the index of the transition with the initial state which matches the state ID
+        for i in range(len(self.buffer)):
+            if self.buffer[i].ID == stateID:
+                self.buffer[i].reward = newReward
+                self.rewards[i] = newReward
+                return
+        # If a state transition with a matching ID could not be found (probably if the penetrating shot happened towards
+        # the end of the maximum memory before the memory was cleared)
+        # print("WARNING: Could not find state ID " + str(stateID))
+
+
 
     def clear_buffer(self):
         self.buffer = []

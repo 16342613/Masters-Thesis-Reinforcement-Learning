@@ -279,6 +279,7 @@ public class MovementTrainerAI : TrainerScript
 
     public override void ResetEnvironment()
     {
+        target.transform.localPosition = new Vector3(Random.Range(1, 19f), 0, Random.Range(1, 19f));
         agent.transform.localPosition = new Vector3(Random.Range(1, 19f), 0, Random.Range(1, 19f));
     }
 

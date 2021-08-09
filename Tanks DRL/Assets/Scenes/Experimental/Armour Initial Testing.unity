@@ -319,7 +319,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 26.51, y: 0, z: 0}
 --- !u!1 &267840427
 GameObject:
@@ -643,7 +643,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &488455686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -656,9 +656,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de6fb107c783e1b4d968fe65845a4000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  environmentCount: 10
+  environmentCount: 12
   environment: {fileID: 8556852524376852695, guid: 9858a14528b32db4db69c30c698d98c7, type: 3}
-  offset: {x: 0, y: 0, z: 10}
+  offset: {x: 0, y: 0, z: 30}
 --- !u!4 &488455687
 Transform:
   m_ObjectHideFlags: 0
@@ -671,7 +671,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &515519052
 GameObject:
@@ -984,7 +984,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2116381058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -997,7 +997,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de6fb107c783e1b4d968fe65845a4000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  environmentCount: 12
+  environmentCount: 1
   environment: {fileID: 5462887504134001962, guid: baad9a7e11b698d48b7003755006b98d, type: 3}
   offset: {x: 0, y: 0, z: 30}
 --- !u!4 &2116381059
@@ -1012,7 +1012,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1156420382915350712
 PrefabInstance:
@@ -1031,7 +1031,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5462887504134001963, guid: baad9a7e11b698d48b7003755006b98d, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5462887504134001963, guid: baad9a7e11b698d48b7003755006b98d, type: 3}
       propertyPath: m_LocalPosition.x

@@ -255,17 +255,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 924a238cdc320d849a3f30417dde0023, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AIName: Sole Trainer
+  epsilon: 1
+  episodeRewards: []
+  masterTrainer: {fileID: 0}
   shooter: {fileID: 8556852523151521875}
   target: {fileID: 5273237593744962085}
   round: {fileID: 6139722949784224834, guid: 7abf957f0b6838f458f605bb4029f5cc, type: 3}
-  maximumBounds: {x: 10, y: 2, z: 10}
-  minimumBounds: {x: 0, y: 0.2, z: 0}
+  maximumBounds: {x: 9, y: 9, z: 9}
+  minimumBounds: {x: -9, y: -9, z: -9}
   proximityThreshold: 2.5
   aimVariance: 30
   environmentTransform: {fileID: 0}
   replayBufferPath: Assets/API Entry/AI/Replay Buffer.txt
-  epsilon: 1
-  episodeRewards: []
+  train: 0
 --- !u!1 &8556852524376852695
 GameObject:
   m_ObjectHideFlags: 0

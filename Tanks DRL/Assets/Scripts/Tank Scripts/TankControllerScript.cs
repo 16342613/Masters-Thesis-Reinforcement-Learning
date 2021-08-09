@@ -31,7 +31,7 @@ public abstract class TankControllerScript : MonoBehaviour
     private GameManager gameManagerScript;
 
     private bool firedRound = false;
-    public GameObject AITrainer = null;
+    public TrainerScript AITrainer = null;
     public bool isDummy = false;
 
     public virtual void Start()

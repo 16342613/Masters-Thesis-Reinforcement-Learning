@@ -31,6 +31,25 @@ public class ShellScript : MonoBehaviour
             TankControllerScript hitTankScript = collision.transform.GetComponentInParent<TankControllerScript>();
             ArmourPlateScript hitArmourScript = collision.transform.GetComponent<ArmourPlateScript>();
 
+            // If the shell and the armour plate are both from the same environment
+            if (hitTankScript.AITrainer.name == AITrainer.name)
+            {
+                // Cause damage if the armour is penned
+                if (penetration > hitArmourScript.armourThickness)
+                {
+                    try
+                    {
+                        AITrainer.UpdateReward(stateID,
+                            (1 - ((float)(hitTankScript.GetHitpoints() - alphaDamage) / (float)hitTankScript.GetMaxHitpoints())) * 10f);
+                    }
+                    catch (MissingComponentException)
+                    {
+                        Debug.Log("Cant find the AI Armour trainer!");
+                    }
+
+                    hitTankScript.CauseDamage(alphaDamage);
+                }
+            }
 
             // Start at the current component and work upwards until you reach the hull/turret
             /*
@@ -50,6 +69,7 @@ public class ShellScript : MonoBehaviour
                 collision.GetContact(0).normal - collision.transform.forward.normalized);   // The relative angle of the impact
             */
 
+            /*
             // Cause damage if the armour is penned
             if (penetration > hitArmourScript.armourThickness)
             {
@@ -65,6 +85,7 @@ public class ShellScript : MonoBehaviour
 
                 hitTankScript.CauseDamage(alphaDamage);
             }
+            */
         }
 
         Destroy(this.gameObject);

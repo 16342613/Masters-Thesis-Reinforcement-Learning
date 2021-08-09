@@ -40,6 +40,18 @@ class A3C_Worker(threading.Thread):
         else:
             return "0"
 
+    def update_reward(self, stringInput):
+        inputs = self.helper.parse_string_input(stringInput)[0]
+        self.memory.update_reward(int(inputs[0]), inputs[1])
+
+        return "0"
+
+    def global_predict(self, stringInput, parseString=True):
+        parsedInput = self.helper.parse_string_input(stringInput)
+        outputs = Global.globalModel.get_prediction(parsedInput, parseString)
+
+        return outputs
+
     def run(self):
         print("Started worker thread")
         while True:

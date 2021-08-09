@@ -6,8 +6,6 @@ import tensorflow as tf
 import keras
 import os
 import pickle
-import dill
-import weakref
 import matplotlib.pyplot as plt
 from scipy.signal import savgol_filter
 from datetime import datetime
@@ -19,15 +17,21 @@ class A3C_Master:
         self.inputSize = inputSize
         self.actionCount = actionCount
 
-        self.optimiser = tf.compat.v1.train.AdamOptimizer(0.00015, use_locking=True)
+        self.optimiser = tf.compat.v1.train.AdamOptimizer(0.0002, use_locking=True)
         self.pretrainedWeightsAvailable = False
         self.setWeights = False
-        self.globalSavePath = "Generated Data/Saved Models/globalNetwork.h5"
-        if os.path.isfile(self.globalSavePath):
+        self.globalSavePath = "Generated Data/Saved Models/"
+
+        if os.path.isfile(os.path.join(self.globalSavePath, "test.pkl")):
             Global.globalModel = A3C_NN(self.inputSize, self.actionCount)
-            self.pretrainedWeightsAvailable = True
-            # self.global_predict("UnityEngine.Vector3 | UnityEngine.Vector3 >|< (4.1, 0.2, 0.0) | (8.6, 0.2, -5.0)", False)
+            Global.globalModel.build((None, self.inputSize))
+
+            with open(self.globalSavePath + "test.pkl", "rb") as file:
+                weights = pickle.load(file)
+                for i in range(len(weights)):
+                    Global.globalModel.trainable_variables[i].assign(weights[i])
             print("Loaded saved weights")
+
         else:
             Global.globalModel = A3C_NN(self.inputSize, self.actionCount)
             self.setWeights = True
@@ -54,15 +58,13 @@ class A3C_Master:
         parsedInput = helper.parse_string_input(stringInput)
         outputs = Global.globalModel.get_prediction(parsedInput, parseString)
 
-        if self.pretrainedWeightsAvailable is True and self.setWeights is False:
-            Global.globalModel.load_weights(self.globalSavePath)
-            self.setWeights = True
-
         return outputs
 
     def save_network(self):
-        Global.globalModel.save_weights(self.globalSavePath)
-        print("Saved global model")
+        # Global.globalModel.save_weights(os.path.join(self.globalSavePath, "globalModel.h5"))
+        with open(self.globalSavePath + "test.pkl", "wb") as file:
+            pickle.dump(Global.globalModel.trainable_variables, file)
+        print(datetime.now().strftime("%H:%M:%S") + " : Saved global model")
 
     def plot_progress(self, stringInput):
         workerIndex = int(stringInput.split(" >|< ")[0])

@@ -11,8 +11,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         // Lock the framerate to 60fps
-        Application.targetFrameRate = 120;
         QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 1000;
 
         // Lock the cursor inside the game window
         Cursor.lockState = CursorLockMode.Locked;

@@ -1,3 +1,5 @@
+import datetime
+
 from A3C_NN import A3C_NN
 from A3C_Buffer import A3C_Buffer
 from StateTransition import StateTransition
@@ -49,7 +51,6 @@ class A3C_Worker(threading.Thread):
     def global_predict(self, stringInput, parseString=True):
         parsedInput = self.helper.parse_string_input(stringInput)
         outputs = Global.globalModel.get_prediction(parsedInput, parseString)
-
         return outputs
 
     def run(self):
@@ -76,7 +77,7 @@ class A3C_Worker(threading.Thread):
         :return:
         """
         lastTransition = self.memory.buffer[-1]
-        with tf.GradientTape(persistent=True) as tape:
+        with tf.GradientTape() as tape:
             # Get the gradients of the local model
             loss = self._compute_loss(lastTransition, self.memory, self.discountFactor)
             # loss = self.compute_loss_correct(lastTransition.terminalState, lastTransition.newState, self.memory)

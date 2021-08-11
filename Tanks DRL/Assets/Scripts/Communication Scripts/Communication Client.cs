@@ -1,9 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
 using System.Diagnostics;
+using System.Threading;
 
 public class CommunicationClient
 {
@@ -17,8 +16,9 @@ public class CommunicationClient
     private bool connectedToServer;
     private bool verboseLogging;
     public string IP;
+    public int currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
-    public CommunicationClient(string logFilePath, string IP = "192.168.56.1", bool verboseLogging = true)
+    public CommunicationClient(string logFilePath, string IP = "192.168.56.1", bool verboseLogging = false)
     {
         this.logFilePath = logFilePath;
         this.IP = IP;
@@ -116,7 +116,7 @@ public class CommunicationClient
     {
         if (this.verboseLogging == true || criticalLog == true)
         {
-            FileHandler.WriteToFile(logFilePath, DateTime.Now.ToString("HH:mm:ss tt") + " : " + data);
+            // FileHandler.WriteToFile(logFilePath, DateTime.Now.ToString("HH:mm:ss tt") + " : " + data);
         }
     }
 }

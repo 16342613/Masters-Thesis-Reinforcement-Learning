@@ -53,7 +53,7 @@ public abstract class TrainerScript : MonoBehaviour
         
     }
 
-    public abstract object[] TakeAction(EnvironmentState state, int actionRepeat = 1);
+    public abstract object[] TakeAction(EnvironmentState state, int actionRepeat = 1, string givenResponse = null);
 
     public abstract void ResetEnvironment();
 

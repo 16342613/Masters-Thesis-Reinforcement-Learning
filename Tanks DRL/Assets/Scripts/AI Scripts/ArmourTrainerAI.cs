@@ -26,8 +26,8 @@ public class ArmourTrainerAI : TrainerScript
         targetScript.AITrainer = this;
         environmentTransform = this.gameObject.transform.parent.transform;
 
-        client = new CommunicationClient("Assets/Debug/Communication Log.txt");
-        client.ConnectToServer("DESKTOP-23VITDP", 8000);
+        client = new CommunicationClient("Assets/Debug/Communication Log.txt", verboseLogging: false);
+        //client.ConnectToServer("DESKTOP-23VITDP", 8000);
 
         // Clear the log files
         HelperScript.ClearLogs();
@@ -36,6 +36,7 @@ public class ArmourTrainerAI : TrainerScript
     // Update is called once per frame
     void Update()
     {
+        /*
         if (Input.GetKeyDown(KeyCode.Space))
         {
             AimShooter();
@@ -76,6 +77,7 @@ public class ArmourTrainerAI : TrainerScript
         }
 
         // TestReward();
+        */
     }
 
     /// <summary>
@@ -125,7 +127,7 @@ public class ArmourTrainerAI : TrainerScript
             " >|< " + stateID + " | " + newReward);
     }
 
-    private EnvironmentState ObserveEnvironment()
+    public EnvironmentState ObserveEnvironment()
     {
         /*
         Vector3 targetLocation = target.transform.position;
@@ -163,8 +165,8 @@ public class ArmourTrainerAI : TrainerScript
         Vector3 targetLocation = target.transform.position / 20f;
         Vector3 targetHullAngle = target.transform.Find("Hitbox/Hull").transform.rotation.eulerAngles / 360f;
         Vector3 targetTurretAngle = target.transform.Find("Hitbox/Turret").transform.rotation.eulerAngles / 360f;
-        float targetMaxHitpoints = (float) targetScript.GetMaxHitpoints();
-        float targetHitpoints = ((float) targetScript.GetHitpoints()) / targetMaxHitpoints;
+        float targetMaxHitpoints = (float)targetScript.GetMaxHitpoints();
+        float targetHitpoints = ((float)targetScript.GetHitpoints()) / targetMaxHitpoints;
 
         Vector3 shooterLocation = shooter.transform.position / 20f;
         Vector3 shooterDirection = shooter.transform.forward.normalized;
@@ -179,7 +181,7 @@ public class ArmourTrainerAI : TrainerScript
         {
             if (hit.collider.gameObject.tag == "Armour Plate")
             {
-                if (hit.collider.gameObject.GetComponentInParent<ArmourTrainerAI>().AIName == AIName)
+                if (hit.collider.gameObject.transform.root.GetComponentInChildren<ArmourTrainerAI>().AIName == AIName)
                 {
                     // aimedLocation = hit.collider.transform.InverseTransformPoint(hit.point);
                     aimedLocation = hit.point / 20f;
@@ -196,10 +198,19 @@ public class ArmourTrainerAI : TrainerScript
         return new EnvironmentState(targetLocation, targetHullAngle, targetTurretAngle, targetHitpoints, targetMaxHitpoints, tankIndex, shooterLocation, shooterDirection, idealForward, shooterPenetration, aimedLocation, plateThickness);
     }
 
-    public override object[] TakeAction(EnvironmentState state, int actionRepeat = 1)
+    public override object[] TakeAction(EnvironmentState state = null, int actionRepeat = 1, string givenResponse = null)
     {
         // Predict the action using the NN
-        string response = client.RequestResponse(ServerRequests.PREDICT.ToString() + " >|< " + state.ToString());
+        string response = "";
+        if (givenResponse == null)
+        {
+            response = client.RequestResponse(ServerRequests.PREDICT.ToString() + " >|< " + state.ToString());
+        }
+        else
+        {
+            response = givenResponse;
+        }
+
         float value = 0;
 
         if (response.Contains(" >|< ") == true)
@@ -212,7 +223,6 @@ public class ArmourTrainerAI : TrainerScript
         List<float> parsedResponse = HelperScript.ParseStringToFloats(response, " | ");
 
         int bestActionIndex = HelperScript.SampleProbabilityDistribution(parsedResponse); //parsedResponse.IndexOf(parsedResponse.Max());
-        int observedHitpoints = targetScript.GetHitpoints();
         Vector3 oldIdealRotation = (Quaternion.LookRotation(HelperScript.GetDirection(state.shooterLocation, state.enemyLocation), Vector3.up) * Vector3.forward).normalized;
         float oldForwardDissimilarity = (Mathf.Abs(oldIdealRotation.x - state.shooterForward.x) + Mathf.Abs(oldIdealRotation.y - state.shooterForward.y) + Mathf.Abs(oldIdealRotation.z - state.shooterForward.z)) / 3f;
 
@@ -549,8 +559,13 @@ public class ArmourTrainerAI : TrainerScript
 
             for (int j = 0; j < maxEpisodeSteps; j++)
             {
+                System.Diagnostics.Stopwatch swMain = new System.Diagnostics.Stopwatch();
+                swMain.Start();
                 stepCounts.Add(0);
+                System.Diagnostics.Stopwatch swStep = new System.Diagnostics.Stopwatch();
+                swStep.Start();
                 object[] stepOutput = ObserveAndTakeAction(ServerRequests.SEND_A3C_TRANSITION);
+                swStep.Stop();
                 stepCount++;
 
                 episodeReward += float.Parse(stepOutput[2].ToString());
@@ -558,7 +573,10 @@ public class ArmourTrainerAI : TrainerScript
                 // Reset the environment and leave this episode if the episode has terminated
                 if (int.Parse(stepOutput[1].ToString()) == 1) { break; }
                 stepCounts[i]++;
+                swMain.Stop();
                 yield return new WaitForSeconds(0.001f);
+
+                Debug.Log("Main: " + swMain.ElapsedMilliseconds + " ; Step: " + swStep.ElapsedMilliseconds);
             }
 
             if (stepCount > 100000)

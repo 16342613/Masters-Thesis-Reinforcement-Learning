@@ -13,7 +13,7 @@ public class MovementTrainerAI : TrainerScript
     // Start is called before the first frame update
     void Start()
     {
-        client = new CommunicationClient("Assets/Debug/Communication Log.txt");
+        client = new CommunicationClient("Assets/Debug/Communication Log.txt", verboseLogging: false);
         client.ConnectToServer("DESKTOP-23VITDP", 8000);
 
         // Clear the log files
@@ -55,7 +55,7 @@ public class MovementTrainerAI : TrainerScript
         return new EnvironmentState(agent.transform.localPosition / 20f, target.transform.localPosition / 20f);
     }
 
-    public override object[] TakeAction(EnvironmentState state, int actionRepeat = 1)
+    public override object[] TakeAction(EnvironmentState state = null, int actionRepeat = 1, string givenResponse = null)
     {
         // Predict the action using the NN
         string response = client.RequestResponse(ServerRequests.PREDICT.ToString() + " >|< " + state.ToString());

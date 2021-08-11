@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnvironmentState : MonoBehaviour
+public class EnvironmentState
 {
     #region Armour Trainer
     public Vector3 enemyLocation;

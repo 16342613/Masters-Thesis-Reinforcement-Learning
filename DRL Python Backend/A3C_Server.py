@@ -124,7 +124,7 @@ class A3C_Server:
 
     def __echo(self, toEcho):
         try:
-            self.__log_data(toEcho, overrideLogPermissions=True)
+            # self.__log_data(toEcho, overrideLogPermissions=True)
             return "1"
         except:
             return "0"

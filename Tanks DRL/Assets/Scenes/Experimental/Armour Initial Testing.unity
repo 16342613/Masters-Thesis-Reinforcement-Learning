@@ -659,6 +659,8 @@ MonoBehaviour:
   environmentCount: 12
   environment: {fileID: 8556852524376852695, guid: 9858a14528b32db4db69c30c698d98c7, type: 3}
   offset: {x: 0, y: 0, z: 30}
+  episodeRewards: []
+  episodeSteps: 
 --- !u!4 &488455687
 Transform:
   m_ObjectHideFlags: 0
@@ -720,7 +722,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &604691309
 Light:
   m_ObjectHideFlags: 0
@@ -1000,6 +1002,8 @@ MonoBehaviour:
   environmentCount: 1
   environment: {fileID: 5462887504134001962, guid: baad9a7e11b698d48b7003755006b98d, type: 3}
   offset: {x: 0, y: 0, z: 30}
+  episodeRewards: []
+  episodeSteps: 
 --- !u!4 &2116381059
 Transform:
   m_ObjectHideFlags: 0

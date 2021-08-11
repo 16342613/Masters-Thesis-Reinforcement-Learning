@@ -2,18 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-
-using CielaSpike;
+using System.Threading;
 
 public class MasterTrainerScript : MonoBehaviour
 {
     List<GameObject> environments = new List<GameObject>();
     // Change the trainer script type between <> accordingly. In the end, you only need one trainer
     List<ArmourTrainerAI> trainingScripts = new List<ArmourTrainerAI>();
+    List<CommunicationThread> communicationThreads = new List<CommunicationThread>();
+    List<bool> episodeFinished = new List<bool>();
 
     public int environmentCount;
     public GameObject environment;
     public Vector3 offset = new Vector3(0, 0, 10);
+    private int currentThreadID = Thread.CurrentThread.ManagedThreadId;
+    public List<float> episodeRewards;
+    public List<int> episodeSteps;
 
     // Start is called before the first frame update
     void Start()
@@ -21,10 +25,21 @@ public class MasterTrainerScript : MonoBehaviour
         SetUpEnvironments();
 
         environments = GameObject.FindGameObjectsWithTag("Environment").ToList();
-        foreach (GameObject environment in environments)
+
+        for (int i = 0; i < environmentCount; i++)
         {
             // This may be null depending on the type of trainer. In the end, you should only use one trainer
-            trainingScripts.Add(environment.GetComponentInChildren<ArmourTrainerAI>());
+            trainingScripts.Add(environments[i].GetComponentInChildren<ArmourTrainerAI>());
+            // Initalise communication clients at separate ports
+            CommunicationThread commThread = new CommunicationThread(8000 + i);
+            Thread thread = new Thread(commThread.run);
+            thread.Start();
+
+            communicationThreads.Add(commThread);
+
+            episodeFinished.Add(false);
+            episodeRewards.Add(0);
+            episodeSteps.Add(0);
         }
 
         for (int i = 0; i < trainingScripts.Count; i++)
@@ -48,6 +63,25 @@ public class MasterTrainerScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.B))
         {
             Train();
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            StartCoroutine(TrainAsynchronous());
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            DoStep();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            for (int i = 0; i < environmentCount; i++)
+            {
+                trainingScripts[i].epsilon = 0;
+            }
+            ResetAllEnvironments();
         }
 
         // Debug.Log(GlobalScript.globalEpisodeCount);
@@ -74,8 +108,237 @@ public class MasterTrainerScript : MonoBehaviour
         }
     }
 
-    private void TrainAsyncronous()
+    private IEnumerator TrainAsynchronous(int episodeCount = 1001, int maxEpisodeSteps = 200, int epsilonAnnealInterval = 6, int plotInterval = 999)
     {
+        ResetAllEnvironments();
 
+        for (int i = 0; i < episodeCount; i++)
+        {
+
+            for (int j = 0; j < maxEpisodeSteps; j++)
+            {
+                DoAsynchronousTrainingStep();
+
+                yield return new WaitForSeconds(0.001f);
+            }
+
+            for (int j = 0; j < environmentCount; j++)
+            {
+                FileHandler.WriteToFile("Assets/Debug/AI Log.txt", System.DateTime.Now.ToString("HH:mm:ss tt") + " Name : " + trainingScripts[j].AIName + " ==> Episode : " + i + " ; Steps : " + episodeSteps[j] + " ; Reward : " + episodeRewards[j] + " ; Epsilon : " + trainingScripts[j].epsilon);
+            }
+
+            // Save the networks after a certain amount of episodes
+            if ((i % plotInterval == 0) && (i > 0))
+            {
+                for (int j = 0; j < environmentCount; j++)
+                {
+                    communicationThreads[j].SendRequest(ServerRequests.SAVE_NETWORKS.ToString());
+                }
+
+                Thread.Sleep(10000);
+                WaitForServerComplete();
+                CollectServerResponses();
+            }
+
+            if ((i % epsilonAnnealInterval == 0) && (trainingScripts[0].epsilon >= 0.1f) && (i > 0))
+            {
+                for (int j = 0; j < environmentCount; j++)
+                {
+                    trainingScripts[j].epsilon = trainingScripts[j].epsilon * 0.998f;
+                }
+            }
+
+            // Reset the environments to facilitate the next episode
+            ResetAllEnvironments();
+        }
+    }
+
+    private List<float> DoAsynchronousTrainingStep()
+    {
+        // Perform some 'global step update' rather than update the steps individually on each environment
+        // Send state transition at time t across all environments to the threaded server, and return the results.
+
+        // Store the initial observed states (S)
+        List<EnvironmentState> initialStates = new List<EnvironmentState>();
+
+        for (int i = 0; i < environmentCount; i++)
+        {
+            communicationThreads[i].SendRequest(ServerRequests.ECHO.ToString() + " >|< " + "0");
+        }
+        WaitForServerComplete();
+        CollectServerResponses();
+
+        for (int i = 0; i < environmentCount; i++)
+        {
+            // Observe each environment
+            EnvironmentState observedState = trainingScripts[i].ObserveEnvironment();
+            initialStates.Add(observedState);
+
+            // If the episode in an environment has reached a terminal state, you can skip to the next environment
+            if (episodeFinished[i] == true)
+            {
+                continue;
+            }
+
+            // Send the observation to the communication thread, which should pass it to the server
+            communicationThreads[i].SendRequest(ServerRequests.PREDICT.ToString() + " >|< " + initialStates[i].ToString());
+        }
+        // Wait for all prediction responses to return back from the server
+        WaitForServerComplete();
+
+        // Collect the responses from the server, now that you are sure that all responses have been received
+        List<string> predictedActionResponses = CollectServerResponses();
+        // Store the reward for the actions (R)
+        List<float> rewards = new List<float>();
+
+        // Take a particular action given the response from the server
+        for (int i = 0; i < environmentCount; i++)
+        {
+            // If the episode in an environment has reached a terminal state, you can skip to the next environment
+            if (episodeFinished[i] == true)
+            {
+                continue;
+            }
+
+            // Take an action, and record the action taken and the reward (This is different from the normal TakeAction method, as the response
+            // from the server is already provided as an input parameter)
+            object[] actionReward = trainingScripts[i].TakeAction(state: initialStates[i], actionRepeat: 5, givenResponse: predictedActionResponses[i]);
+            // Record the next state after taking the action
+            EnvironmentState newState = trainingScripts[i].ObserveEnvironment();
+
+            string stateTransitionString = initialStates[i].ToString()
+            + " >|< " + actionReward[0].ToString()
+            + " >|< " + actionReward[1].ToString()
+            + " >|< " + newState.ToString()
+            + " >|< " + initialStates[i].ID.ToString()
+            + " >|< " + actionReward[2].ToString();
+
+            // communicationThreads[i].SendRequest(ServerRequests.PREDICT.ToString() + " >|< " + initialStates[i].ToString());
+
+            // Send the state transition to the server in order to train the A3C algorithm
+            communicationThreads[i].SendRequest(ServerRequests.SEND_A3C_TRANSITION.ToString() + " >|< " + stateTransitionString);
+            //rewards.Add(float.Parse(actionReward[1].ToString()));
+            episodeRewards[i] += float.Parse(actionReward[1].ToString());
+            episodeSteps[i] += 1;
+            // If the environment has encountered a terminal state
+            if (actionReward[2].ToString() == "1")
+            {
+                episodeFinished[i] = true;
+            }
+        }
+
+        // Some A3C appends could trigger a training command on the server, so you may need to wait for the server to finish training
+        WaitForServerComplete();
+
+        return rewards;
+    }
+
+    private void WaitForServerComplete()
+    {
+        for (int i = 0; i < environmentCount; i++)
+        {
+            if (episodeFinished[i] == true)
+            {
+                continue;
+            }
+
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+
+            bool serverResponseReceived = false;
+
+            while (serverResponseReceived == false && sw.ElapsedMilliseconds < 5000)
+            {
+                serverResponseReceived = communicationThreads[i].CheckResponse();
+                Thread.Sleep(1);
+            }
+
+            if (sw.ElapsedMilliseconds >= 5000)
+            {
+                throw new System.Exception("TIMEOUT!");
+            }
+
+            sw.Stop();
+        }
+    }
+
+    private List<string> CollectServerResponses()
+    {
+        List<string> output = new List<string>();
+
+        for (int i = 0; i < environmentCount; i++)
+        {
+            output.Add(communicationThreads[i].GetResponse());
+
+            // Reset the response
+            communicationThreads[i].ResetResponse();
+        }
+
+        return output;
+    }
+
+    private void ResetAllEnvironments()
+    {
+        for (int i = 0; i < environmentCount; i++)
+        {
+            // Add the rewards for the episode
+            trainingScripts[i].ResetEnvironment();
+            // Reset the episode finished flag
+            episodeFinished[i] = false;
+            // Reset the rewards
+            episodeRewards[i] = 0;
+            // Reset the step counter
+            episodeSteps[i] = 0;
+        }
+    }
+
+    private void DoStep()
+    {
+        // Perform some 'global step update' rather than update the steps individually on each environment
+        // Send state transition at time t across all environments to the threaded server, and return the results.
+
+        // Store the initial observed states (S)
+        List<EnvironmentState> initialStates = new List<EnvironmentState>();
+
+        for (int i = 0; i < environmentCount; i++)
+        {
+            communicationThreads[i].SendRequest(ServerRequests.ECHO.ToString() + " >|< " + "0");
+        }
+        WaitForServerComplete();
+        CollectServerResponses();
+
+        for (int i = 0; i < environmentCount; i++)
+        {
+            // Observe each environment
+            EnvironmentState observedState = trainingScripts[i].ObserveEnvironment();
+            initialStates.Add(observedState);
+
+            // If the episode in an environment has reached a terminal state, you can skip to the next environment
+            if (episodeFinished[i] == true)
+            {
+                continue;
+            }
+
+            // Send the observation to the communication thread, which should pass it to the server
+            communicationThreads[i].SendRequest(ServerRequests.PREDICT.ToString() + " >|< " + initialStates[i].ToString());
+        }
+        // Wait for all prediction responses to return back from the server
+        WaitForServerComplete();
+
+        // Collect the responses from the server, now that you are sure that all responses have been received
+        List<string> predictedActionResponses = CollectServerResponses();
+
+        // Take a particular action given the response from the server
+        for (int i = 0; i < environmentCount; i++)
+        {
+            // If the episode in an environment has reached a terminal state, you can skip to the next environment
+            if (episodeFinished[i] == true)
+            {
+                continue;
+            }
+
+            // Take an action
+            trainingScripts[i].TakeAction(state: initialStates[i], actionRepeat: 5, givenResponse: predictedActionResponses[i]);
+        }
     }
 }

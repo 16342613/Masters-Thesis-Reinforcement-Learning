@@ -22,6 +22,11 @@ public class EnvironmentState
 
     public int ID;
 
+    public float forwardRay;
+    public float backwardRay;
+    public float leftRay;
+    public float rightRay;
+
     public EnvironmentState(Vector3 enemyLocation, Vector3 enemyHullAngle, Vector3 enemyTurretAngle, float enemyHitpoints, float enemyMaxHitpoints, int tankIndex,
         Vector3 shooterLocation, Vector3 shooterForward, Vector3 idealForward, float shooterPenetration, Vector3 aimedLocation, float plateThickness)
     {
@@ -46,11 +51,20 @@ public class EnvironmentState
     #region Movement Trainer
     public Vector3 agentPosition;
     public Vector3 targetPosition;
+    public Vector3 agentRotation;
+    public float dotProduct;
 
-    public EnvironmentState(Vector3 agentPosition, Vector3 targetPosition)
+
+    public EnvironmentState(Vector3 agentPosition, Vector3 targetPosition, float forwardRay, float backwardRay, float leftRay, float rightRay, Vector3 agentRotation, float dotProduct)
     {
         this.agentPosition = agentPosition;
         this.targetPosition = targetPosition;
+        this.forwardRay = forwardRay;
+        this.backwardRay = backwardRay;
+        this.leftRay = leftRay;
+        this.rightRay = rightRay;
+        this.agentRotation = agentRotation;
+        this.dotProduct = dotProduct;
     }
     #endregion
 
@@ -68,7 +82,7 @@ public class EnvironmentState
             + tankIndex.ToString() + " | " + shooterLocation.ToString() + " | " + shooterForward.ToString() + " | " + shooterPenetration + " | " + aimedLocation.ToString() + " | " + plateThickness;
         */
 
-        return enemyLocation.GetType().ToString() + " | "
+        /*return enemyLocation.GetType().ToString() + " | "
            + enemyHitpoints.GetType().ToString() + " | " + shooterLocation.GetType().ToString() + " | " + shooterForward.GetType().ToString() + " | " + idealForward.GetType().ToString() + " | "
            + aimedLocation.GetType().ToString()
 
@@ -76,10 +90,18 @@ public class EnvironmentState
 
            + enemyLocation.ToString() + " | " + enemyHitpoints.ToString() + " | "
            + shooterLocation.ToString() + " | " + shooterForward.ToString() + " | " + idealForward.ToString() + " | " + aimedLocation.ToString();
-
+        */
         #endregion
 
+        #region Navigation ToString
 
+        return agentPosition.GetType().ToString() + " | " + targetPosition.GetType().ToString()
+
+            + " >|< "
+
+            + agentPosition.ToString() + " | " + targetPosition.ToString();
+
+        #endregion
         /*
         return enemyLocation.GetType().ToString() + " | " + shooterLocation.GetType().ToString()
 

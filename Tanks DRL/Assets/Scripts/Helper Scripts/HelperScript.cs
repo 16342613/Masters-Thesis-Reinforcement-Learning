@@ -77,9 +77,22 @@ public class HelperScript : MonoBehaviour
         return 0;
     }
 
-    /*public static Vector3 NormalizeVector3(Vector3 original, float squareSide)
+    public static float AngleDir(Vector3 fwd, Vector3 targetDir, Vector3 up)
     {
-        float length = (float)Math.Sqrt(Math.Pow(original.x, 2f) + Math.Pow(original.x, 2f) + Math.Pow(original.x, 2f));
-        return new Vector3(original.x / length, original.y / length, original.z / length);
-    }*/
+        Vector3 perp = Vector3.Cross(fwd, targetDir);
+        float dir = Vector3.Dot(perp, up);
+
+        if (dir > 0f)
+        {
+            return 1f;
+        }
+        else if (dir < 0f)
+        {
+            return -1f;
+        }
+        else
+        {
+            return 0f;
+        }
+    }
 }

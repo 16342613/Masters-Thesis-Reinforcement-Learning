@@ -68,17 +68,12 @@ class DeepQLearner:
 
     def create_neural_network(self):
         inputs = Input(shape=self.inputShape)
-        x = layers.Dense(256, activation="relu", kernel_regularizer="l2")(inputs)
-        x = layers.Dense(256, activation="relu", kernel_regularizer="l2")(x)
-        x = layers.Dense(256, activation="relu", kernel_regularizer="l2")(x)
-        x = layers.Dense(256, activation="relu", kernel_regularizer="l2")(x)
-        x = layers.Dense(256, activation="relu", kernel_regularizer="l2")(x)
-        x = layers.Dense(256, activation="relu", kernel_regularizer="l2")(x)
-        x = layers.Dense(256, activation="relu", kernel_regularizer="l2")(x)
+        x = layers.Dense(64, activation="relu", kernel_regularizer="l2")(inputs)
+        x = layers.Dense(64, activation="relu", kernel_regularizer="l2")(x)
         x = layers.Dense(self.actionCount, activation="linear", kernel_regularizer="l2")(x)
 
         model = Model(inputs, x)
-        model.compile(loss="mse", optimizer=keras.optimizers.Adam(learning_rate=0.00025))
+        model.compile(loss="mse", optimizer=keras.optimizers.Adam(learning_rate=0.01))
         return model
 
     def predict_action(self, stringInput):
@@ -179,9 +174,9 @@ class DeepQLearner:
 
     def train(self):
         # Sample from replay buffer
-        # sampledTransitions = self.replayBuffer.sample_buffer(self.batchSize)
-        sampledTransitions = self.replayBuffer.prioritized_experience_sample(self.batchSize, (0.5, 0.5))
-        #print(len(self.replayBuffer.positiveBuffer))
+        sampledTransitions = self.replayBuffer.sample_buffer(self.batchSize)
+        # sampledTransitions = self.replayBuffer.prioritized_experience_sample(self.batchSize, (0.5, 0.5))
+        # print(len(self.replayBuffer.buffer))
         stateBatch = []
         qValuesBatch = []
 

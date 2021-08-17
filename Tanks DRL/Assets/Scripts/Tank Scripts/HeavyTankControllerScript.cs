@@ -70,4 +70,27 @@ public class HeavyTankControllerScript : TankControllerScript
             hull.transform.localEulerAngles = new Vector3(currentHullRotation.x, currentHullRotation.y + (hullTraverseSpeed * Time.deltaTime), currentHullRotation.z);
         }
     }
+
+    public override void HandleAIMovement(int inputCommand)
+    {
+        Vector3 currentHullRotation = hull.transform.localEulerAngles;
+
+        if (inputCommand == 0)
+        {
+            tankRigidBody.AddForce(hull.transform.TransformDirection(new Vector3(0, 0, horsepower)));
+        }
+        else if (inputCommand == 1)
+        {
+            tankRigidBody.AddForce(hull.transform.TransformDirection(new Vector3(0, 0, -horsepower)));
+        }
+
+        if (inputCommand == 2)
+        {
+            hull.transform.localEulerAngles = new Vector3(currentHullRotation.x, currentHullRotation.y - (hullTraverseSpeed * Time.deltaTime), currentHullRotation.z);
+        }
+        else if (inputCommand == 3)
+        {
+            hull.transform.localEulerAngles = new Vector3(currentHullRotation.x, currentHullRotation.y + (hullTraverseSpeed * Time.deltaTime), currentHullRotation.z);
+        }
+    }
 }

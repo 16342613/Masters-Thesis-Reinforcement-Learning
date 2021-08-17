@@ -15,6 +15,8 @@ import os
 
 
 class A3C_Worker(threading.Thread):
+    save_lock = threading.Lock()
+
     def __init__(self, inputSize, actionCount, workerID, discountFactor, optimiser, weightUpdateInterval=30):
         super(A3C_Worker, self).__init__()
         self.inputSize = inputSize
@@ -33,14 +35,19 @@ class A3C_Worker(threading.Thread):
         self.episodeLoss = [0]
         self.elapsedEpisodes = 0
 
-    def append_to_buffer(self, stringInput):
-        if self.acceptAppends is True:
+        self.localModel.build((None, self.inputSize))
+        for i in range(len(Global.globalModel.trainable_variables)):
+            self.localModel.trainable_variables[i].assign(Global.globalModel.trainable_variables[i])
+
+    def append_to_buffer(self, stringInput, tempPass = False):
+        if tempPass is False:
             transitionData = StateTransition.string_to_transition(stringInput)
             self.memory.populate_buffer(transitionData)
 
-            return str(len(self.memory.buffer))
-        else:
-            return "0"
+        if len(self.memory.buffer) >= self.weightUpdateInterval:
+            self.train()
+
+        return str(len(self.memory.buffer))
 
     def update_reward(self, stringInput):
         inputs = self.helper.parse_string_input(stringInput)[0]
@@ -50,7 +57,7 @@ class A3C_Worker(threading.Thread):
 
     def global_predict(self, stringInput, parseString=True):
         parsedInput = self.helper.parse_string_input(stringInput)
-        outputs = Global.globalModel.get_prediction(parsedInput, parseString)
+        outputs = self.localModel.get_prediction(parsedInput, parseString)
         return outputs
 
     def run(self):
@@ -79,27 +86,15 @@ class A3C_Worker(threading.Thread):
         lastTransition = self.memory.buffer[-1]
         with tf.GradientTape() as tape:
             # Get the gradients of the local model
-            loss = self._compute_loss(lastTransition, self.memory, self.discountFactor)
-            # loss = self.compute_loss_correct(lastTransition.terminalState, lastTransition.newState, self.memory)
+            # loss = self._compute_loss(lastTransition, self.memory, self.discountFactor)
+            loss = self.compute_loss_correct(lastTransition.terminalState, lastTransition.newState, self.memory)
 
         self.episodeLoss[-1] += loss
-        # if lastTransition.terminalState == 1:
-        #     print("Episode loss: " + str(self.episodeLoss[-1]))
-        #     self.elapsedEpisodes += 1
-        #     #print(self.elapsedEpisodes)
-        #     if (self.elapsedEpisodes > 0) and (self.elapsedEpisodes % 50 == 0):
-        #         x = [i for i in range(len(self.episodeLoss))]
-        #         plt.plot(x, self.episodeLoss)
-        #
-        #         if os.path.isfile("Generated Data/Screenshots/latestPlot.png"):
-        #             os.remove("Generated Data/Screenshots/latestPlot.png")
-        #         plt.savefig("Generated Data/Screenshots/latestPlot.png")
-        #         self.episodeLoss.append(0)
-        #         print("PLOTTED LOSSES________________________________________________________________________________")
 
         localGradients = tape.gradient(loss, self.localModel.trainable_weights)
-        # Apply the local gradients to the global model
-        self.optimiser.apply_gradients(zip(localGradients, Global.globalModel.trainable_weights))
+        with A3C_Worker.save_lock:
+            # Apply the local gradients to the global model
+            self.optimiser.apply_gradients(zip(localGradients, Global.globalModel.trainable_weights))
         # Update the local model
         self.localModel.set_weights(Global.globalModel.get_weights())
         self.memory.clear_buffer()
@@ -133,13 +128,13 @@ class A3C_Worker(threading.Thread):
 
         # Adding entropy to the loss function discourages premature convergence
         policy = tf.nn.softmax(networkOutput[0])
-        entropy = tf.reduce_sum(policy * tf.math.log(networkOutput[0] + 1e-20), axis=1)
+        entropy = tf.reduce_sum(policy * tf.math.log(policy + 1e-20), axis=1)
 
         policyLoss = tf.compat.v1.nn.softmax_cross_entropy_with_logits_v2(labels=oheAction, logits=networkOutput[0])
         policyLoss = policyLoss * tf.stop_gradient(advantage)
         policyLoss = policyLoss - 0.01 * entropy
 
-        totalLoss = tf.reduce_mean((0.5 * valueLoss) + policyLoss)
+        totalLoss = tf.reduce_mean((0.5 * valueLoss + policyLoss))
         return totalLoss
 
     def compute_loss_correct(self,

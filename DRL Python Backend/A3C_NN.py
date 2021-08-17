@@ -1,6 +1,7 @@
 from tensorflow.keras import layers
 from tensorflow.keras import Model
 from tensorflow.keras import Input
+import tensorflow as tf
 import keras
 
 class A3C_NN(keras.Model):
@@ -23,7 +24,8 @@ class A3C_NN(keras.Model):
 
     def get_prediction(self, state, parseString=True):
         outputs = self(state)
-        outputs = [outputs[0].numpy(), outputs[1].numpy()]
+        probs = tf.nn.softmax(outputs[0])
+        outputs = [probs.numpy(), outputs[1].numpy()]
         if parseString is False:
             return outputs
         else:
@@ -36,7 +38,6 @@ class A3C_NN(keras.Model):
 
                 stringOutput = stringOutput[:-3]
                 stringOutput += " >|< "
-
             return stringOutput[:-5]
 
     def call(self, inputs):
@@ -60,9 +61,9 @@ class A3C_NN(keras.Model):
         # x = self.batchNorm1(x)
         x = self.dense2(x)
         # x = self.batchNorm2(x)
-        x = self.dense3(x)
+        # x = self.dense3(x)
         # x = self.batchNorm3(x)
-        x = self.dense4(x)
+        # x = self.dense4(x)
         # x = self.batchNorm4(x)
         logits = self.policy_logits(x)
         values = self.values(x)

@@ -8,7 +8,7 @@ public class MasterTrainerScript : MonoBehaviour
 {
     List<GameObject> environments = new List<GameObject>();
     // Change the trainer script type between <> accordingly. In the end, you only need one trainer
-    List<ArmourTrainerAI> trainingScripts = new List<ArmourTrainerAI>();
+    List<MovementTrainerAI> trainingScripts = new List<MovementTrainerAI>();
     List<CommunicationThread> communicationThreads = new List<CommunicationThread>();
     List<bool> episodeFinished = new List<bool>();
 
@@ -29,7 +29,7 @@ public class MasterTrainerScript : MonoBehaviour
         for (int i = 0; i < environmentCount; i++)
         {
             // This may be null depending on the type of trainer. In the end, you should only use one trainer
-            trainingScripts.Add(environments[i].GetComponentInChildren<ArmourTrainerAI>());
+            trainingScripts.Add(environments[i].GetComponentInChildren<MovementTrainerAI>());
             // Initalise communication clients at separate ports
             CommunicationThread commThread = new CommunicationThread(8000 + i);
             Thread thread = new Thread(commThread.run);
@@ -54,7 +54,7 @@ public class MasterTrainerScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.M))
         {
-            foreach (ArmourTrainerAI trainingScript in trainingScripts)
+            foreach (MovementTrainerAI trainingScript in trainingScripts)
             {
                 trainingScript.TestConnection();
             }
@@ -102,13 +102,13 @@ public class MasterTrainerScript : MonoBehaviour
 
     private void Train()
     {
-        foreach (ArmourTrainerAI trainingScript in trainingScripts)
+        foreach (MovementTrainerAI trainingScript in trainingScripts)
         {
             StartCoroutine(trainingScript.TrainA3C());
         }
     }
 
-    private IEnumerator TrainAsynchronous(int episodeCount = 1001, int maxEpisodeSteps = 200, int epsilonAnnealInterval = 6, int plotInterval = 999)
+    private IEnumerator TrainAsynchronous(int episodeCount = 1001, int maxEpisodeSteps = 200, int epsilonAnnealInterval = 2, int plotInterval = 50)
     {
         ResetAllEnvironments();
 
@@ -118,8 +118,12 @@ public class MasterTrainerScript : MonoBehaviour
             for (int j = 0; j < maxEpisodeSteps; j++)
             {
                 DoAsynchronousTrainingStep();
-
                 yield return new WaitForSeconds(0.001f);
+
+                if (!episodeFinished.Contains(false))
+                {
+                    break;
+                }
             }
 
             for (int j = 0; j < environmentCount; j++)
@@ -132,10 +136,9 @@ public class MasterTrainerScript : MonoBehaviour
             {
                 for (int j = 0; j < environmentCount; j++)
                 {
-                    communicationThreads[j].SendRequest(ServerRequests.SAVE_NETWORKS.ToString());
+                    communicationThreads[j].SendRequest(ServerRequests.SAVE_NETWORKS.ToString() + " >|< " + "0");
                 }
-
-                Thread.Sleep(10000);
+                Thread.Sleep(5000);
                 WaitForServerComplete();
                 CollectServerResponses();
             }
@@ -158,27 +161,31 @@ public class MasterTrainerScript : MonoBehaviour
         // Perform some 'global step update' rather than update the steps individually on each environment
         // Send state transition at time t across all environments to the threaded server, and return the results.
 
-        // Store the initial observed states (S)
-        List<EnvironmentState> initialStates = new List<EnvironmentState>();
-
-        for (int i = 0; i < environmentCount; i++)
+        /*for (int i = 0; i < environmentCount; i++)
         {
-            communicationThreads[i].SendRequest(ServerRequests.ECHO.ToString() + " >|< " + "0");
-        }
-        WaitForServerComplete();
-        CollectServerResponses();
-
-        for (int i = 0; i < environmentCount; i++)
-        {
-            // Observe each environment
-            EnvironmentState observedState = trainingScripts[i].ObserveEnvironment();
-            initialStates.Add(observedState);
-
-            // If the episode in an environment has reached a terminal state, you can skip to the next environment
             if (episodeFinished[i] == true)
             {
                 continue;
             }
+
+            communicationThreads[i].SendRequest(ServerRequests.ECHO.ToString() + " >|< " + "0");
+        }
+        WaitForServerComplete();
+        CollectServerResponses();*/
+
+        List<EnvironmentState> initialStates = new List<EnvironmentState>();
+        for (int i = 0; i < environmentCount; i++)
+        {
+            // If the episode in an environment has reached a terminal state, you can skip to the next environment
+            if (episodeFinished[i] == true)
+            {
+                initialStates.Add(null);
+                continue;
+            }
+            
+            // Observe each environment
+            EnvironmentState observedState = trainingScripts[i].ObserveEnvironment();
+            initialStates.Add(observedState);
 
             // Send the observation to the communication thread, which should pass it to the server
             communicationThreads[i].SendRequest(ServerRequests.PREDICT.ToString() + " >|< " + initialStates[i].ToString());
@@ -191,6 +198,7 @@ public class MasterTrainerScript : MonoBehaviour
         // Store the reward for the actions (R)
         List<float> rewards = new List<float>();
 
+        int currentIndex = 0;
         // Take a particular action given the response from the server
         for (int i = 0; i < environmentCount; i++)
         {
@@ -202,7 +210,9 @@ public class MasterTrainerScript : MonoBehaviour
 
             // Take an action, and record the action taken and the reward (This is different from the normal TakeAction method, as the response
             // from the server is already provided as an input parameter)
-            object[] actionReward = trainingScripts[i].TakeAction(state: initialStates[i], actionRepeat: 5, givenResponse: predictedActionResponses[i]);
+            object[] actionReward = new object[] { };
+            actionReward = trainingScripts[i].TakeAction(state: initialStates[i], actionRepeat: 1, givenResponse: predictedActionResponses[currentIndex]);
+
             // Record the next state after taking the action
             EnvironmentState newState = trainingScripts[i].ObserveEnvironment();
 
@@ -225,11 +235,12 @@ public class MasterTrainerScript : MonoBehaviour
             {
                 episodeFinished[i] = true;
             }
-        }
 
+            currentIndex++;
+        }
         // Some A3C appends could trigger a training command on the server, so you may need to wait for the server to finish training
         WaitForServerComplete();
-
+        CollectServerResponses();
         return rewards;
     }
 
@@ -246,11 +257,9 @@ public class MasterTrainerScript : MonoBehaviour
             sw.Start();
 
             bool serverResponseReceived = false;
-
             while (serverResponseReceived == false && sw.ElapsedMilliseconds < 5000)
             {
                 serverResponseReceived = communicationThreads[i].CheckResponse();
-                Thread.Sleep(1);
             }
 
             if (sw.ElapsedMilliseconds >= 5000)
@@ -268,10 +277,15 @@ public class MasterTrainerScript : MonoBehaviour
 
         for (int i = 0; i < environmentCount; i++)
         {
+            if (episodeFinished[i] == true)
+            {
+                continue;
+            }
+
             output.Add(communicationThreads[i].GetResponse());
 
             // Reset the response
-            communicationThreads[i].ResetResponse();
+            // communicationThreads[i].ResetResponse();
         }
 
         return output;
@@ -289,6 +303,8 @@ public class MasterTrainerScript : MonoBehaviour
             episodeRewards[i] = 0;
             // Reset the step counter
             episodeSteps[i] = 0;
+
+            communicationThreads[i].ClearQueues();
         }
     }
 

@@ -111,4 +111,9 @@ public class LightTankControllerScript : TankControllerScript
             wheelColliders[inverseSteeringWheelIndexes[i]].steerAngle = -steeringInput;
         }
     }
+
+    public override void HandleAIMovement(int inputCommand)
+    {
+        throw new System.NotImplementedException();
+    }
 }

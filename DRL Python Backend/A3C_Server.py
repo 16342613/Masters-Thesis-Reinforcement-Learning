@@ -1,4 +1,5 @@
 import socket
+import time
 from threading import Thread
 from DeepQLearner import DeepQLearner
 from datetime import datetime
@@ -48,6 +49,7 @@ class A3C_Server:
                 else:
                     # Handle the request, but no response is necessary
                     commands[splitMessage[0]]()
+            time.sleep(0.001)
 
 
     def initialise_server(self):
@@ -85,6 +87,7 @@ class A3C_Server:
             clientThread = Thread(target=self.handle_new_client, args=(clientSocket, ))
             clientThread.start()
             self.__log_data("Accepted client " + clientSocket.getsockname()[0], True)
+            break
 
 
     def start_server(self):
@@ -116,7 +119,7 @@ class A3C_Server:
 
     def __log_data(self, toPrint, overrideLogPermissions=False):
         if (self.verboseLogging is True) or (overrideLogPermissions is True):
-            print(datetime.now().strftime("%H:%M:%S") + " : " + toPrint)
+            print(datetime.now().strftime("%H:%M:%S.%f") + " : " + toPrint)
 
     def __connection_test(self, clientMessage):
         return "Hello from " + socket.gethostname() + " on port " + str(
@@ -125,6 +128,6 @@ class A3C_Server:
     def __echo(self, toEcho):
         try:
             # self.__log_data(toEcho, overrideLogPermissions=True)
-            return "1"
+            return "-1"
         except:
             return "0"

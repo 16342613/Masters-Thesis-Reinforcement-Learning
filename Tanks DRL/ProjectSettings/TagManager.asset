@@ -10,6 +10,7 @@ TagManager:
   - Armour Plate
   - Enemy Tank
   - Environment
+  - Obstacle
   layers:
   - Default
   - TransparentFX

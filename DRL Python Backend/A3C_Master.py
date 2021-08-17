@@ -17,7 +17,7 @@ class A3C_Master:
         self.inputSize = inputSize
         self.actionCount = actionCount
 
-        self.optimiser = tf.compat.v1.train.AdamOptimizer(0.0002, use_locking=True)
+        self.optimiser = tf.compat.v1.train.AdamOptimizer(0.00025, use_locking=True)
         self.pretrainedWeightsAvailable = False
         self.setWeights = False
         self.globalSavePath = "Generated Data/Saved Models/"
@@ -60,11 +60,13 @@ class A3C_Master:
 
         return outputs
 
-    def save_network(self):
+    def save_network(self, empty):
         # Global.globalModel.save_weights(os.path.join(self.globalSavePath, "globalModel.h5"))
         with open(self.globalSavePath + "test.pkl", "wb") as file:
             pickle.dump(Global.globalModel.trainable_variables, file)
         print(datetime.now().strftime("%H:%M:%S") + " : Saved global model")
+
+        return "-1"
 
     def plot_progress(self, stringInput):
         workerIndex = int(stringInput.split(" >|< ")[0])

@@ -253,4 +253,6 @@ public abstract class TankControllerScript : MonoBehaviour
     {
         // TODO
     }
+
+    public abstract void HandleAIMovement(int inputCommand);
 }

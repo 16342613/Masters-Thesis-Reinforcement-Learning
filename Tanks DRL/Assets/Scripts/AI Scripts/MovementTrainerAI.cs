@@ -225,15 +225,15 @@ public class MovementTrainerAI : TrainerScript
 
         // The default reward
         float reward = 0; //-(angleDifference * angleDifference);
-        //reward -= newDistance;
+        reward -= newDistance;
 
         if (newDistance < oldDistance)
         {
-            reward += 0.1f;
+            //reward += 0.1f;
         }
         else
         {
-            reward -= 0.1f;
+            //reward -= 0.1f;
         }
 
         // If the agent wants to turn right when the target is to its right
@@ -279,7 +279,7 @@ public class MovementTrainerAI : TrainerScript
 
         if (hitWall == true)
         {
-            reward -= 0.2f;
+            //reward -= 0.2f;
             //return new object[] { bestActionIndex, reward, 1 }; // Episode has finished
         }
 
@@ -304,7 +304,7 @@ public class MovementTrainerAI : TrainerScript
             //return new object[] { bestActionIndex, reward, 1 }; // Episode has finished
         }
 
-        if (AIName == "0" || train == true)
+        if (AIName == "0")
         {
             HelperScript.PrintList(parsedResponse);
             Debug.Log(reward + " ; " + value);

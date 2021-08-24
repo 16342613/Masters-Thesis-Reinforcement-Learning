@@ -30,7 +30,7 @@ public abstract class TankControllerScript : MonoBehaviour
     private int cameraZoomFactor = 5;
     private GameManager gameManagerScript;
 
-    private bool firedRound = false;
+    protected bool reloaded = true;
     public TrainerScript AITrainer = null;
     public bool isDummy = false;
 
@@ -41,10 +41,10 @@ public abstract class TankControllerScript : MonoBehaviour
         if (isDummy == false)
         {
             gameManagerScript = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
-            hull = transform.Find("Hitbox/Hull").gameObject;
-            turret = transform.Find("Hitbox/Turret").gameObject;
-            gun = transform.Find("Hitbox/Turret/Gun").gameObject;
-            muzzle = transform.Find("Hitbox/Turret/Gun/Muzzle");
+            hull = transform.Find("Objects/Hitbox/Hull").gameObject;
+            turret = transform.Find("Objects/Hitbox/Turret").gameObject;
+            gun = transform.Find("Objects/Hitbox/Turret/Gun").gameObject;
+            muzzle = transform.Find("Objects/Hitbox/Turret/Gun/Muzzle");
             turretRotation = turret.transform.rotation.eulerAngles.y;
             gunPitch = gun.transform.rotation.eulerAngles.x;
 
@@ -56,18 +56,18 @@ public abstract class TankControllerScript : MonoBehaviour
             cameraTransform = cameraTransformContainer.transform;
             cameraPitch = cameraTransform.rotation.eulerAngles.x;
 
-            muzzleSmokeVFX = transform.Find("Hitbox/Turret/Gun/Muzzle/Muzzle Smoke").GetComponent<VisualEffect>();
+            muzzleSmokeVFX = transform.Find("Objects/Hitbox/Turret/Gun/Muzzle/Muzzle Smoke").GetComponent<VisualEffect>();
             muzzleSmokeVFX.enabled = false;
-            muzzleBlastVFX = transform.Find("Hitbox/Turret/Gun/Muzzle/Muzzle Blast").GetComponent<VisualEffect>();
+            muzzleBlastVFX = transform.Find("Objects/Hitbox/Turret/Gun/Muzzle/Muzzle Blast").GetComponent<VisualEffect>();
             muzzleBlastVFX.enabled = false;
-            muzzleResidualSmokeVFX = transform.Find("Hitbox/Turret/Gun/Muzzle/Muzzle Residual Smoke").GetComponent<VisualEffect>();
+            muzzleResidualSmokeVFX = transform.Find("Objects/Hitbox/Turret/Gun/Muzzle/Muzzle Residual Smoke").GetComponent<VisualEffect>();
             muzzleResidualSmokeVFX.enabled = false;
-            muzzleLightSource = transform.Find("Hitbox/Turret/Gun/Muzzle/Muzzle Light Source").GetComponent<Light>();
+            muzzleLightSource = transform.Find("Objects/Hitbox/Turret/Gun/Muzzle/Muzzle Light Source").GetComponent<Light>();
             muzzleLightSource.enabled = false;
 
             if (isPlayer == true)
             {
-                aimCamera = transform.Find("Hitbox/Turret/Gun/Aim Camera").GetComponent<Camera>();
+                aimCamera = transform.Find("Objects/Hitbox/Turret/Gun/Aim Camera").GetComponent<Camera>();
                 aimCamera.gameObject.SetActive(false);
 
                 thirdPersonCamera = Camera.main;
@@ -76,6 +76,8 @@ public abstract class TankControllerScript : MonoBehaviour
             {
 
             }
+
+            this.GetComponent<Rigidbody>().centerOfMass = new Vector3(0, -0.9f, 0);
         }
     }
 

@@ -28,8 +28,8 @@ public class LightTankControllerScript : TankControllerScript
         base.Start();   // Call the Start method of the superclass
 
         // Set up the wheels of the light tank
-        wheelColliders = transform.Find("Wheel Colliders").GetComponentsInChildren<WheelCollider>().ToList();
-        GameObject wheelsParent = transform.Find("Wheels").gameObject;
+        wheelColliders = transform.Find("Objects/Wheel Colliders").GetComponentsInChildren<WheelCollider>().ToList();
+        GameObject wheelsParent = transform.Find("Objects/Wheels").gameObject;
         foreach (Transform t in wheelsParent.transform)
         {
             wheels.Add(t.gameObject);
@@ -45,13 +45,26 @@ public class LightTankControllerScript : TankControllerScript
             base.HandleMouseInput(2f, gunDepression, gunElevation, scrollZoomFactor);
             HandleMovementInput();
 
-            if(Input.GetKey(KeyCode.X))
+            if (Input.GetMouseButtonDown(0))
             {
-                base.FireGun(shellTypes[0]);
+                if (base.reloaded == true)
+                {
+                    StartCoroutine(FireGunWithReload());
+                }
             }
         }
 
         UpdateWheelPositions();
+    }
+
+    private IEnumerator FireGunWithReload()
+    {
+        base.FireGun(shellTypes[0]);
+        base.reloaded = false;
+
+        yield return new WaitForSeconds(5);
+
+        base.reloaded = true;
     }
 
     /// <summary>
@@ -79,7 +92,7 @@ public class LightTankControllerScript : TankControllerScript
         {
             for (int i = 0; i < wheelColliders.Count; i++)
             {
-                wheelColliders[i].motorTorque = 30;
+                wheelColliders[i].motorTorque = 50;
                 wheelColliders[i].brakeTorque = 0;
             }
         }

@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/Experimental/Armour Initial Testing.unity
+- path: Assets/Scenes/Prokhorovka.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

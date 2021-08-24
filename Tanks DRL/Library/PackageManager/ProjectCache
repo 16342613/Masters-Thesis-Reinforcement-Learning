@@ -13,7 +13,7 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 637637189061949175
+      ticks: 637650866900687159
     m_Hash: 713333597
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
@@ -82,9 +82,11 @@ m_PackageAssets:
         - 2.7.2
         - 2.7.3
         - 2.7.4
+        - 2.7.5
         - 2.8.0-exp.1
         - 2.8.0-exp.2
         - 2.8.0-pre.1
+        - 2.8.0
         compatible:
         - 2.5.0
         - 2.6.0-preview.2
@@ -104,9 +106,11 @@ m_PackageAssets:
         - 2.7.2
         - 2.7.3
         - 2.7.4
+        - 2.7.5
         - 2.8.0-exp.1
         - 2.8.0-exp.2
         - 2.8.0-pre.1
+        - 2.8.0
         verified: 2.6.5
       dependencies: []
       resolvedDependencies: []
@@ -196,6 +200,8 @@ m_PackageAssets:
         - 1.5.7
         - 1.6.0
         - 1.7.1
+        - 1.8.0
+        - 1.9.0
         - 2.0.0-preview.6
         - 2.0.0-preview.8
         - 2.0.0-preview.15
@@ -211,6 +217,7 @@ m_PackageAssets:
         - 1.4.9
         - 1.5.7
         - 1.6.0
+        - 1.8.0
         - 2.0.0-preview.6
         - 2.0.0-preview.8
         - 2.0.0-preview.15
@@ -604,6 +611,7 @@ m_PackageAssets:
         - 7.5.3
         - 7.6.0
         - 7.7.0
+        - 7.7.1
         - 8.0.1
         - 8.1.0
         - 8.2.0
@@ -3084,6 +3092,7 @@ m_PackageAssets:
         - 7.5.3
         - 7.6.0
         - 7.7.0
+        - 7.7.1
         - 8.0.1
         - 8.1.0
         - 8.2.0
@@ -3233,6 +3242,7 @@ m_PackageAssets:
         - 7.5.3
         - 7.6.0
         - 7.7.0
+        - 7.7.1
         - 8.0.1
         - 8.1.0
         - 8.2.0
@@ -3357,6 +3367,7 @@ m_PackageAssets:
         - 7.5.3
         - 7.6.0
         - 7.7.0
+        - 7.7.1
         - 8.0.1
         - 8.1.0
         - 8.2.0
@@ -3460,6 +3471,7 @@ m_PackageAssets:
         - 7.5.3
         - 7.6.0
         - 7.7.0
+        - 7.7.1
         - 8.0.1
         - 8.1.0
         - 8.2.0

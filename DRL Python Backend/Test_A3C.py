@@ -55,9 +55,9 @@ class ActorCriticModel(keras.Model):
         super(ActorCriticModel, self).__init__()
         self.state_size = state_size
         self.action_size = action_size
-        self.dense1 = layers.Dense(100, activation='relu')
+        self.dense1 = layers.Dense(64, activation='relu')
         self.policy_logits = layers.Dense(action_size)
-        self.dense2 = layers.Dense(100, activation='relu')
+        self.dense2 = layers.Dense(64, activation='relu')
         self.values = layers.Dense(1)
 
     def call(self, inputs):
@@ -104,7 +104,7 @@ class MasterAgent():
                           self.global_model,
                           self.opt, res_queue,
                           i, game_name=self.game_name,
-                          save_dir=self.save_dir) for i in range(12)]  # range(multiprocessing.cpu_count())]
+                          save_dir=self.save_dir) for i in range(1)]  # range(multiprocessing.cpu_count())]
 
         for i, worker in enumerate(workers):
             print("Starting worker {}".format(i))
@@ -180,7 +180,7 @@ class Worker(threading.Thread):
         mem = Memory()
         rewards = []
 
-        while Worker.global_episode < 3000:
+        while Worker.global_episode < 4000:
             current_state = self.env.reset()
             mem.clear()
             ep_reward = 0.
@@ -326,8 +326,8 @@ class Worker(threading.Thread):
 
 
 
-MasterAgent = MasterAgent()
-MasterAgent.train()
+# MasterAgent = MasterAgent()
+# MasterAgent.train()
 
 
 

@@ -1,3 +1,5 @@
+from queue import Queue
+
 from A3C_NN import A3C_NN
 from A3C_Worker import A3C_Worker
 from HelperPy import HelperPy
@@ -12,40 +14,48 @@ from datetime import datetime
 from Global import Global
 import numpy as np
 
+#from Test_A3C_MOD import Worker
+# from Test_A3C_MOD import ActorCriticModel
+
+
 class A3C_Master:
     def __init__(self, inputSize, actionCount):
         self.inputSize = inputSize
         self.actionCount = actionCount
 
-        self.optimiser = tf.compat.v1.train.AdamOptimizer(0.00025, use_locking=True)
+        self.optimiser = tf.compat.v1.train.AdamOptimizer(0.0001, use_locking=True)
         self.pretrainedWeightsAvailable = False
         self.setWeights = False
         self.globalSavePath = "Generated Data/Saved Models/"
+        self.globalModel = None
 
         if os.path.isfile(os.path.join(self.globalSavePath, "test.pkl")):
-            Global.globalModel = A3C_NN(self.inputSize, self.actionCount)
-            Global.globalModel.build((None, self.inputSize))
+            self.globalModel = A3C_NN(self.inputSize, self.actionCount)
+            self.globalModel.build((None, self.inputSize))
 
             with open(self.globalSavePath + "test.pkl", "rb") as file:
                 weights = pickle.load(file)
                 for i in range(len(weights)):
-                    Global.globalModel.trainable_variables[i].assign(weights[i])
+                    self.globalModel.trainable_variables[i].assign(weights[i])
             print("Loaded saved weights")
 
         else:
-            Global.globalModel = A3C_NN(self.inputSize, self.actionCount)
+            # self.globalModel = A3C_NN(self.inputSize, self.actionCount)
+            self.globalModel = A3C_NN(self.inputSize, self.actionCount)  # global network
             self.setWeights = True
 
-        Global.globalModel(tf.convert_to_tensor(np.random.random((1, self.inputSize)), dtype=tf.float32))
+        self.globalModel(tf.convert_to_tensor(np.random.random((1, self.inputSize)), dtype=tf.float32))
 
         self.workers = dict()
         self.currentRewards = []
         self.receivedPlots = []
 
-
     def assign_worker(self, clientIP):
-        worker = A3C_Worker(self.inputSize, self.actionCount, clientIP, 0.99, self.optimiser, weightUpdateInterval=15)
-        worker.start()
+        # worker = A3C_Worker(self.inputSize, self.actionCount, clientIP, 0.99, self.optimiser, weightUpdateInterval=15)
+        worker = A3C_Worker(self.inputSize, self.actionCount, self.globalModel, self.optimiser, Queue(), "yo",
+                        game_name="CartPole-v0", save_dir="Generated Data/Saved Models")
+
+        # worker.start()
 
         self.currentRewards.append([])
         self.receivedPlots.append(False)
@@ -63,7 +73,7 @@ class A3C_Master:
     def save_network(self, empty):
         # Global.globalModel.save_weights(os.path.join(self.globalSavePath, "globalModel.h5"))
         with open(self.globalSavePath + "test.pkl", "wb") as file:
-            pickle.dump(Global.globalModel.trainable_variables, file)
+            pickle.dump(self.globalModel.trainable_variables, file)
         print(datetime.now().strftime("%H:%M:%S") + " : Saved global model")
 
         return "-1"
@@ -78,7 +88,7 @@ class A3C_Master:
         self.receivedPlots[workerIndex] = True
         print("Received plots for worker " + str(workerIndex))
 
-        #ySmooth = savgol_filter(self.currentRewards, 3, 3)
+        # ySmooth = savgol_filter(self.currentRewards, 3, 3)
         # axes = plt.gca()
         # axes.set_ylim([0, 50])
 
@@ -104,4 +114,3 @@ class A3C_Master:
         print(datetime.now().strftime("%H:%M:%S") + " : Saved plots")
 
         return "1.0"
-

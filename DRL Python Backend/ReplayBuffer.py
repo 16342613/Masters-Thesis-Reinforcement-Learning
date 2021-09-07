@@ -2,7 +2,7 @@ import random
 
 
 class ReplayBuffer:
-    def __init__(self, savePath, capacity=100000):
+    def __init__(self, savePath, capacity=2000):
         self.savePath = savePath
         self.capacity = capacity
 

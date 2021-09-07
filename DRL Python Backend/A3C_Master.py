@@ -78,39 +78,33 @@ class A3C_Master:
 
         return "-1"
 
+    def add_plot_data(self, plotBitString):
+        data = plotBitString.split(" | ")
+        self.currentRewards[int(data[0])].append(float(data[1]))
+
+        return "0"
+
     def plot_progress(self, stringInput):
-        workerIndex = int(stringInput.split(" >|< ")[0])
-        splitString = stringInput.split(" >|< ")[1].split(" | ")
+        averagedResults = []
 
-        for i in range(len(splitString)):
-            self.currentRewards[workerIndex].append(float(splitString[i]))
+        for i in range(len(self.currentRewards[0])):
+            episodeRewards = []
+            for j in range(len(self.currentRewards)):
+                episodeRewards.append(self.currentRewards[j][i])
 
-        self.receivedPlots[workerIndex] = True
-        print("Received plots for worker " + str(workerIndex))
+            averagedResults.append(sum(episodeRewards) / len(self.currentRewards))
 
-        # ySmooth = savgol_filter(self.currentRewards, 3, 3)
-        # axes = plt.gca()
-        # axes.set_ylim([0, 50])
+        windowLength = round(199 / len(self.currentRewards))
+        if windowLength % 2 == 0:
+            windowLength += 1
 
-        x = [i for i in range(len(self.currentRewards[workerIndex]))]
-        plt.plot(x, self.currentRewards[workerIndex], label=str(workerIndex))
+        ySmooth = savgol_filter(averagedResults, windowLength, 6)
+        plt.plot([i for i in range(len(ySmooth))], ySmooth)
 
-        if os.path.isfile("Generated Data/Screenshots/latestPlot.png"):
-            os.remove("Generated Data/Screenshots/latestPlot.png")
-        plt.savefig("Generated Data/Screenshots/latestPlot.png")
-        plt.clf()
-
-        # if all(self.receivedPlots) is True:
-        #     for i in range(len(self.currentRewards)):
-        #         x = [i for i in range(len(self.currentRewards[workerIndex]))]
-        #         plt.plot(x, self.currentRewards[workerIndex], label=str(i))
-        #     self.receivedPlots = [False for i in range(len(self.receivedPlots))]
-        #
-        #     if os.path.isfile("Generated Data/Screenshots/latestPlot.png"):
-        #         os.remove("Generated Data/Screenshots/latestPlot.png")
-        #     plt.savefig("Generated Data/Screenshots/latestPlot.png")
-        #     plt.clf()
-        # #plt.plot(x, ySmooth, color='black')
-        print(datetime.now().strftime("%H:%M:%S") + " : Saved plots")
+        plt.xlabel("Episode")
+        plt.ylabel("Reward")
+        plt.title("A3C Episode vs Reward for Block Finder")
+        plt.legend()
+        plt.show()
 
         return "1.0"

@@ -21,3 +21,11 @@ class StateTransition:
                                newState=helper.parse_string_input(" >|< ".join([splitString[4], splitString[5]]))[0],
                                ID=int(helper.parse_float(splitString[6])[0]),
                                terminalState=int(helper.parse_float(splitString[7])[0]))
+
+    @staticmethod
+    def state_to_string(state):
+        outputString = ""
+        for value in state:
+            outputString += str(value)
+
+        return outputString[:-3]

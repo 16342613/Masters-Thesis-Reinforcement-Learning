@@ -68,23 +68,27 @@ class DeepQLearner:
 
     def create_neural_network(self):
         inputs = Input(shape=self.inputShape)
-        x = layers.Dense(64, activation="relu", kernel_regularizer="l2")(inputs)
-        x = layers.Dense(64, activation="relu", kernel_regularizer="l2")(x)
-        x = layers.Dense(self.actionCount, activation="linear", kernel_regularizer="l2")(x)
+        x = layers.Dense(24, activation="relu")(inputs)
+        x = layers.Dense(24, activation="relu")(x)
+        x = layers.Dense(self.actionCount, activation="linear")(x)
 
         model = Model(inputs, x)
-        model.compile(loss="mse", optimizer=keras.optimizers.Adam(learning_rate=0.01))
+        model.compile(loss="mse", optimizer=keras.optimizers.Adam(learning_rate=0.001))
         return model
 
-    def predict_action(self, stringInput):
-        parsedInputs = self.parse_string_input(stringInput)
-        predictions = self.predictionNetwork.predict(parsedInputs)
+    def predict_action(self, stringInput, providedState = None):
+        if providedState is None:
+            parsedInputs = self.parse_string_input(stringInput)
+            predictions = self.predictionNetwork.predict(parsedInputs)
 
-        stringOutput = ""
-        for actionProbability in predictions[0]:
-            stringOutput += str(actionProbability) + " | "
+            stringOutput = ""
+            for actionProbability in predictions[0]:
+                stringOutput += str(actionProbability) + " | "
 
-        return stringOutput[:-3]
+            return stringOutput[:-3]
+        else:
+            predictions = self.predictionNetwork.predict(providedState)
+            return predictions
 
     def parse_string_input(self, stringInput, delimiter=" | "):
         types = stringInput.split(" >|< ")[0].split(delimiter)
@@ -105,15 +109,18 @@ class DeepQLearner:
     def __parse_float(inputString):
         return [float(inputString)]
 
-    def add_to_replay_buffer(self, stringInput):
-        splitString = stringInput.split(" >|< ")
-        transitionData = StateTransition(self.parse_string_input(" >|< ".join([splitString[0], splitString[1]]))[0],
-                                         self.__parse_float(splitString[2])[0],
-                                         self.__parse_float(splitString[3])[0],
-                                         self.parse_string_input(" >|< ".join([splitString[4], splitString[5]]))[0],
-                                         int(self.__parse_float(splitString[6])[0]))
+    def add_to_replay_buffer(self, stringInput, providedTransition=None):
+        if providedTransition is None:
+            splitString = stringInput.split(" >|< ")
+            transitionData = StateTransition(self.parse_string_input(" >|< ".join([splitString[0], splitString[1]]))[0],
+                                             self.__parse_float(splitString[2])[0],
+                                             self.__parse_float(splitString[3])[0],
+                                             self.parse_string_input(" >|< ".join([splitString[4], splitString[5]]))[0],
+                                             int(self.__parse_float(splitString[6])[0]))
 
-        self.replayBuffer.populate_buffer(transitionData)
+            self.replayBuffer.populate_buffer(transitionData)
+        else:
+            self.replayBuffer.populate_buffer(providedTransition)
         return str(len(self.replayBuffer.buffer))
 
     # def dql_loss(self, y_true, y_pred):
@@ -169,7 +176,8 @@ class DeepQLearner:
         return "1.0"
 
     def __compute_target_Q_value(self, newState, reward):
-        rawTarget = np.amax(self.targetNetwork.predict(np.array(newState).reshape(1, self.inputShape[0])))
+        #rawTarget = np.amax(self.targetNetwork.predict(np.array(newState).reshape(1, self.inputShape[0])))
+        rawTarget = np.amax(self.predictionNetwork.predict(np.array(newState).reshape(1, self.inputShape[0])))
         return reward + (self.discountFactor * rawTarget)
 
     def train(self):
@@ -179,20 +187,25 @@ class DeepQLearner:
         # print(len(self.replayBuffer.buffer))
         stateBatch = []
         qValuesBatch = []
-
+        losses = []
         for transition in sampledTransitions:
-            predictionQValues = self.predictionNetwork.predict(
-                np.array(transition.initialState).reshape(1, self.inputShape[0]))
+            predictionQValues = self.predictionNetwork.predict(np.array(transition.initialState).reshape(1, self.inputShape[0]))
             self.__add_to_q_value_distribution(predictionQValues[0])
-            targetQValue = self.__compute_target_Q_value(transition.newState, transition.reward)
+            if transition.terminalState == 1:
+                targetQValue = transition.reward
+            else:
+                targetQValue = self.__compute_target_Q_value(transition.newState, transition.reward)
             predictionQValues[0][int(transition.action)] = targetQValue
 
             stateBatch.append(transition.initialState)
             qValuesBatch.append(predictionQValues[0])
 
-        history = self.predictionNetwork.fit(np.array(stateBatch), np.array(qValuesBatch), batch_size=self.batchSize,
-                                             epochs=1)
-        self.losses.append(history.history["loss"][0])
+            x = transition.initialState.reshape(1, 4)
+            history = self.predictionNetwork.fit(x, predictionQValues, epochs=1, verbose=0)
+            losses.append(history.history["loss"][0])
+        print(round(sum(losses)/len(losses), 5))
+        #history = self.predictionNetwork.fit(np.array(stateBatch), np.array(qValuesBatch), batch_size=self.batchSize, epochs=1)
+        #self.losses.append(history.history["loss"][0])
 
         # trainX = np.array([[transition.initialState] for transition in sampledTransitions])
         # trainY = []

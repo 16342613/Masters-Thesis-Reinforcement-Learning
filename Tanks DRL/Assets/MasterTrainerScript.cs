@@ -16,8 +16,8 @@ public class MasterTrainerScript : MonoBehaviour
     public GameObject environment;
     public Vector3 offset = new Vector3(0, 0, 10);
     private int currentThreadID = Thread.CurrentThread.ManagedThreadId;
-    public List<float> episodeRewards;
-    public List<int> episodeSteps;
+    private List<float> episodeRewards = new List<float>();
+    private List<int> episodeSteps = new List<int>();
 
     // Start is called before the first frame update
     void Start()
@@ -128,7 +128,17 @@ public class MasterTrainerScript : MonoBehaviour
 
             for (int j = 0; j < environmentCount; j++)
             {
-                FileHandler.WriteToFile("Assets/Debug/AI Log.txt", System.DateTime.Now.ToString("HH:mm:ss tt") + " Name : " + trainingScripts[j].AIName + " ==> Episode : " + i + " ; Steps : " + episodeSteps[j] + " ; Reward : " + episodeRewards[j] + " ; Epsilon : " + trainingScripts[j].epsilon);
+                trainingScripts[j].epsilon = 0.1f;
+                FileHandler.WriteToFile("Assets/Debug/AI Log.txt", System.DateTime.Now.ToString("HH:mm:ss tt")
+                    + " Name : " + trainingScripts[j].AIName
+                    + " ==> Episode : " + i
+                    + " ; Steps : " + episodeSteps[j]
+                    + " ; Reward : " + episodeRewards[j]
+                    + " ; Epsilon : " + trainingScripts[j].epsilon);
+
+                communicationThreads[j].SendRequest(ServerRequests.ADD_PLOT_DATA.ToString() + " >|< " + j + " | " + episodeRewards[j]);
+                Thread.Sleep(100);
+                communicationThreads[j].ClearResponseQueue();
             }
 
             // Save the networks after a certain amount of episodes
@@ -143,17 +153,21 @@ public class MasterTrainerScript : MonoBehaviour
                 CollectServerResponses();
             }
 
-            if ((i % epsilonAnnealInterval == 0) && (trainingScripts[0].epsilon >= 0.1f) && (i > 0))
+            if ((i % epsilonAnnealInterval == 0) && (trainingScripts[0].epsilon >= 0.11f) && (i > 0))
             {
                 for (int j = 0; j < environmentCount; j++)
                 {
-                    trainingScripts[j].epsilon = trainingScripts[j].epsilon * 0.998f;
+                    trainingScripts[j].epsilon = trainingScripts[j].epsilon * 0.994f;
                 }
             }
 
             // Reset the environments to facilitate the next episode
             ResetAllEnvironments();
         }
+
+        communicationThreads[0].SendRequest(ServerRequests.PLOT.ToString() + " >|< " + "0");
+        WaitForServerComplete();
+        CollectServerResponses();
     }
 
     private List<float> DoAsynchronousTrainingStep()
@@ -182,7 +196,7 @@ public class MasterTrainerScript : MonoBehaviour
                 initialStates.Add(null);
                 continue;
             }
-            
+
             // Observe each environment
             EnvironmentState observedState = trainingScripts[i].ObserveEnvironment();
             initialStates.Add(observedState);

@@ -32,7 +32,8 @@ class A3C_Server:
                          "ECHO": self.__echo,
                          "UPDATE_REWARD": assignedWorker.update_reward,
                          "SAVE_NETWORKS": Global.masterTrainer.save_network,
-                         "PLOT": Global.masterTrainer.plot_progress})
+                         "PLOT": Global.masterTrainer.plot_progress,
+                         "ADD_PLOT_DATA": Global.masterTrainer.add_plot_data})
 
         while True:
             message = clientSocket.recv(1024).decode()
@@ -42,7 +43,6 @@ class A3C_Server:
 
                 if len(splitMessage) > 1:
                     # Accept the request and send the response
-
                     response = commands[splitMessage[0]](" >|< ".join([splitMessage[i + 1] for i in range(len(splitMessage) - 1)]))
                     clientSocket.send(str.encode(response))
                     self.__log_data("Sent response " + response + " to " + clientSocket.getsockname()[0])

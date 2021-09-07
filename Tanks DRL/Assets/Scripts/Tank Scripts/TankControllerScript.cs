@@ -164,7 +164,7 @@ public abstract class TankControllerScript : MonoBehaviour
             }
         }
 
-        Debug.DrawRay(muzzle.position, muzzle.forward * 100, Color.red);
+        //Debug.DrawRay(muzzle.position, muzzle.forward * 100, Color.red);
     }
 
     public void FireGun(GameObject round)
@@ -211,7 +211,7 @@ public abstract class TankControllerScript : MonoBehaviour
 
     private IEnumerator StopMuzzleLight()
     {
-        yield return new WaitForSeconds(0.05f);
+        yield return new WaitForSeconds(0.5f);
         muzzleLightSource.enabled = false;
     }
 

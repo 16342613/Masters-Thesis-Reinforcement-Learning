@@ -79,6 +79,8 @@ class Environment(threading.Thread):
                 self.worker.memory.populate_buffer(StateTransition(currentState, action, reward, newState, ID=10, terminalState=done))
                 self.worker.append_to_buffer("", True)
 
+                currentState = newState
+
             self.episodeCount += 1
             print(str(self.episodeCount) + " -> " + str(episodeReward))
             self.rewards.append(episodeReward)

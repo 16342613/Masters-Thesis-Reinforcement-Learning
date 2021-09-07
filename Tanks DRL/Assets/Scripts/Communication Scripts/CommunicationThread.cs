@@ -72,6 +72,11 @@ class CommunicationThread
         responseQueue.Clear();
     }
 
+    public void ClearResponseQueue()
+    {
+        responseQueue.Clear();
+    }
+
     public bool CheckResponse()
     {
         /*if (serverResponse != "EMPTY")

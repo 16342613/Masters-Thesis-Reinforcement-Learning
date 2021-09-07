@@ -3,7 +3,6 @@ import os
 import threading
 from queue import Queue
 import gym
-import time
 import tensorflow as tf
 import numpy as np
 import keras
@@ -11,11 +10,7 @@ from keras import layers
 from matplotlib import pyplot as plt
 from scipy.signal import savgol_filter
 import random
-
-from A3C_NN import A3C_NN
-from A3C_Buffer import A3C_Buffer
-from A3C_Master import A3C_Master
-from StateTransition import StateTransition
+import math
 
 
 class RandomAgent:
@@ -81,8 +76,11 @@ class ActorCriticModel(keras.Model):
         return logits, values
 
 
-class MasterAgent():
-    def __init__(self):
+class MasterAgent:
+    results = []
+
+    def __init__(self, workerCount):
+        self.workerCount = workerCount
         self.game_name = 'CartPole-v0'
         save_dir = "Generated Data/Saved Models"
         self.save_dir = save_dir
@@ -92,30 +90,40 @@ class MasterAgent():
         env = gym.make(self.game_name)
         self.state_size = env.observation_space.shape[0]
         self.action_size = env.action_space.n
-        self.opt = tf.compat.v1.train.AdamOptimizer(0.00025, use_locking=True)
+        self.opt = tf.compat.v1.train.AdamOptimizer(0.0001, use_locking=True)
         print(self.state_size, self.action_size)
 
         self.global_model = ActorCriticModel(self.state_size, self.action_size)  # global network
         self.global_model(tf.convert_to_tensor(np.random.random((1, self.state_size)), dtype=tf.float32))
-        print(self.state_size)
-        print(self.action_size)
 
-    def train(self):
-        # if args.algorithm == 'random':
-        #     random_agent = RandomAgent(self.game_name, 1)
-        #     random_agent.run()
-        #     return
+    def train(self, workerCount=None, bufferCount=None):
+        if workerCount is None:
+            workerCount = self.workerCount
 
         res_queue = Queue()
-
-        workers = [Worker(self.state_size,
-                          self.action_size,
-                          self.global_model,
-                          self.opt, res_queue,
-                          i, game_name=self.game_name,
-                          save_dir=self.save_dir) for i in range(12)]  # range(multiprocessing.cpu_count())]
+        if bufferCount is not None:
+            workers = [Worker(self.state_size,
+                              self.action_size,
+                              self.global_model,
+                              self.opt, res_queue,
+                              i,
+                              game_name=self.game_name,
+                              bufferSize=bufferCount,
+                              save_dir=self.save_dir) for i in
+                       range(workerCount)]  # range(multiprocessing.cpu_count())]
+        else:
+            workers = [Worker(self.state_size,
+                              self.action_size,
+                              self.global_model,
+                              self.opt, res_queue,
+                              i,
+                              game_name=self.game_name,
+                              bufferSize=30,
+                              save_dir=self.save_dir) for i in
+                       range(workerCount)]  # range(multiprocessing.cpu_count())]
 
         for i, worker in enumerate(workers):
+            MasterAgent.results.append([])
             print("Starting worker {}".format(i))
             worker.start()
 
@@ -128,12 +136,87 @@ class MasterAgent():
                 break
         [w.join() for w in workers]
 
-        # plt.plot(moving_average_rewards)
-        # plt.ylabel('Moving average ep reward')
-        # plt.xlabel('Step')
-        # plt.savefig(os.path.join(self.save_dir,
-        #                          '{} Moving Average.png'.format(self.game_name)))
-        # plt.show()
+        # self.plot_results()
+
+
+    def multi_config_train(self, overrideThreadCount):
+
+        # for i in range(self.workerCount):
+        for i in overrideThreadCount:
+            self.global_model = ActorCriticModel(self.state_size, self.action_size)
+            self.global_model(tf.convert_to_tensor(np.random.random((1, self.state_size)), dtype=tf.float32))
+
+            self.train(bufferCount=i)  # workerCount=i+1)
+            plotData, originalData = self._generate_plot_data()
+            # plt.plot([i for i in range(len(originalData))], originalData, label=str(i + 1) + " Original")
+
+            if i == 0:
+                plt.plot([i for i in range(len(plotData))], plotData, label=str(i) + " Buffer")
+            else:
+                plt.plot([i for i in range(len(plotData))], plotData, label=str(i) + " Buffer")
+
+            MasterAgent.results = []  # Clear the results buffer
+
+        plt.xlabel("Episode")
+        plt.ylabel("Reward")
+        plt.title("A3C Episode vs Reward for Various Thread Counts")
+        plt.legend()
+        plt.show()
+
+
+    def _generate_plot_data(self):
+        averagedResults = []
+
+        for i in range(len(MasterAgent.results[0])):
+            episodeRewards = []
+            for j in range(len(MasterAgent.results)):
+                episodeRewards.append(MasterAgent.results[j][i])
+
+            averagedResults.append(sum(episodeRewards) / len(MasterAgent.results))
+
+        windowLength = round(199 / len(MasterAgent.results))
+        if windowLength % 2 == 0:
+            windowLength += 1
+
+        ySmooth = savgol_filter(averagedResults, windowLength, 6)
+        return ySmooth, averagedResults
+
+
+    def plot_results(self):
+        averagedResults = []
+
+        for i in range(len(MasterAgent.results[0])):
+            episodeRewards = []
+            for j in range(self.workerCount):
+                episodeRewards.append(MasterAgent.results[j][i])
+
+            averagedResults.append(sum(episodeRewards) / self.workerCount)
+
+        windowLength = round(99 / self.workerCount)
+        if windowLength % 2 == 0:
+            windowLength += 1
+
+        ySmooth = savgol_filter(averagedResults, windowLength, 3)
+        # plt.plot([i for i in range(len(MasterAgent.results[0]))], MasterAgent.results[0])
+        plt.plot([i for i in range(len(ySmooth))], ySmooth, color='black')
+        plt.show()
+
+
+class Memory:
+    def __init__(self):
+        self.states = []
+        self.actions = []
+        self.rewards = []
+
+    def store(self, state, action, reward):
+        self.states.append(state)
+        self.actions.append(action)
+        self.rewards.append(reward)
+
+    def clear(self):
+        self.states = []
+        self.actions = []
+        self.rewards = []
 
 
 class Worker(threading.Thread):
@@ -151,7 +234,8 @@ class Worker(threading.Thread):
                  opt,
                  result_queue,
                  idx,
-                 game_name='CartPole-v0',
+                 game_name,
+                 bufferSize,
                  save_dir='/tmp'):
         super(Worker, self).__init__()
         self.state_size = state_size
@@ -161,31 +245,20 @@ class Worker(threading.Thread):
         self.opt = opt
         self.local_model = ActorCriticModel(self.state_size, self.action_size)
         self.worker_idx = idx
+        self.bufferSize = bufferSize
         self.game_name = game_name
         self.env = gym.make(self.game_name).unwrapped
         self.save_dir = save_dir
         self.ep_loss = 0.0
-        self.memory = A3C_Buffer()
-
-        self.rewards = []
-
-    def append_to_buffer(self, stringInput, tempPass=False):
-        if tempPass is False:
-            transitionData = StateTransition.string_to_transition(stringInput)
-            self.memory.populate_buffer(transitionData)
-
-        if (len(self.memory.buffer) >= 15) or (self.memory.buffer[-1].terminalState == 1):
-            self.train()
-
-        return str(len(self.memory.buffer))
 
     def run(self):
         total_step = 1
-        episodeCount = 0
-        epsilon = 1
-        while Worker.global_episode < 5000:
+        mem = Memory()
+        rewards = []
+        episode_count = 0
+        while episode_count < 1500:  # Worker.global_episode < 1500:
             current_state = self.env.reset()
-            self.memory.clear_buffer()
+            mem.clear()
             ep_reward = 0.
             ep_steps = 0
             self.ep_loss = 0
@@ -193,34 +266,63 @@ class Worker(threading.Thread):
             time_count = 0
             done = False
 
-            start = time.time()
             while not done:
+                # if self.worker_idx == 0:
+                    # self.env.render()
                 logits, _ = self.local_model(
                     tf.convert_to_tensor(current_state[None, :],
                                          dtype=tf.float32))
                 probs = tf.nn.softmax(logits)
-                if random.uniform(0, 1) < epsilon:
-                    action = random.randint(0, 1)
-                else:
-                    action = np.random.choice(self.action_size, p=probs.numpy()[0])
+ 
+                action = np.random.choice(self.action_size, p=probs.numpy()[0])
                 new_state, reward, done, _ = self.env.step(action)
 
-                doneInt = 0
-                if done:
-                    reward = -1
-                    doneInt = 1
+                # ONLY FOR MOUNTAIN CAR
+                # reward = new_state[0]
 
+                # print(new_state)
+                # print(reward)
+                #if done:
+                    # reward = -1
+                    #reward = 100
                 ep_reward += reward
-                self.memory.populate_buffer(StateTransition(current_state, action, reward, new_state, 10, doneInt))
-                self.append_to_buffer("", tempPass=True)
+                mem.store(current_state, action, reward)
 
-                # if done or time_count == 15:
-                if done:
-                    # self.train()
+                if ep_steps > 750:
+                    done = True
 
-                    if done:
-                        end = time.time()
-                        print(str(Worker.global_episode) + " : " + str(round(end - start, 2)))
+                if time_count == self.bufferSize or done:
+                    # Calculate gradient wrt to local model. We do so by tracking the
+                    # variables involved in computing the loss by using tf.GradientTape
+                    with tf.GradientTape() as tape:
+                        total_loss = self.compute_loss(done,
+                                                       new_state,
+                                                       mem,
+                                                       0.99)
+
+                    # print(total_loss)
+                    self.ep_loss += total_loss
+                    # Calculate local gradients
+                    grads = tape.gradient(total_loss, self.local_model.trainable_weights)
+                    # Push local gradients to global model
+                    self.opt.apply_gradients(zip(grads,
+                                                 self.global_model.trainable_weights))
+                    # Update local model with new weights
+                    self.local_model.set_weights(self.global_model.get_weights())
+
+                    mem.clear()
+                    time_count = 0
+
+                    if done:  # done and print information
+                        # Worker.global_moving_average_reward = \
+                        #     record(Worker.global_episode, ep_reward, self.worker_idx,
+                        #               Worker.global_moving_average_reward, self.result_queue,
+                        #               self.ep_loss, ep_steps)
+                        # We must use a lock to save our model and to print to prevent data races.
+                        # print(ep_reward)
+                        # print(Worker.global_episode)
+                        # print(self.ep_loss)
+                        rewards.append(ep_reward)
 
                         if ep_reward > Worker.best_score:
                             with Worker.save_lock:
@@ -232,49 +334,30 @@ class Worker(threading.Thread):
                                 )
                                 Worker.best_score = ep_reward
                         Worker.global_episode += 1
-                        episodeCount += 1
-                        epsilon = epsilon * 0.9925
-
-                        self.rewards.append(ep_reward)
-                        self.memory.clear_buffer()
-
+                        episode_count += 1
                 ep_steps += 1
 
                 time_count += 1
                 current_state = new_state
                 total_step += 1
 
+            # print("Episode: " + str(Worker.global_episode) + " ; Reward: " + str(ep_reward) + " ; Steps: " + str(ep_steps) + " ; Env: " + str(self.worker_idx))
+            print("Episode: " + str(episode_count) + " ; Reward: " + str(round(ep_reward, 2)) + " ; Steps: " + str(
+                ep_steps) + " ; Env: " + str(self.worker_idx))
+            MasterAgent.results[self.worker_idx].append(ep_reward)
         self.result_queue.put(None)
 
-        ySmooth = savgol_filter(self.rewards, 99, 6)
-        plt.plot([i for i in range(len(self.rewards))], self.rewards)
-        plt.plot([i for i in range(len(self.rewards))], ySmooth, color='black')
-        plt.show()
-
-    def train(self):
-        with tf.GradientTape() as tape:
-            total_loss = self.compute_loss(done=self.memory.buffer[-1].terminalState,
-                                           new_state=self.memory.buffer[-1].newState,
-                                           memory=self.memory,
-                                           gamma=0.99)
-
-        # print(total_loss)
-        self.ep_loss += total_loss
-        # Calculate local gradients
-        grads = tape.gradient(total_loss, self.local_model.trainable_weights)
-        # Push local gradients to global model
-        self.opt.apply_gradients(zip(grads,
-                                     self.global_model.trainable_weights))
-        # Update local model with new weights
-        self.local_model.set_weights(self.global_model.get_weights())
-        self.memory.clear_buffer()
+        # ySmooth = savgol_filter(rewards, 99, 6)
+        # plt.plot([i for i in range(len(rewards))], rewards)
+        # plt.plot([i for i in range(len(rewards))], ySmooth, color='black')
+        # plt.show()
 
     def compute_loss(self,
                      done,
                      new_state,
                      memory,
                      gamma=0.99):
-        if done == 1:
+        if done:
             reward_sum = 0.  # terminal
         else:
             nnOut = self.local_model(tf.convert_to_tensor(new_state[None, :], dtype=tf.float32))
@@ -288,7 +371,7 @@ class Worker(threading.Thread):
         discounted_rewards.reverse()
 
         logits, values = self.local_model(
-            tf.convert_to_tensor(np.vstack(memory.initialStates),
+            tf.convert_to_tensor(np.vstack(memory.states),
                                  dtype=tf.float32))
         # Get our advantages
         dr = np.array(discounted_rewards)[:, None]
@@ -337,9 +420,45 @@ class Worker(threading.Thread):
             env.close()
 
 
-# MasterAgent = MasterAgent()
-# MasterAgent.train()
+class Game:
+    def __init__(self):
+        self.targetPosition = [0, 0]
+        self.agentPosition = [1, 1]
 
-a3cMaster = A3C_Master(4, 2)
-for i in range(12):
-    a3cMaster.assign_worker("0")
+    def reset(self):
+        self.agentPosition = [random.uniform(-10, 10), random.uniform(-10, 10)]
+        return self._get_current_state()
+
+    def step(self, action):
+        # Move right
+        if action == 0:
+            self.agentPosition = [self.agentPosition[0] + 0.1, self.agentPosition[1]]
+        # Move left
+        elif action == 1:
+            self.agentPosition = [self.agentPosition[0] - 0.1, self.agentPosition[1]]
+        # Move up
+        elif action == 2:
+            self.agentPosition = [self.agentPosition[0], self.agentPosition[1] + 0.1]
+        # Move down
+        elif action == 3:
+            self.agentPosition = [self.agentPosition[0], self.agentPosition[1] - 0.1]
+
+        reward = math.sqrt(((self.agentPosition[0] - self.targetPosition[0]) ** 2) + (
+                (self.agentPosition[1] - self.targetPosition[1]) ** 2))
+
+        return self._get_current_state(), reward, self._check_terminal_state(), "PLACEHOLDER"
+
+    def _get_current_state(self):
+        return np.array([self.agentPosition, self.targetPosition])
+
+    def _check_terminal_state(self):
+        if math.sqrt(((self.agentPosition[0] - self.targetPosition[0]) ** 2) + (
+                (self.agentPosition[1] - self.targetPosition[1]) ** 2)) < 0.3:
+            return True
+        else:
+            return False
+
+
+masterAgent = MasterAgent(4)
+# masterAgent.train()
+masterAgent.multi_config_train([5, 10, 20, 30, 40, 50])

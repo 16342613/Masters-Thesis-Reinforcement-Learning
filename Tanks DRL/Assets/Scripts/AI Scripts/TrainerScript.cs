@@ -28,7 +28,9 @@ enum ServerRequests
     // Send transition data to the A3C server
     SEND_A3C_TRANSITION,
     // Send the transition data to the A3C server and get the action probability distribution
-    SEND_TRANSITION_GET_ACTION
+    SEND_TRANSITION_GET_ACTION,
+    // Sends a data to plot on the server
+    ADD_PLOT_DATA
 }
 
 public abstract class TrainerScript : MonoBehaviour

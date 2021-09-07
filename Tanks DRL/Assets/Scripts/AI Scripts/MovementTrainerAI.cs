@@ -23,7 +23,7 @@ public class MovementTrainerAI : TrainerScript
     // Update is called once per frame
     void Update()
     {
-        train = true;
+        train = false;
         if (Input.GetKeyDown(KeyCode.S))
         {
             ObserveAndTakeAction(ServerRequests.PREDICT);
@@ -37,7 +37,7 @@ public class MovementTrainerAI : TrainerScript
 
         if (Input.GetKeyDown(KeyCode.N))
         {
-            train = true;
+            train = false;
             //StartCoroutine(TrainA3C());
             StartCoroutine(TrainDQN());
         }
@@ -133,8 +133,10 @@ public class MovementTrainerAI : TrainerScript
             bestActionIndex = HelperScript.SampleProbabilityDistribution(parsedResponse);//parsedResponse.IndexOf(parsedResponse.Max());
         }
 
+        System.Random random = new System.Random();
+        double rnum = random.NextDouble();
         // Use epsilon-greedy for exploration
-        if (Random.Range(0, 1) < epsilon)
+        if (rnum < epsilon)
         {
             System.Random rnd = new System.Random();
             bestActionIndex = rnd.Next(parsedResponse.Count);// Mathf.RoundToInt(Random.Range(0, (float)(parsedResponse.Count - 1)));
@@ -148,14 +150,14 @@ public class MovementTrainerAI : TrainerScript
         {
             switch (bestActionIndex)
             {
-                // Turn left
+                // Go left
                 case 0:
-                    agent.transform.localPosition -= new Vector3(1, 0, 0);
+                    agent.transform.position -= agent.transform.right * 1f;
                     break;
 
                 // Turn right
                 case 1:
-                    agent.transform.localPosition += new Vector3(1, 0, 0);
+                    agent.transform.position += agent.transform.right * 1f;
                     break;
                 
                 // Go Forward
@@ -163,7 +165,7 @@ public class MovementTrainerAI : TrainerScript
                     agent.transform.position += agent.transform.forward * 1f;
                     break;
 
-                // Go Forward
+                // Go Backward
                 case 3:
                     agent.transform.position -= agent.transform.forward * 1f;
                     break;
@@ -225,15 +227,15 @@ public class MovementTrainerAI : TrainerScript
 
         // The default reward
         float reward = 0; //-(angleDifference * angleDifference);
-        reward -= newDistance;
+        //reward -= newDistance;
 
         if (newDistance < oldDistance)
         {
-            //reward += 0.1f;
+            reward += 0.1f;
         }
         else
         {
-            //reward -= 0.1f;
+            reward -= 0.1f;
         }
 
         // If the agent wants to turn right when the target is to its right
@@ -267,7 +269,7 @@ public class MovementTrainerAI : TrainerScript
 
         if (newDistance < 0.1f)//Vector3.Dot(agent.transform.forward, (target.transform.localPosition - agent.transform.localPosition).normalized) > 0.999f)
         {
-            reward += 1f;
+            reward += 5f;
             return new object[] { bestActionIndex, reward, 1 }; // Episode has finished
         }
         else
@@ -307,7 +309,7 @@ public class MovementTrainerAI : TrainerScript
         if (AIName == "0")
         {
             HelperScript.PrintList(parsedResponse);
-            Debug.Log(reward + " ; " + value);
+            Debug.Log(reward + " ; " + value + " ; " + bestActionIndex);
         }
 
 
